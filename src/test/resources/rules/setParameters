@@ -1,0 +1,7 @@
+rule:
+	purpose = validation
+	actionType = move
+	decision = grant
+	forceSpaceFunction = sum(after, diff(after, before))
+	condition:
+		negate(occupied(after))

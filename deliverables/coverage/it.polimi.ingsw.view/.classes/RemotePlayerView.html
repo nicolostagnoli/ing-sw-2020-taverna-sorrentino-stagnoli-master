@@ -1,0 +1,409 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: RemotePlayerView</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.view</a> ]
+</div>
+
+<h1>Coverage Summary for Class: RemotePlayerView (it.polimi.ingsw.view)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">RemotePlayerView</td>
+<td class="coverageStat">
+  <span class="percent">
+    72,2%
+  </span>
+  <span class="absValue">
+    (13/ 18)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    59,3%
+  </span>
+  <span class="absValue">
+    (67/ 113)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">RemotePlayerView$MessageReceiver</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (1/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    20%
+  </span>
+  <span class="absValue">
+    (1/ 5)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    70%
+  </span>
+  <span class="absValue">
+    (14/ 20)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    57,6%
+  </span>
+  <span class="absValue">
+    (68/ 118)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.view;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.listeners.*;
+<i>4</i>&nbsp;import it.polimi.ingsw.model.Board;
+<i>5</i>&nbsp;import it.polimi.ingsw.model.Coord;
+<i>6</i>&nbsp;import it.polimi.ingsw.model.Level;
+<i>7</i>&nbsp;import it.polimi.ingsw.model.Player;
+<i>8</i>&nbsp;import it.polimi.ingsw.observer.*;
+<i>9</i>&nbsp;import it.polimi.ingsw.server.Connection;
+<i>10</i>&nbsp;
+<i>11</i>&nbsp;import java.util.ArrayList;
+<i>12</i>&nbsp;import java.util.List;
+<i>13</i>&nbsp;import java.util.Map;
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;public class RemotePlayerView implements ModelEventListener, EventSource {
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;    //used for reacting when a message arrives from the client (assuming the client only sends strings)
+<b class="fc"><i>18</i>&nbsp;    private class MessageReceiver implements Observer&lt;Object&gt; {</b>
+<i>19</i>&nbsp;        @Override
+<i>20</i>&nbsp;        public void update(Object message) {
+<b class="nc"><i>21</i>&nbsp;            System.out.println(&quot;Received: &quot; + message.toString());</b>
+<b class="nc"><i>22</i>&nbsp;            receivedObject = message;</b>
+<b class="nc"><i>23</i>&nbsp;            handleMessageReceived();</b>
+<b class="nc"><i>24</i>&nbsp;        }</b>
+<i>25</i>&nbsp;    }
+<i>26</i>&nbsp;
+<i>27</i>&nbsp;    private Connection clientConnection;
+<i>28</i>&nbsp;    private Object receivedObject;
+<i>29</i>&nbsp;
+<i>30</i>&nbsp;    private final String nickname;
+<i>31</i>&nbsp;
+<i>32</i>&nbsp;    protected PlayerViewEventListener controller;
+<i>33</i>&nbsp;
+<b class="fc"><i>34</i>&nbsp;    public RemotePlayerView(String nickname, Connection cc){</b>
+<b class="fc"><i>35</i>&nbsp;        this.clientConnection = cc;</b>
+<i>36</i>&nbsp;        //when a message arrives from the client, handle with my MessageReceiver
+<b class="fc"><i>37</i>&nbsp;        this.clientConnection.addObserver(new MessageReceiver());</b>
+<i>38</i>&nbsp;
+<b class="fc"><i>39</i>&nbsp;        this.nickname = nickname;</b>
+<b class="fc"><i>40</i>&nbsp;    }</b>
+<i>41</i>&nbsp;
+<i>42</i>&nbsp;    /**
+<i>43</i>&nbsp;     * To get reference to the connection object related to this remote view (server side)
+<i>44</i>&nbsp;     * @return the connection object
+<i>45</i>&nbsp;     */
+<i>46</i>&nbsp;    public Connection getClientConnection(){
+<b class="nc"><i>47</i>&nbsp;        return this.clientConnection;</b>
+<i>48</i>&nbsp;    }
+<i>49</i>&nbsp;
+<i>50</i>&nbsp;    /**
+<i>51</i>&nbsp;     * used for adding the controller as a listener for the player view events
+<i>52</i>&nbsp;     * @param listener the controller
+<i>53</i>&nbsp;     */
+<i>54</i>&nbsp;    @Override
+<i>55</i>&nbsp;    public void addListener(Listener listener) {
+<b class="nc"><i>56</i>&nbsp;        if (!(listener instanceof PlayerViewEventListener)) {</b>
+<b class="nc"><i>57</i>&nbsp;            throw new IllegalArgumentException(&quot;Tried to register a non-ViewEventListener to View.&quot;);</b>
+<i>58</i>&nbsp;        }
+<b class="nc"><i>59</i>&nbsp;        this.controller = (PlayerViewEventListener) listener;</b>
+<b class="nc"><i>60</i>&nbsp;    }</b>
+<i>61</i>&nbsp;
+<i>62</i>&nbsp;    //this method is fired when an object is received from the client
+<i>63</i>&nbsp;    private void handleMessageReceived() {
+<i>64</i>&nbsp;        List&lt;Object&gt; objects;
+<b class="nc"><i>65</i>&nbsp;        if(receivedObject instanceof List)</b>
+<b class="nc"><i>66</i>&nbsp;            objects = (List&lt;Object&gt;)receivedObject;</b>
+<i>67</i>&nbsp;        else {
+<b class="nc"><i>68</i>&nbsp;            System.out.println(&quot;Something went wrong in handling received message&quot;);</b>
+<b class="nc"><i>69</i>&nbsp;            return;</b>
+<i>70</i>&nbsp;        }
+<i>71</i>&nbsp;
+<i>72</i>&nbsp;        //the first object received is always the event
+<b class="nc"><i>73</i>&nbsp;        String event = (String) objects.get(0);</b>
+<b class="nc"><i>74</i>&nbsp;        switch (event) {</b>
+<i>75</i>&nbsp;            //player events
+<i>76</i>&nbsp;            case &quot;onGodChosen&quot;:
+<b class="nc"><i>77</i>&nbsp;                String god = (String) objects.get(1);</b>
+<b class="nc"><i>78</i>&nbsp;                controller.onGodChosen(this, god);</b>
+<b class="nc"><i>79</i>&nbsp;                break;</b>
+<i>80</i>&nbsp;            case &quot;onWorkerInitialization&quot;:
+<b class="nc"><i>81</i>&nbsp;                Coord choice = (Coord) objects.get(1);</b>
+<b class="nc"><i>82</i>&nbsp;                controller.onWorkerInitialization(this, choice);</b>
+<b class="nc"><i>83</i>&nbsp;                break;</b>
+<i>84</i>&nbsp;            case &quot;onWorkerChosen&quot;:
+<b class="nc"><i>85</i>&nbsp;                Coord workerPos = (Coord) objects.get(1);</b>
+<b class="nc"><i>86</i>&nbsp;                controller.onWorkerChosen(this, workerPos);</b>
+<b class="nc"><i>87</i>&nbsp;                break;</b>
+<i>88</i>&nbsp;            case &quot;onMoveChosen&quot;:
+<b class="nc"><i>89</i>&nbsp;                Coord moveChoice = (Coord) objects.get(1);</b>
+<b class="nc"><i>90</i>&nbsp;                controller.onMoveChosen(this, moveChoice);</b>
+<b class="nc"><i>91</i>&nbsp;                break;</b>
+<i>92</i>&nbsp;            case &quot;onBuildChosen&quot;:
+<b class="nc"><i>93</i>&nbsp;                Coord buildChoice = (Coord) objects.get(1);</b>
+<b class="nc"><i>94</i>&nbsp;                Level level = (Level) objects.get(2);</b>
+<b class="nc"><i>95</i>&nbsp;                controller.onBuildChosen(this, buildChoice, level);</b>
+<b class="nc"><i>96</i>&nbsp;                break;</b>
+<i>97</i>&nbsp;            case &quot;skipAction&quot;:
+<b class="nc"><i>98</i>&nbsp;                controller.skipAction(this);</b>
+<b class="nc"><i>99</i>&nbsp;                break;</b>
+<i>100</i>&nbsp;            //challenger events
+<i>101</i>&nbsp;            case &quot;onGodsChosen&quot;:
+<b class="nc"><i>102</i>&nbsp;                List&lt;String&gt; gods = (List)objects.get(1);</b>
+<b class="nc"><i>103</i>&nbsp;                ((ChallengerViewEventListener)controller).onGodsChosen(this, gods);</b>
+<b class="nc"><i>104</i>&nbsp;                break;</b>
+<i>105</i>&nbsp;            case &quot;onStartPlayerChosen&quot;:
+<b class="nc"><i>106</i>&nbsp;                String startPlayer = (String)objects.get(1);</b>
+<b class="nc"><i>107</i>&nbsp;                ((ChallengerViewEventListener)controller).onStartPlayerChosen(this, startPlayer);</b>
+<b class="nc"><i>108</i>&nbsp;                break;</b>
+<i>109</i>&nbsp;            //client ping check
+<i>110</i>&nbsp;            /*case &quot;onPong&quot;:
+<i>111</i>&nbsp;                //client ping successful
+<i>112</i>&nbsp;                break;*/
+<i>113</i>&nbsp;            default:
+<b class="nc"><i>114</i>&nbsp;                System.out.println(&quot;Event message not recognized.&quot;);</b>
+<i>115</i>&nbsp;                break;
+<i>116</i>&nbsp;        }
+<b class="nc"><i>117</i>&nbsp;    }</b>
+<i>118</i>&nbsp;
+<i>119</i>&nbsp;    /**
+<i>120</i>&nbsp;     * used to send objects to the client through the Connection
+<i>121</i>&nbsp;     * @param message the object to send
+<i>122</i>&nbsp;     */
+<i>123</i>&nbsp;    public void sendObjectToClient(Object message){
+<b class="fc"><i>124</i>&nbsp;        this.clientConnection.asyncSend(message);</b>
+<b class="fc"><i>125</i>&nbsp;    }</b>
+<i>126</i>&nbsp;
+<i>127</i>&nbsp;    //Model Events:
+<i>128</i>&nbsp;
+<i>129</i>&nbsp;    /**
+<i>130</i>&nbsp;     * To send the onBoardChanged event to the client
+<i>131</i>&nbsp;     * @param board
+<i>132</i>&nbsp;     */
+<i>133</i>&nbsp;    @Override
+<i>134</i>&nbsp;    public void onBoardChanged(Board board) {
+<b class="fc"><i>135</i>&nbsp;        List&lt;Object&gt; objects = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>136</i>&nbsp;        objects.add(&quot;onBoardChanged&quot;);</b>
+<b class="fc"><i>137</i>&nbsp;        objects.add(board);</b>
+<b class="fc"><i>138</i>&nbsp;        sendObjectToClient(objects);</b>
+<b class="fc"><i>139</i>&nbsp;    }</b>
+<i>140</i>&nbsp;
+<i>141</i>&nbsp;    /**
+<i>142</i>&nbsp;     * To send the onGameReady event to the client
+<i>143</i>&nbsp;     * @param players
+<i>144</i>&nbsp;     */
+<i>145</i>&nbsp;    @Override
+<i>146</i>&nbsp;    public void onGameReady(List&lt;Player&gt; players) {
+<b class="fc"><i>147</i>&nbsp;        List&lt;Object&gt; objects = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>148</i>&nbsp;        objects.add(&quot;onGameReady&quot;);</b>
+<b class="fc"><i>149</i>&nbsp;        objects.add(players);</b>
+<b class="fc"><i>150</i>&nbsp;        sendObjectToClient(objects);</b>
+<b class="fc"><i>151</i>&nbsp;    }</b>
+<i>152</i>&nbsp;
+<i>153</i>&nbsp;    /**
+<i>154</i>&nbsp;     * To send the onGodsChosen event to the client
+<i>155</i>&nbsp;     * @param gods
+<i>156</i>&nbsp;     */
+<i>157</i>&nbsp;    @Override
+<i>158</i>&nbsp;    public void onGodsChosen(List&lt;String&gt; gods) {
+<b class="fc"><i>159</i>&nbsp;        List&lt;Object&gt; objects = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>160</i>&nbsp;        objects.add(&quot;onGodsChosen&quot;);</b>
+<b class="fc"><i>161</i>&nbsp;        objects.add(gods);</b>
+<b class="fc"><i>162</i>&nbsp;        sendObjectToClient(objects);</b>
+<b class="fc"><i>163</i>&nbsp;    }</b>
+<i>164</i>&nbsp;
+<i>165</i>&nbsp;    /**
+<i>166</i>&nbsp;     * To send the onPlayerAdded event to the client
+<i>167</i>&nbsp;     * @param nickname
+<i>168</i>&nbsp;     * @param numCurr
+<i>169</i>&nbsp;     * @param numTot
+<i>170</i>&nbsp;     */
+<i>171</i>&nbsp;    @Override
+<i>172</i>&nbsp;    public void onPlayerAdded(String nickname, int numCurr, int numTot) {
+<b class="fc"><i>173</i>&nbsp;        List&lt;Object&gt; objects = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>174</i>&nbsp;        objects.add(&quot;onPlayerAdded&quot;);</b>
+<b class="fc"><i>175</i>&nbsp;        objects.add(nickname);</b>
+<b class="fc"><i>176</i>&nbsp;        objects.add(numCurr);</b>
+<b class="fc"><i>177</i>&nbsp;        objects.add(numTot);</b>
+<b class="fc"><i>178</i>&nbsp;        sendObjectToClient(objects);</b>
+<b class="fc"><i>179</i>&nbsp;    }</b>
+<i>180</i>&nbsp;
+<i>181</i>&nbsp;    /**
+<i>182</i>&nbsp;     * To send the onMessage event to the client
+<i>183</i>&nbsp;     * @param message
+<i>184</i>&nbsp;     */
+<i>185</i>&nbsp;    @Override
+<i>186</i>&nbsp;    public void onMessage(String message) {
+<b class="nc"><i>187</i>&nbsp;        List&lt;Object&gt; objects = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>188</i>&nbsp;        objects.add(&quot;onMessage&quot;);</b>
+<b class="nc"><i>189</i>&nbsp;        objects.add(message);</b>
+<b class="nc"><i>190</i>&nbsp;        sendObjectToClient(objects);</b>
+<b class="nc"><i>191</i>&nbsp;    }</b>
+<i>192</i>&nbsp;
+<i>193</i>&nbsp;    /**
+<i>194</i>&nbsp;     * To send the onGodSelection event to the client
+<i>195</i>&nbsp;     * @param nickname
+<i>196</i>&nbsp;     * @param gods
+<i>197</i>&nbsp;     */
+<i>198</i>&nbsp;    @Override
+<i>199</i>&nbsp;    public void onGodSelection(String nickname, List&lt;String&gt; gods) {
+<b class="fc"><i>200</i>&nbsp;        List&lt;Object&gt; objects = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>201</i>&nbsp;        objects.add(&quot;onGodSelection&quot;);</b>
+<b class="fc"><i>202</i>&nbsp;        objects.add(nickname);</b>
+<b class="fc"><i>203</i>&nbsp;        objects.add(gods);</b>
+<b class="fc"><i>204</i>&nbsp;        sendObjectToClient(objects);</b>
+<b class="fc"><i>205</i>&nbsp;    }</b>
+<i>206</i>&nbsp;
+<i>207</i>&nbsp;    /**
+<i>208</i>&nbsp;     * To send the onGodsSelection event to the client
+<i>209</i>&nbsp;     * @param gods
+<i>210</i>&nbsp;     * @param numPlayers
+<i>211</i>&nbsp;     */
+<i>212</i>&nbsp;    @Override
+<i>213</i>&nbsp;    public void onGodsSelection(List&lt;String&gt; gods, int numPlayers) {
+<b class="fc"><i>214</i>&nbsp;        List&lt;Object&gt; objects = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>215</i>&nbsp;        objects.add(&quot;onGodsSelection&quot;);</b>
+<b class="fc"><i>216</i>&nbsp;        objects.add(gods);</b>
+<b class="fc"><i>217</i>&nbsp;        objects.add(numPlayers);</b>
+<b class="fc"><i>218</i>&nbsp;        sendObjectToClient(objects);</b>
+<b class="fc"><i>219</i>&nbsp;    }</b>
+<i>220</i>&nbsp;
+<i>221</i>&nbsp;    /**
+<i>222</i>&nbsp;     * To send the onStartPlayerSelection event to the client
+<i>223</i>&nbsp;     * @param players
+<i>224</i>&nbsp;     */
+<i>225</i>&nbsp;    @Override
+<i>226</i>&nbsp;    public void onStartPlayerSelection(List&lt;String&gt; players) {
+<b class="fc"><i>227</i>&nbsp;        List&lt;Object&gt; objects = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>228</i>&nbsp;        objects.add(&quot;onStartPlayerSelection&quot;);</b>
+<b class="fc"><i>229</i>&nbsp;        objects.add(players);</b>
+<b class="fc"><i>230</i>&nbsp;        sendObjectToClient(objects);</b>
+<b class="fc"><i>231</i>&nbsp;    }</b>
+<i>232</i>&nbsp;
+<i>233</i>&nbsp;    /**
+<i>234</i>&nbsp;     * To send the onMyInitialization event to the client
+<i>235</i>&nbsp;     * @param nickname
+<i>236</i>&nbsp;     * @param freeSpaces
+<i>237</i>&nbsp;     */
+<i>238</i>&nbsp;    @Override
+<i>239</i>&nbsp;    public void onMyInitialization(String nickname, List&lt;Coord&gt; freeSpaces) {
+<b class="fc"><i>240</i>&nbsp;        List&lt;Object&gt; objects = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>241</i>&nbsp;        objects.add(&quot;onMyInitialization&quot;);</b>
+<b class="fc"><i>242</i>&nbsp;        objects.add(nickname);</b>
+<b class="fc"><i>243</i>&nbsp;        objects.add(freeSpaces);</b>
+<b class="fc"><i>244</i>&nbsp;        sendObjectToClient(objects);</b>
+<b class="fc"><i>245</i>&nbsp;    }</b>
+<i>246</i>&nbsp;
+<i>247</i>&nbsp;    /**
+<i>248</i>&nbsp;     * To send the onMyTurn event to the client
+<i>249</i>&nbsp;     * @param nickname
+<i>250</i>&nbsp;     * @param selectableWorkers
+<i>251</i>&nbsp;     */
+<i>252</i>&nbsp;    @Override
+<i>253</i>&nbsp;    public void onMyTurn(String nickname, List&lt;Coord&gt; selectableWorkers) {
+<b class="fc"><i>254</i>&nbsp;        List&lt;Object&gt; objects = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>255</i>&nbsp;        objects.add(&quot;onMyTurn&quot;);</b>
+<b class="fc"><i>256</i>&nbsp;        objects.add(nickname);</b>
+<b class="fc"><i>257</i>&nbsp;        objects.add(selectableWorkers);</b>
+<b class="fc"><i>258</i>&nbsp;        sendObjectToClient(objects);</b>
+<b class="fc"><i>259</i>&nbsp;    }</b>
+<i>260</i>&nbsp;
+<i>261</i>&nbsp;    /**
+<i>262</i>&nbsp;     * To send the onMyAction event to the client
+<i>263</i>&nbsp;     * @param nickname
+<i>264</i>&nbsp;     * @param movableSpaces
+<i>265</i>&nbsp;     * @param buildableSpaces
+<i>266</i>&nbsp;     * @param canEndTurn
+<i>267</i>&nbsp;     */
+<i>268</i>&nbsp;    @Override
+<i>269</i>&nbsp;    public void onMyAction(String nickname, List&lt;Coord&gt; movableSpaces, Map&lt;Level, List&lt;Coord&gt;&gt; buildableSpaces, boolean canEndTurn) {
+<b class="fc"><i>270</i>&nbsp;        List&lt;Object&gt; objects = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>271</i>&nbsp;        objects.add(&quot;onMyAction&quot;);</b>
+<b class="fc"><i>272</i>&nbsp;        objects.add(nickname);</b>
+<b class="fc"><i>273</i>&nbsp;        objects.add(movableSpaces);</b>
+<b class="fc"><i>274</i>&nbsp;        objects.add(buildableSpaces);</b>
+<b class="fc"><i>275</i>&nbsp;        objects.add(canEndTurn);</b>
+<b class="fc"><i>276</i>&nbsp;        sendObjectToClient(objects);</b>
+<b class="fc"><i>277</i>&nbsp;    }</b>
+<i>278</i>&nbsp;
+<i>279</i>&nbsp;    /**
+<i>280</i>&nbsp;     * To send the onEnd event to the client
+<i>281</i>&nbsp;     */
+<i>282</i>&nbsp;    @Override
+<i>283</i>&nbsp;    public void onEnd() {
+<b class="nc"><i>284</i>&nbsp;        List&lt;Object&gt; objects = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>285</i>&nbsp;        objects.add(&quot;onEnd&quot;);</b>
+<b class="nc"><i>286</i>&nbsp;        sendObjectToClient(objects);</b>
+<b class="nc"><i>287</i>&nbsp;    }</b>
+<i>288</i>&nbsp;
+<i>289</i>&nbsp;    /**
+<i>290</i>&nbsp;     * Get the nickname of the client related to this View
+<i>291</i>&nbsp;     * @return
+<i>292</i>&nbsp;     */
+<i>293</i>&nbsp;    @Override
+<i>294</i>&nbsp;    public String getNickname() {
+<b class="fc"><i>295</i>&nbsp;        return this.nickname;</b>
+<i>296</i>&nbsp;    }
+<i>297</i>&nbsp;
+<i>298</i>&nbsp;
+<i>299</i>&nbsp;}
+<i>300</i>&nbsp;
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 00:11</div>
+</div>
+</body>
+</html>

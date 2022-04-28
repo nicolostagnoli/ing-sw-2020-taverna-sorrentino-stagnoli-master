@@ -1,0 +1,60 @@
+rule:
+	purpose = VALIDATION
+	decision = GRANT
+	actionType = MOVE
+	condition:
+		near(before,after)
+		negate(occupied(after))
+		negate(dome(after))
+		compareLevels(before, after, <2)
+
+rule:
+	purpose = VALIDATION
+	decision = DENY
+	actionType = MOVE
+	condition:
+		or(negate(near(before, after)), or(occupied(after),or(dome(after),compareLevels(before, after, >1))))
+
+rule:
+	purpose = VALIDATION
+	decision = DENY
+	actionType = BUILD
+	buildLevel = GROUND
+rule:
+	purpose = VALIDATION
+	decision = DENY
+	actionType = BUILD
+	buildLevel = LVL1
+rule:
+	purpose = VALIDATION
+	decision = DENY
+	actionType = BUILD
+	buildLevel = LVL2
+rule:
+	purpose = VALIDATION
+	decision = DENY
+	actionType = BUILD
+	buildLevel = LVL3
+rule:
+	purpose = VALIDATION
+	decision = DENY
+	actionType = BUILD
+	buildLevel = DOME
+
+rule:
+	purpose = WIN
+	decision = GRANT
+	actionType = MOVE
+	condition:
+		compareLevels(before, LVL2, =0)
+		compareLevels(after, LVL3, =0)
+
+rule:
+	purpose = GENERATION
+	actionType = MOVE
+	target = MYSELF
+	id = gen_move
+
+secondary file:
+	source = rules/standard/secondary
+	generatedBy = gen_move

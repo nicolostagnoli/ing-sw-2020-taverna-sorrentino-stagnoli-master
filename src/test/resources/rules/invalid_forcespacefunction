@@ -1,0 +1,2 @@
+rule:
+	forceSpaceFunction = sum(error, after)

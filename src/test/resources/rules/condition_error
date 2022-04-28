@@ -1,0 +1,4 @@
+rule:
+	purpose = validation
+	condition:
+		compareLevels(error, before, =0)

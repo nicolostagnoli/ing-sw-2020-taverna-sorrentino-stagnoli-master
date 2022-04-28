@@ -1,0 +1,39 @@
+rule:
+	purpose = GENERATION
+	actionType = MOVE
+	target = OPPONENTS
+	id = limus_gen
+
+secondary file:
+	source = rules/limus_validation
+	generatedBy = unique
+	generatedBy = gen1
+	generatedBy = gen2
+	generatedBy = gen3
+
+secondary rule:
+	purpose = GENERATION
+	actionType = MOVE
+	target = MYSELF
+	generatedBy = limus_gen
+	generatedBy = gen2
+	generatedBy = gen3
+	id = gen1
+
+secondary rule:
+	purpose = GENERATION
+	actionType = BUILD
+	target = MYSELF
+	generatedBy = limus_gen
+	generatedBy = gen1
+	generatedBy = gen3
+	id = gen2
+
+secondary rule:
+	purpose = GENERATION
+	actionType = END
+	target = MYSELF
+	generatedBy = limus_gen
+	generatedBy = gen1
+	generatedBy = gen2
+	id = gen3

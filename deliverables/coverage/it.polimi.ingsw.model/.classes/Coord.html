@@ -1,0 +1,206 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Coord</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.model</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Coord (it.polimi.ingsw.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Coord</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (8/ 8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (34/ 34)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.model;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.exceptions.model.InvalidCoordinatesException;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;import java.io.Serializable;
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;public class Coord implements Serializable {
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;    private static final long serialVersionUID = 1L;
+<i>10</i>&nbsp;
+<i>11</i>&nbsp;    public final int x;
+<i>12</i>&nbsp;    public final int y;
+<i>13</i>&nbsp;
+<b class="fc"><i>14</i>&nbsp;    public Coord(int x, int y) {</b>
+<b class="fc"><i>15</i>&nbsp;        this.x=x;</b>
+<b class="fc"><i>16</i>&nbsp;        this.y=y;</b>
+<b class="fc"><i>17</i>&nbsp;    }</b>
+<i>18</i>&nbsp;
+<i>19</i>&nbsp;    /**
+<i>20</i>&nbsp;     * Check if a coordinate is valid for the game.
+<i>21</i>&nbsp;     * More formally, this method returns true if and only if both values of the coordinate
+<i>22</i>&nbsp;     * are between 0 (included) and {@link Board#BOARD_SIZE} (excluded)
+<i>23</i>&nbsp;     * @param c coordinate to check
+<i>24</i>&nbsp;     * @return true if valid, false otherwise
+<i>25</i>&nbsp;     */
+<i>26</i>&nbsp;    public static boolean validCoord(Coord c) {
+<b class="fc"><i>27</i>&nbsp;        if (c.x &lt; 0 || c.x &gt;= Board.BOARD_SIZE || c.y &lt; 0 || c.y &gt;= Board.BOARD_SIZE) {</b>
+<b class="fc"><i>28</i>&nbsp;            return false;</b>
+<i>29</i>&nbsp;        }
+<i>30</i>&nbsp;        else {
+<b class="fc"><i>31</i>&nbsp;            return true;</b>
+<i>32</i>&nbsp;        }
+<i>33</i>&nbsp;    }
+<i>34</i>&nbsp;
+<i>35</i>&nbsp;    /**
+<i>36</i>&nbsp;     * Check if this coordinates are near to the given coordinates (1 step horizontally, vertically or both)
+<i>37</i>&nbsp;     * @param c the other given coordinates
+<i>38</i>&nbsp;     * @return true if near, false otherwise
+<i>39</i>&nbsp;     * @throws InvalidCoordinatesException when this or the given coordinates are not valid
+<i>40</i>&nbsp;     */
+<i>41</i>&nbsp;    public boolean isNear(Coord c) throws InvalidCoordinatesException {
+<b class="fc"><i>42</i>&nbsp;        if( !Coord.validCoord(this) ){</b>
+<b class="fc"><i>43</i>&nbsp;            throw new InvalidCoordinatesException(&quot;Method isNear() has been called on invalid coordinates.&quot;);</b>
+<i>44</i>&nbsp;        }
+<b class="fc"><i>45</i>&nbsp;        if( !Coord.validCoord(c) ){</b>
+<b class="fc"><i>46</i>&nbsp;            throw new InvalidCoordinatesException(&quot;Invalid coordinates given.&quot;);</b>
+<i>47</i>&nbsp;        }
+<i>48</i>&nbsp;
+<b class="fc"><i>49</i>&nbsp;        if(this.x == c.x &amp;&amp; this.y == c.y) { // Same coordinates</b>
+<b class="fc"><i>50</i>&nbsp;            return false;</b>
+<i>51</i>&nbsp;        }
+<i>52</i>&nbsp;
+<b class="fc"><i>53</i>&nbsp;        int diffX = Math.abs(this.x - c.x);</b>
+<b class="fc"><i>54</i>&nbsp;        int diffY = Math.abs(this.y - c.y);</b>
+<b class="fc"><i>55</i>&nbsp;        if (diffX &gt; 1 || diffY &gt; 1){</b>
+<b class="fc"><i>56</i>&nbsp;            return false;</b>
+<i>57</i>&nbsp;        }
+<i>58</i>&nbsp;        else {
+<b class="fc"><i>59</i>&nbsp;            return true;</b>
+<i>60</i>&nbsp;        }
+<i>61</i>&nbsp;    }
+<i>62</i>&nbsp;
+<i>63</i>&nbsp;    /**
+<i>64</i>&nbsp;     * Sum the components of the given coordinates to this
+<i>65</i>&nbsp;     * @param c the coordinates to sum
+<i>66</i>&nbsp;     * @return new coordinates which are the sum
+<i>67</i>&nbsp;     */
+<i>68</i>&nbsp;    public Coord sum(Coord c) {
+<b class="fc"><i>69</i>&nbsp;        return new Coord(this.x + c.x, this.y + c.y);</b>
+<i>70</i>&nbsp;    }
+<i>71</i>&nbsp;
+<i>72</i>&nbsp;    /**
+<i>73</i>&nbsp;     * Convert a string (like A1, B2...) to a Coord object
+<i>74</i>&nbsp;     * @param input the string to convert
+<i>75</i>&nbsp;     * @return a Coord object equivalent
+<i>76</i>&nbsp;     * @throws IllegalArgumentException when bad input
+<i>77</i>&nbsp;     */
+<i>78</i>&nbsp;    public static Coord convertStringToCoord(String input) throws IllegalArgumentException {
+<b class="fc"><i>79</i>&nbsp;        if (input.length() != 2)</b>
+<b class="fc"><i>80</i>&nbsp;            throw new IllegalArgumentException();</b>
+<b class="fc"><i>81</i>&nbsp;        input = input.toUpperCase();</b>
+<b class="fc"><i>82</i>&nbsp;        int y = (input.charAt(0) - &#39;A&#39;);</b>
+<b class="fc"><i>83</i>&nbsp;        int x = (input.charAt(1) - &#39;1&#39;);</b>
+<i>84</i>&nbsp;
+<b class="fc"><i>85</i>&nbsp;        Coord result = new Coord(x, y);</b>
+<b class="fc"><i>86</i>&nbsp;        if (!validCoord(result)) {</b>
+<b class="fc"><i>87</i>&nbsp;            throw new IllegalArgumentException();</b>
+<i>88</i>&nbsp;        }
+<b class="fc"><i>89</i>&nbsp;        return result;</b>
+<i>90</i>&nbsp;    }
+<i>91</i>&nbsp;
+<i>92</i>&nbsp;    /**
+<i>93</i>&nbsp;     * Equality check between coordinates
+<i>94</i>&nbsp;     * @param obj the other coordinates
+<i>95</i>&nbsp;     * @return true if the components have the same values, false otherwise
+<i>96</i>&nbsp;     */
+<i>97</i>&nbsp;    @Override
+<i>98</i>&nbsp;    public boolean equals(Object obj) {
+<b class="fc"><i>99</i>&nbsp;        if(obj instanceof Coord){</b>
+<b class="fc"><i>100</i>&nbsp;            Coord other = (Coord) obj;</b>
+<b class="fc"><i>101</i>&nbsp;            return (this.x == other.x &amp;&amp; this.y == other.y);</b>
+<i>102</i>&nbsp;        }
+<b class="fc"><i>103</i>&nbsp;        return false;</b>
+<i>104</i>&nbsp;    }
+<i>105</i>&nbsp;
+<i>106</i>&nbsp;    /**
+<i>107</i>&nbsp;     * ToString method
+<i>108</i>&nbsp;     * @return a string representation of the coordinate
+<i>109</i>&nbsp;     */
+<i>110</i>&nbsp;    @Override
+<i>111</i>&nbsp;    public String toString() {
+<b class="fc"><i>112</i>&nbsp;        return &quot;(&quot; + x + &quot;, &quot; + y + &quot;)&quot; ;</b>
+<i>113</i>&nbsp;    }
+<i>114</i>&nbsp;
+<i>115</i>&nbsp;    /**
+<i>116</i>&nbsp;     * HashCode method
+<i>117</i>&nbsp;     * @return a unique numeric value for each pair of values x and y
+<i>118</i>&nbsp;     */
+<i>119</i>&nbsp;    @Override
+<i>120</i>&nbsp;    public int hashCode() {
+<b class="fc"><i>121</i>&nbsp;        return 10*x + y;</b>
+<i>122</i>&nbsp;    }
+<i>123</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 00:11</div>
+</div>
+</body>
+</html>

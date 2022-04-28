@@ -1,0 +1,43 @@
+rule:
+	purpose = GENERATION
+	actionType = MOVE
+	target = OPPONENTS
+	id = hera_gen
+
+secondary rule:
+	purpose = WIN
+	actionType = MOVE
+	decision = DENY
+	condition:
+		or(negate(valid(sum(after, coord(1,0)))), or(negate(valid(sum(after, coord(0,1)))), or(negate(valid(sum(after, coord(1,1)))), or(negate(valid(sum(after, coord(-1,0)))), or(negate(valid(sum(after, coord(0,-1)))), or(negate(valid(sum(after, coord(-1,-1)))), or(negate(valid(sum(after, coord(1,-1)))), negate(valid(sum(after, coord(-1,1)))))))))))
+	generatedBy = hera_gen
+	generatedBy = gen1
+	generatedBy = gen2
+	generatedBy = gen3
+
+secondary rule:
+	purpose = GENERATION
+	actionType = MOVE
+	target = MYSELF
+	id = gen1
+	generatedBy = hera_gen
+	generatedBy = gen2
+	generatedBy = gen3
+
+secondary rule:
+	purpose = GENERATION
+	actionType = BUILD
+	target = MYSELF
+	id = gen2
+	generatedBy = hera_gen
+	generatedBy = gen1
+	generatedBy = gen3
+
+secondary rule:
+	purpose = GENERATION
+	actionType = END
+	target = MYSELF
+	id = gen3
+	generatedBy = hera_gen
+	generatedBy = gen1
+	generatedBy = gen2

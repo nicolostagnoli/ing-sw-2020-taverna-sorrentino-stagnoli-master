@@ -1,0 +1,4 @@
+rule:
+	purpose = validation
+	unexpected line
+	actionType = move

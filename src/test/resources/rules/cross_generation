@@ -1,0 +1,13 @@
+rule:
+	purpose = generation
+	actionType = move
+	target = myself
+	id = ABC
+	generatedBy = DEF
+
+rule:
+	purpose = generation
+	actionType = build
+	target = opponents
+	generatedBy = ABC
+	id = DEF

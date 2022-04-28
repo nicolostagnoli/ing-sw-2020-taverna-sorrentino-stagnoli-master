@@ -1,0 +1,14 @@
+{"name":"Apollo","description":"Your Move: Your Worker may move into an opponent Worker's space by forcing their Worker to the space yours just vacated."}
+{"name":"Artemis","description":"Your Move: Your Worker may move one additional time, but not back to its initial space."}
+{"name":"Athena","description":"Opponent's Turn: If one of your Workers moved up on your last turn, opponent Workers cannot move up this turn."}
+{"name":"Demeter","description":"Your Build: Your Worker may build one additional time, but not on the same space."}
+{"name":"Hephaestus","description":"Your Build: Your Worker may build one additional block (not dome) on top of your first block."}
+{"name":"Pan","description":"Win Condition: You also win if your Worker moves down two or more levels."}
+{"name":"Minotaur","description":"Your Move: Your Worker may move into an opponent Worker's space, if their Worker can be forced one space straight backwards to an unoccupied space at any level."}
+{"name":"Atlas","description":"Your Build: Your Worker may build a dome at any level."}
+{"name":"Prometheus","description":"Your Turn: If your Worker does not move up, it may build both before and after moving."}
+{"name":"Zeus","description":"Your Build: Your Worker may build a block under itself."}
+{"name":"Limus","description":"Opponent's Turn: Opponent Workers cannot build on spaces neighboring your Workers, unless building a dome to create a Complete Tower."}
+{"name":"Triton","description":"Your Move: Each time your Worker moves into a perimeter space, it may immediately move again."}
+{"name":"Hestia","description":"Your Build: Your Worker may build one additional time, but this cannot be on a perimeter space."}
+{"name":"Hera","description":"Opponent's Turn: An opponent cannot win by moving into a perimeter space."}

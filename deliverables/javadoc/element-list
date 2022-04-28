@@ -1,0 +1,14 @@
+module:it.polimi.ingsw
+it.polimi.ingsw
+it.polimi.ingsw.client
+it.polimi.ingsw.client.gui
+it.polimi.ingsw.controller
+it.polimi.ingsw.exceptions.model
+it.polimi.ingsw.exceptions.model.handler
+it.polimi.ingsw.listeners
+it.polimi.ingsw.model
+it.polimi.ingsw.model.handler
+it.polimi.ingsw.model.handler.util
+it.polimi.ingsw.observer
+it.polimi.ingsw.server
+it.polimi.ingsw.view

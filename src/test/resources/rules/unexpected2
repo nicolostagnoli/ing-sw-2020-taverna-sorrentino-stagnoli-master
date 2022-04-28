@@ -1,0 +1,13 @@
+rule:
+	purpose = generation
+	actionType = move
+	target = myself
+	id = ABC
+
+unexpected line
+
+secondary rule:
+	purpose = generation
+	actionType = build
+	target = myself
+	id = DEF

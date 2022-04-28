@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="mainPane" maxHeight="720.0" maxWidth="1280.0" minHeight="720.0" minWidth="1280.0" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.gui.Home">
+   <children>
+      <ImageView pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <image>
+            <Image url="@Home/bg.png" />
+         </image>
+      </ImageView>
+      <ImageView AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <image>
+            <Image url="@Home/Santorini.png" />
+         </image>
+      </ImageView>
+      <AnchorPane fx:id="homePane" prefHeight="720.0" prefWidth="1280.0">
+         <children>
+            <ImageView fx:id="createGameButton" layoutX="325.0" layoutY="364.0" onMouseClicked="#createGame" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@Home/Create button.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
+            <ImageView fx:id="joinGameButton" layoutX="349.0" layoutY="460.0" onMouseClicked="#joinGame" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@Home/Join button.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="numPlayersPane" onKeyPressed="#opponentsKeyPressed" prefHeight="720.0" prefWidth="1280.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <TextField fx:id="numPlayersTextField" alignment="CENTER" layoutX="325.0" layoutY="394.0" prefHeight="56.0" prefWidth="631.0" promptText="Insert number of opponents..." style="-fx-border-style: solid; -fx-border-width: 4px; -fx-border-color: rgb(26, 103, 159); -fx-background-color: #DDD;" styleClass="text_box" stylesheets="@style.css" AnchorPane.bottomAnchor="270.0" AnchorPane.leftAnchor="325.0" AnchorPane.rightAnchor="324.0" AnchorPane.topAnchor="394.0">
+               <font>
+                  <Font size="22.0" />
+               </font>
+            </TextField>
+            <ImageView layoutX="380.0" layoutY="320.0" AnchorPane.bottomAnchor="340.0" AnchorPane.leftAnchor="380.0" AnchorPane.rightAnchor="379.0" AnchorPane.topAnchor="320.0">
+               <image>
+                  <Image url="@Home/Choose the number of opponents.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="numPlayersNextBtn" layoutX="559.0" layoutY="480.0" onMouseClicked="#opponentsChosen" AnchorPane.bottomAnchor="184.0" AnchorPane.leftAnchor="559.0" AnchorPane.rightAnchor="559.0" AnchorPane.topAnchor="480.0">
+               <image>
+                  <Image url="@Home/Next button.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
+            <Label id="numPlayerError" fx:id="numPlayersError" layoutX="396.0" layoutY="558.0" stylesheets="@style.css" text="You have to insert a valid number (1 or 2)" textFill="RED" visible="false">
+               <font>
+                  <Font name="System Bold" size="25.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="nicknamePane" onKeyPressed="#nicknameKeyPressed" prefHeight="720.0" prefWidth="1280.0" visible="false">
+         <children>
+            <TextField fx:id="nicknameTextField" alignment="CENTER" layoutX="325.0" layoutY="394.0" prefHeight="56.0" prefWidth="631.0" promptText="Nickname..." style="-fx-border-style: solid; -fx-border-width: 4px; -fx-border-color: rgb(26, 103, 159); -fx-background-color: #DDD;" styleClass="text_box" stylesheets="@style.css">
+               <font>
+                  <Font size="22.0" />
+               </font>
+            </TextField>
+            <ImageView layoutX="560.0" layoutY="480.0" onMouseClicked="#nicknameChosen">
+               <image>
+                  <Image url="@Home/Next button.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
+            <ImageView fitHeight="65.0" fitWidth="431.0" layoutX="426.0" layoutY="317.0">
+               <image>
+                  <Image url="@Home/What’s your nickname_.png" />
+               </image>
+            </ImageView>
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="lobbyListPane" layoutY="14.0" onKeyPressed="#lobbylistKeyPressed" prefHeight="720.0" prefWidth="1280.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <ListView fx:id="lobbyList" fixedCellSize="40.0" layoutX="416.0" layoutY="296.0" prefHeight="347.0" prefWidth="448.0" AnchorPane.bottomAnchor="77.0" AnchorPane.leftAnchor="416.0" AnchorPane.rightAnchor="416.0" AnchorPane.topAnchor="296.0" />
+            <ImageView fx:id="lobbyListNext" layoutX="471.0" layoutY="650.0" onMouseClicked="#lobbyListNext">
+               <image>
+                  <Image url="@Home/Next button.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
+            <ImageView fx:id="refreshBtn" layoutX="640.0" layoutY="650.0" onMouseClicked="#joinGame">
+               <image>
+                  <Image url="@Home/refresh_btn.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
+         </children>
+      </AnchorPane>
+      <ImageView fx:id="backBtn" fitHeight="56.0" fitWidth="162.0" layoutX="15.0" layoutY="660.0" onMouseClicked="#backBtnClick" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@Board/back_btn.png" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
+   </children>
+</AnchorPane>

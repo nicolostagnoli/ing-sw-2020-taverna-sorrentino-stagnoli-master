@@ -1,0 +1,14 @@
+secondary file:
+	source = rules/setParameters
+	generatedBy = ABC
+
+rule:
+	purpose = validation
+	actionType = move
+	decision = grant
+
+rule:
+	purpose = generation
+	actionType = move
+	target = myself
+	id = ABC

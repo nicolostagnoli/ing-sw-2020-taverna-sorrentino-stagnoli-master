@@ -1,0 +1,39 @@
+rule:
+	purpose = GENERATION
+	actionType = MOVE
+	target = MYSELF
+	condition:
+		or(negate(valid(sum(after, coord(1,0)))), or(negate(valid(sum(after, coord(0,1)))), or(negate(valid(sum(after, coord(1,1)))), or(negate(valid(sum(after, coord(-1,0)))), or(negate(valid(sum(after, coord(0,-1)))), or(negate(valid(sum(after, coord(-1,-1)))), or(negate(valid(sum(after, coord(1,-1)))), negate(valid(sum(after, coord(-1,1)))))))))))
+	id = triton_gen
+	generatedBy = triton_gen
+
+secondary rule:
+	purpose = VALIDATION
+	actionType = MOVE
+	decision = GRANT
+	condition:
+		near(before,after)
+		negate(occupied(after))
+		negate(dome(after))
+		compareLevels(before, after, <2)
+	generatedBy = triton_gen
+
+secondary rule:
+	purpose = WIN
+	actionType = MOVE
+	decision = GRANT
+	condition:
+		compareLevels(before, LVL2, =0)
+		compareLevels(after, LVL3, =0)
+	generatedBy = triton_gen
+
+secondary rule:
+	purpose = GENERATION
+	actionType = MOVE
+	target = MYSELF
+	generatedBy = triton_gen
+	id = towards_secondary
+
+secondary file:
+	source = rules/standard/secondary
+	generatedBy = towards_secondary

@@ -1,0 +1,7 @@
+rule:
+	purpose = VALIDATION
+	actionType = move
+	decision = grant
+
+file:
+	source = rules/setParameters

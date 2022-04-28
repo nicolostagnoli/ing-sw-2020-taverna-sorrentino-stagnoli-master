@@ -1,0 +1,48 @@
+rule:
+	purpose = GENERATION
+	actionType = MOVE
+	target = OPPONENTS
+	id = athena
+	condition:
+		compareLevels(before, after, >0)
+
+secondary rule:
+	purpose = VALIDATION
+	actionType = MOVE
+	decision = DENY
+	condition:
+		compareLevels(before, after, >0)
+	generatedBy = athena
+	generatedBy = gen1
+	generatedBy = gen2
+	generatedBy = gen3
+
+secondary rule:
+	purpose = GENERATION
+	actionType = MOVE
+	target = MYSELF
+	id = gen1
+	generatedBy = athena
+	generatedBy = gen1
+	generatedBy = gen2
+	generatedBy = gen3
+
+secondary rule:
+	purpose = GENERATION
+	actionType = BUILD
+	target = MYSELF
+	id = gen2
+	generatedBy = athena
+	generatedBy = gen1
+	generatedBy = gen2
+	generatedBy = gen3
+
+secondary rule:
+	purpose = GENERATION
+	actionType = END
+	target = MYSELF
+	id = gen3
+	generatedBy = athena
+	generatedBy = gen1
+	generatedBy = gen2
+	generatedBy = gen3

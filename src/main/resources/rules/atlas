@@ -1,0 +1,16 @@
+rule:
+	purpose = GENERATION
+	actionType = MOVE
+	target = MYSELF
+	id = atlas
+
+secondary rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = GRANT
+	buildLevel = DOME
+	condition:
+		negate(occupied(after))
+		negate(dome(after))
+		near(before, after)
+	generatedBy = atlas

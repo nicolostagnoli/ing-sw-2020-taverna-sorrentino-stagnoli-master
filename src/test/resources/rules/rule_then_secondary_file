@@ -1,0 +1,9 @@
+rule:
+	purpose = GENERATION
+	actionType = move
+	target = myself
+	id = unique
+
+secondary file:
+	source = rules/setParameters
+	generatedBy = unique

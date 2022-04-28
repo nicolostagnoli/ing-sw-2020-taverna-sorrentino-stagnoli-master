@@ -1,0 +1,20 @@
+file:
+	source = rules/standard/build_up
+
+rule:
+	purpose = GENERATION
+	actionType = BUILD
+	target = MYSELF
+	id = gen_build
+
+secondary rule:
+	purpose = VALIDATION
+	actionType = MOVE
+	decision = DENY
+	condition:
+		compareLevels(before, after, >0)
+	generatedBy = gen_build
+
+secondary file:
+	source = rules/standard/primary
+	generatedBy = gen_build

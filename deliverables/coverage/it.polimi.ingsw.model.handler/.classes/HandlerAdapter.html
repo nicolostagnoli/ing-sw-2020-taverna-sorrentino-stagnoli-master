@@ -1,0 +1,132 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: HandlerAdapter</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.model.handler</a> ]
+</div>
+
+<h1>Coverage Summary for Class: HandlerAdapter (it.polimi.ingsw.model.handler)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">HandlerAdapter</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/ 5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (14/ 14)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.model.handler;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.model.Board;
+<i>4</i>&nbsp;import it.polimi.ingsw.model.Coord;
+<i>5</i>&nbsp;import it.polimi.ingsw.model.Level;
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;import java.util.List;
+<i>8</i>&nbsp;import java.util.Map;
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;class HandlerAdapter implements RequestHandler {
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;    private final RuleHandler ruleHandler;
+<i>13</i>&nbsp;    private ValidationContainer validationContainer;
+<i>14</i>&nbsp;
+<b class="fc"><i>15</i>&nbsp;    HandlerAdapter(RuleHandler ruleHandler) {</b>
+<b class="fc"><i>16</i>&nbsp;        this.ruleHandler = ruleHandler;</b>
+<b class="fc"><i>17</i>&nbsp;    }</b>
+<i>18</i>&nbsp;
+<i>19</i>&nbsp;    @Override
+<i>20</i>&nbsp;    public void getValidSpaces(Coord current, Board board,
+<i>21</i>&nbsp;                               List&lt;Coord&gt; movableSpaces, Map&lt;Level, List&lt;Coord&gt;&gt; buildableSpaces,
+<i>22</i>&nbsp;                               Map&lt;Coord, Coord&gt; forces) {
+<i>23</i>&nbsp;
+<b class="fc"><i>24</i>&nbsp;        validationContainer = new ValidationContainer(current, board);</b>
+<i>25</i>&nbsp;
+<b class="fc"><i>26</i>&nbsp;        ruleHandler.handleValidationRequest(validationContainer);</b>
+<i>27</i>&nbsp;
+<i>28</i>&nbsp;
+<b class="fc"><i>29</i>&nbsp;        movableSpaces.addAll(validationContainer.getMovableSpaces());</b>
+<b class="fc"><i>30</i>&nbsp;        buildableSpaces.putAll(validationContainer.getBuildableSpaces());</b>
+<b class="fc"><i>31</i>&nbsp;        forces.putAll(validationContainer.getForces());</b>
+<i>32</i>&nbsp;
+<b class="fc"><i>33</i>&nbsp;    }</b>
+<i>34</i>&nbsp;
+<i>35</i>&nbsp;    @Override
+<i>36</i>&nbsp;    public void generate(Coord after, ActionType at) {
+<b class="fc"><i>37</i>&nbsp;        ruleHandler.generate(validationContainer, after, at);</b>
+<b class="fc"><i>38</i>&nbsp;    }</b>
+<i>39</i>&nbsp;
+<i>40</i>&nbsp;    @Override
+<i>41</i>&nbsp;    public boolean checkForWin(Coord after, ActionType at) {
+<b class="fc"><i>42</i>&nbsp;        return ruleHandler.handleWinCheckRequest(validationContainer, after, at);</b>
+<i>43</i>&nbsp;    }
+<i>44</i>&nbsp;
+<i>45</i>&nbsp;    @Override
+<i>46</i>&nbsp;    public void reset() {
+<b class="fc"><i>47</i>&nbsp;        ruleHandler.reset();</b>
+<b class="fc"><i>48</i>&nbsp;    }</b>
+<i>49</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 00:11</div>
+</div>
+</body>
+</html>

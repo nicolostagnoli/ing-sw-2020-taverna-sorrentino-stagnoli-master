@@ -1,0 +1,74 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: ModelEventListener</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.listeners</a> ]
+</div>
+
+<h1>Coverage Summary for Class: ModelEventListener (it.polimi.ingsw.listeners)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">ModelEventListener</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.listeners;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.model.*;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;import java.util.List;
+<i>6</i>&nbsp;import java.util.Map;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;public interface ModelEventListener extends Listener {
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;    public void onBoardChanged(Board board);
+<i>11</i>&nbsp;    public void onGameReady(List&lt;Player&gt; players);
+<i>12</i>&nbsp;    public void onGodsChosen(List&lt;String&gt; gods);
+<i>13</i>&nbsp;    public void onPlayerAdded(String nickname, int numCurr, int numTot);
+<i>14</i>&nbsp;    public void onMessage(String message);
+<i>15</i>&nbsp;
+<i>16</i>&nbsp;    public void onGodSelection(String nickname, List&lt;String&gt; gods);
+<i>17</i>&nbsp;    public void onGodsSelection(List&lt;String&gt; gods, int numPlayers);
+<i>18</i>&nbsp;    public void onStartPlayerSelection(List&lt;String&gt; players);
+<i>19</i>&nbsp;    public void onMyInitialization(String nickname, List&lt;Coord&gt; freeSpaces);
+<i>20</i>&nbsp;
+<i>21</i>&nbsp;    public void onMyTurn(String nickname, List&lt;Coord&gt; selectableWorkers);
+<i>22</i>&nbsp;    public void onMyAction(String nickname, List&lt;Coord&gt; movableSpaces,
+<i>23</i>&nbsp;                           Map&lt;Level, List&lt;Coord&gt;&gt; buildableSpaces, boolean canEndTurn);
+<i>24</i>&nbsp;    public void onEnd();
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;    public String getNickname();
+<i>27</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 00:11</div>
+</div>
+</body>
+</html>

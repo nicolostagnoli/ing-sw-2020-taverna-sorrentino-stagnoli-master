@@ -1,0 +1,204 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Player</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.model</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Player (it.polimi.ingsw.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Player</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (11/ 11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (34/ 34)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.model;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import java.io.Serializable;
+<i>4</i>&nbsp;import java.util.ArrayList;
+<i>5</i>&nbsp;import java.util.List;
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;public class Player implements Serializable, Cloneable {
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;    private static final long serialVersionUID = 6L;
+<i>10</i>&nbsp;
+<i>11</i>&nbsp;    private final String nickname;
+<i>12</i>&nbsp;    private God god;
+<i>13</i>&nbsp;    private List&lt;Worker&gt; workersList;
+<i>14</i>&nbsp;    private Color workerColor;
+<i>15</i>&nbsp;    private boolean isStartPlayer;
+<i>16</i>&nbsp;
+<b class="fc"><i>17</i>&nbsp;    public Player(String nickname) {</b>
+<b class="fc"><i>18</i>&nbsp;        this.nickname = nickname;</b>
+<b class="fc"><i>19</i>&nbsp;        this.workerColor = null;</b>
+<b class="fc"><i>20</i>&nbsp;        this.workersList = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>21</i>&nbsp;        this.workersList.add(new Worker(this));</b>
+<b class="fc"><i>22</i>&nbsp;        this.workersList.add(new Worker(this));</b>
+<b class="fc"><i>23</i>&nbsp;        this.isStartPlayer = false;</b>
+<b class="fc"><i>24</i>&nbsp;    }</b>
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;    /**
+<i>27</i>&nbsp;     * Set the god for this player
+<i>28</i>&nbsp;     * @param god the god to set
+<i>29</i>&nbsp;     */
+<i>30</i>&nbsp;    public void setGod(God god){
+<b class="fc"><i>31</i>&nbsp;        this.god = god;</b>
+<b class="fc"><i>32</i>&nbsp;    }</b>
+<i>33</i>&nbsp;
+<i>34</i>&nbsp;    /**
+<i>35</i>&nbsp;     * Get the god of this player
+<i>36</i>&nbsp;     * @return the god of this player
+<i>37</i>&nbsp;     */
+<i>38</i>&nbsp;    public God getGod() {
+<b class="fc"><i>39</i>&nbsp;        return god;</b>
+<i>40</i>&nbsp;    }
+<i>41</i>&nbsp;
+<i>42</i>&nbsp;
+<i>43</i>&nbsp;    /**
+<i>44</i>&nbsp;     * Get a specific worker of this player
+<i>45</i>&nbsp;     * @param num the number of the worker to get (0 or 1)
+<i>46</i>&nbsp;     * @return a reference to the selected worker
+<i>47</i>&nbsp;     */
+<i>48</i>&nbsp;    public Worker getWorker(int num){
+<b class="fc"><i>49</i>&nbsp;        return workersList.get(num);</b>
+<i>50</i>&nbsp;    }
+<i>51</i>&nbsp;
+<i>52</i>&nbsp;    /**
+<i>53</i>&nbsp;     * Get all the workers of this player
+<i>54</i>&nbsp;     * @return a list containing a copy of the player&#39;s workers
+<i>55</i>&nbsp;     */
+<i>56</i>&nbsp;    public List&lt;Worker&gt; getWorkersList() {
+<b class="fc"><i>57</i>&nbsp;        List&lt;Worker&gt; result = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>58</i>&nbsp;        for (Worker w : workersList) {</b>
+<b class="fc"><i>59</i>&nbsp;            result.add(w.clone());</b>
+<b class="fc"><i>60</i>&nbsp;        }</b>
+<b class="fc"><i>61</i>&nbsp;        return result;</b>
+<i>62</i>&nbsp;    }
+<i>63</i>&nbsp;
+<i>64</i>&nbsp;    /**
+<i>65</i>&nbsp;     * Get the nickname of this player
+<i>66</i>&nbsp;     * @return the nickname of this player
+<i>67</i>&nbsp;     */
+<i>68</i>&nbsp;    public String getNickname() {
+<b class="fc"><i>69</i>&nbsp;        return nickname;</b>
+<i>70</i>&nbsp;    }
+<i>71</i>&nbsp;
+<i>72</i>&nbsp;    /**
+<i>73</i>&nbsp;     * Set the color for the workers of this player
+<i>74</i>&nbsp;     * @param c the color to be set
+<i>75</i>&nbsp;     */
+<i>76</i>&nbsp;    public void setWorkerColor(Color c) {
+<b class="fc"><i>77</i>&nbsp;        this.workerColor = c;</b>
+<b class="fc"><i>78</i>&nbsp;        this.workersList.get(0).setColor(this.workerColor);</b>
+<b class="fc"><i>79</i>&nbsp;        this.workersList.get(1).setColor(this.workerColor);</b>
+<b class="fc"><i>80</i>&nbsp;    }</b>
+<i>81</i>&nbsp;
+<i>82</i>&nbsp;    /**
+<i>83</i>&nbsp;     * Get the color of this player
+<i>84</i>&nbsp;     * @return the color of this player
+<i>85</i>&nbsp;     */
+<i>86</i>&nbsp;    public Color getWorkerColor(){
+<b class="fc"><i>87</i>&nbsp;        return this.workerColor;</b>
+<i>88</i>&nbsp;    }
+<i>89</i>&nbsp;
+<i>90</i>&nbsp;    /**
+<i>91</i>&nbsp;     * Check if this player is the starting one
+<i>92</i>&nbsp;     * @return true if this player is the start player
+<i>93</i>&nbsp;     */
+<i>94</i>&nbsp;    public boolean isStartPlayer() {
+<b class="fc"><i>95</i>&nbsp;        return isStartPlayer;</b>
+<i>96</i>&nbsp;    }
+<i>97</i>&nbsp;
+<i>98</i>&nbsp;    /**
+<i>99</i>&nbsp;     * Set this player as the start player
+<i>100</i>&nbsp;     */
+<i>101</i>&nbsp;    void setAsStartPlayer() {
+<b class="fc"><i>102</i>&nbsp;        isStartPlayer = true;</b>
+<b class="fc"><i>103</i>&nbsp;    }</b>
+<i>104</i>&nbsp;
+<i>105</i>&nbsp;    /**
+<i>106</i>&nbsp;     * Clone the player
+<i>107</i>&nbsp;     * @return a clone of this player.
+<i>108</i>&nbsp;     */
+<i>109</i>&nbsp;    @Override
+<i>110</i>&nbsp;    public Player clone() {
+<b class="fc"><i>111</i>&nbsp;        Player result = new Player(this.nickname);</b>
+<b class="fc"><i>112</i>&nbsp;        result.god = this.god;</b>
+<b class="fc"><i>113</i>&nbsp;        result.workerColor = this.workerColor;</b>
+<b class="fc"><i>114</i>&nbsp;        result.workersList = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>115</i>&nbsp;        result.workersList.add(this.workersList.get(0).clone());</b>
+<b class="fc"><i>116</i>&nbsp;        result.workersList.add(this.workersList.get(1).clone());</b>
+<b class="fc"><i>117</i>&nbsp;        result.isStartPlayer = this.isStartPlayer;</b>
+<i>118</i>&nbsp;
+<b class="fc"><i>119</i>&nbsp;        return result;</b>
+<i>120</i>&nbsp;    }
+<i>121</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 00:11</div>
+</div>
+</body>
+</html>

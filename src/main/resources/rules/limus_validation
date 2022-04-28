@@ -1,0 +1,327 @@
+rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	condition:
+		valid(sum(after, coord(1,0)))
+		sameGod(sum(after, coord(1,0)), "Limus")
+		compareLevels(after, LVL1, >0)
+	buildLevel = LVL1
+
+rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	condition:
+		valid(sum(after, coord(0,1)))
+		sameGod(sum(after, coord(0,1)), "Limus")
+		compareLevels(after, LVL1, >0)
+	buildLevel = LVL1
+
+rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	condition:
+		valid(sum(after, coord(1,1)))
+		sameGod(sum(after, coord(1,1)), "Limus")
+		compareLevels(after, LVL1, >0)
+	buildLevel = LVL1
+
+rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	condition:
+		valid(sum(after, coord(-1,0)))
+		sameGod(sum(after, coord(-1,0)), "Limus")
+		compareLevels(after, LVL1, >0)
+	buildLevel = LVL1
+
+rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	condition:
+		valid(sum(after, coord(0,-1)))
+		sameGod(sum(after, coord(0,-1)), "Limus")
+		compareLevels(after, LVL1, >0)
+	buildLevel = LVL1
+
+rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	condition:
+		valid(sum(after, coord(-1,-1)))
+		sameGod(sum(after, coord(-1,-1)), "Limus")
+		compareLevels(after, LVL1, >0)
+	buildLevel = LVL1
+
+rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	condition:
+		valid(sum(after, coord(1,-1)))
+		sameGod(sum(after, coord(1,-1)), "Limus")
+		compareLevels(after, LVL1, >0)
+	buildLevel = LVL1
+
+rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	condition:
+		valid(sum(after, coord(-1,1)))
+		sameGod(sum(after, coord(-1,1)), "Limus")
+		compareLevels(after, LVL1, >0)
+	buildLevel = LVL1
+
+rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	condition:
+		valid(sum(after, coord(1,0)))
+		sameGod(sum(after, coord(1,0)), "Limus")
+		compareLevels(after, LVL2, >0)
+	buildLevel = LVL2
+
+rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	condition:
+		valid(sum(after, coord(0,1)))
+		sameGod(sum(after, coord(0,1)), "Limus")
+		compareLevels(after, LVL2, >0)
+	buildLevel = LVL2
+
+rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	condition:
+		valid(sum(after, coord(1,1)))
+		sameGod(sum(after, coord(1,1)), "Limus")
+		compareLevels(after, LVL2, >0)
+	buildLevel = LVL2
+
+rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	condition:
+		valid(sum(after, coord(-1,0)))
+		sameGod(sum(after, coord(-1,0)), "Limus")
+		compareLevels(after, LVL2, >0)
+	buildLevel = LVL2
+
+rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	condition:
+		valid(sum(after, coord(0,-1)))
+		sameGod(sum(after, coord(0,-1)), "Limus")
+		compareLevels(after, LVL2, >0)
+	buildLevel = LVL2
+
+rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	condition:
+		valid(sum(after, coord(-1,-1)))
+		sameGod(sum(after, coord(-1,-1)), "Limus")
+		compareLevels(after, LVL2, >0)
+	buildLevel = LVL2
+
+rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	condition:
+		valid(sum(after, coord(1,-1)))
+		sameGod(sum(after, coord(1,-1)), "Limus")
+		compareLevels(after, LVL2, >0)
+	buildLevel = LVL2
+
+rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	condition:
+		valid(sum(after, coord(-1,1)))
+		sameGod(sum(after, coord(-1,1)), "Limus")
+		compareLevels(after, LVL2, >0)
+	buildLevel = LVL2
+
+rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	condition:
+		valid(sum(after, coord(1,0)))
+		sameGod(sum(after, coord(1,0)), "Limus")
+		compareLevels(after, LVL3, >0)
+	buildLevel = LVL3
+
+rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	condition:
+		valid(sum(after, coord(0,1)))
+		sameGod(sum(after, coord(0,1)), "Limus")
+		compareLevels(after, LVL3, >0)
+	buildLevel = LVL3
+
+rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	condition:
+		valid(sum(after, coord(1,1)))
+		sameGod(sum(after, coord(1,1)), "Limus")
+		compareLevels(after, LVL3, >0)
+	buildLevel = LVL3
+
+rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	condition:
+		valid(sum(after, coord(-1,0)))
+		sameGod(sum(after, coord(-1,0)), "Limus")
+		compareLevels(after, LVL3, >0)
+	buildLevel = LVL3
+
+rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	condition:
+		valid(sum(after, coord(0,-1)))
+		sameGod(sum(after, coord(0,-1)), "Limus")
+		compareLevels(after, LVL3, >0)
+	buildLevel = LVL3
+
+rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	condition:
+		valid(sum(after, coord(-1,-1)))
+		sameGod(sum(after, coord(-1,-1)), "Limus")
+		compareLevels(after, LVL3, >0)
+	buildLevel = LVL3
+
+rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	condition:
+		valid(sum(after, coord(1,-1)))
+		sameGod(sum(after, coord(1,-1)), "Limus")
+		compareLevels(after, LVL3, >0)
+	buildLevel = LVL3
+
+rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	condition:
+		valid(sum(after, coord(-1,1)))
+		sameGod(sum(after, coord(-1,1)), "Limus")
+		compareLevels(after, LVL3, >0)
+	buildLevel = LVL3
+
+rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	condition:
+		valid(sum(after, coord(1,0)))
+		sameGod(sum(after, coord(1,0)), "Limus")
+		compareLevels(after, DOME, >0)
+		negate(compareLevels(after, LVL3, =0))
+	buildLevel = DOME
+
+rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	condition:
+		valid(sum(after, coord(0,1)))
+		sameGod(sum(after, coord(0,1)), "Limus")
+		compareLevels(after, DOME, >0)
+		negate(compareLevels(after, LVL3, =0))
+	buildLevel = DOME
+
+rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	condition:
+		valid(sum(after, coord(1,1)))
+		sameGod(sum(after, coord(1,1)), "Limus")
+		compareLevels(after, DOME, >0)
+		negate(compareLevels(after, LVL3, =0))
+	buildLevel = DOME
+
+rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	condition:
+		valid(sum(after, coord(-1,0)))
+		sameGod(sum(after, coord(-1,0)), "Limus")
+		compareLevels(after, DOME, >0)
+		negate(compareLevels(after, LVL3, =0))
+	buildLevel = DOME
+
+rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	condition:
+		valid(sum(after, coord(0,-1)))
+		sameGod(sum(after, coord(0,-1)), "Limus")
+		compareLevels(after, DOME, >0)
+		negate(compareLevels(after, LVL3, =0))
+	buildLevel = DOME
+
+rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	condition:
+		valid(sum(after, coord(-1,-1)))
+		sameGod(sum(after, coord(-1,-1)), "Limus")
+		compareLevels(after, DOME, >0)
+		negate(compareLevels(after, LVL3, =0))
+	buildLevel = DOME
+
+rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	condition:
+		valid(sum(after, coord(1,-1)))
+		sameGod(sum(after, coord(1,-1)), "Limus")
+		compareLevels(after, DOME, >0)
+		negate(compareLevels(after, LVL3, =0))
+	buildLevel = DOME
+
+rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	condition:
+		valid(sum(after, coord(-1,1)))
+		sameGod(sum(after, coord(-1,1)), "Limus")
+		compareLevels(after, DOME, >0)
+		negate(compareLevels(after, LVL3, =0))
+	buildLevel = DOME

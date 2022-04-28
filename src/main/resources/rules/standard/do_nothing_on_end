@@ -1,0 +1,9 @@
+rule:
+	purpose = GENERATION
+	actionType = END
+	target = MYSELF
+	id = unique
+
+secondary file:
+	source = rules/standard/deny_all
+	generatedBy = unique

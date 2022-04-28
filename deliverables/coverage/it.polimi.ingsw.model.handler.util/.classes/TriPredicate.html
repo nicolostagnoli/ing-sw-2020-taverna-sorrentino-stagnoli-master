@@ -1,0 +1,120 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: TriPredicate</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.model.handler.util</a> ]
+</div>
+
+<h1>Coverage Summary for Class: TriPredicate (it.polimi.ingsw.model.handler.util)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TriPredicate</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (3/ 3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/ 5)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.model.handler.util;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import java.util.Objects;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;/**
+<i>6</i>&nbsp; * Represents a predicate (boolean-valued function) of three arguments.
+<i>7</i>&nbsp; * This is the three-arity specialization of {@link java.util.function.Predicate}.
+<i>8</i>&nbsp; * @param &lt;T&gt; the type of the first argument to the predicate
+<i>9</i>&nbsp; * @param &lt;U&gt; the type of the second argument to the predicate
+<i>10</i>&nbsp; * @param &lt;R&gt; the type of the third argument to the predicate
+<i>11</i>&nbsp; */
+<i>12</i>&nbsp;@FunctionalInterface
+<i>13</i>&nbsp;public interface TriPredicate&lt;T, U, R&gt; {
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;    /**
+<i>16</i>&nbsp;     * Evaluates this predicate on the given arguments.
+<i>17</i>&nbsp;     * @param t the first input argument
+<i>18</i>&nbsp;     * @param u the second input argument
+<i>19</i>&nbsp;     * @param r the third input argument
+<i>20</i>&nbsp;     * @return true if the input arguments match the predicate, otherwise false
+<i>21</i>&nbsp;     */
+<i>22</i>&nbsp;    boolean test(T t, U u, R r);
+<i>23</i>&nbsp;
+<i>24</i>&nbsp;    default TriPredicate&lt;T, U, R&gt; negate() {
+<b class="fc"><i>25</i>&nbsp;        return (t, u, r) -&gt; !test(t, u, r);</b>
+<i>26</i>&nbsp;    }
+<i>27</i>&nbsp;
+<i>28</i>&nbsp;    default TriPredicate&lt;T, U, R&gt; and(TriPredicate&lt;? super T, ? super U, ? super R&gt; other) {
+<b class="fc"><i>29</i>&nbsp;        Objects.requireNonNull(other);</b>
+<b class="fc"><i>30</i>&nbsp;        return (t, u, r) -&gt; test(t, u, r) &amp;&amp; other.test(t, u, r);</b>
+<i>31</i>&nbsp;    }
+<i>32</i>&nbsp;
+<i>33</i>&nbsp;    default TriPredicate&lt;T, U, R&gt; or(TriPredicate&lt;? super T, ? super U, ? super R&gt; other) {
+<b class="fc"><i>34</i>&nbsp;        Objects.requireNonNull(other);</b>
+<b class="fc"><i>35</i>&nbsp;        return (t, u, r) -&gt; test(t, u, r) || other.test(t, u, r);</b>
+<i>36</i>&nbsp;    }
+<i>37</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 00:11</div>
+</div>
+</body>
+</html>

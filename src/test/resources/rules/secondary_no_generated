@@ -1,0 +1,10 @@
+rule:
+	purpose = generation
+	actionType = move
+	target = myself
+	id = ABC
+
+secondary rule:
+	purpose = validation
+	actionType = move
+	decision = deny

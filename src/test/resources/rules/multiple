@@ -1,0 +1,15 @@
+rule:
+	purpose = validation
+	actionType = move
+	decision = grant
+	condition:
+		negate(occupied(after))
+	forceSpaceFunction = sum(after, diff(after, before))
+
+rule:
+	purpose = validation
+	actionType = build
+	decision = deny
+	buildLevel = LVL2
+	condition:
+		occupied(sum(after, coord(1,1)))

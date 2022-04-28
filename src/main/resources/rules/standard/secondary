@@ -1,0 +1,21 @@
+file:
+	source = rules/standard/build_up
+
+rule:
+	purpose = VALIDATION
+	actionType = MOVE
+	decision = DENY
+
+rule:
+	purpose = GENERATION
+	actionType = BUILD
+	target = MYSELF
+	id = gen_build
+
+secondary file:
+	source = rules/standard/deny_all
+	generatedBy = gen_build
+
+secondary file:
+	source = rules/standard/do_nothing_on_end
+	generatedBy = gen_build

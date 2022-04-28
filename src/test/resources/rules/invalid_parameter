@@ -1,0 +1,5 @@
+rule:
+	actionType = build
+	id = ABC
+	invalid = value
+	purpose = generation

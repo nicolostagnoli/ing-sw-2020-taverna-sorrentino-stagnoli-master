@@ -1,0 +1,23 @@
+controllare che dopo una move/force lo spazio occupato dal worker precedentemente risulti vuoto e la nuova
+    posizione risulti occupata (tranne nel caso di sostituzioni di posizioni: vedi Apollo)
+controllare che non si possa agire nel turno degli altri
+controllare che nel proprio turno non si possano effettuare azioni coi worker degli altri player
+    (attenzione alle forzature)
+controllare che effettivamente i livelli dopo una build vengano aggiornati
+controllare l'impossibilità di costruire e/o muoversi in una casella con DOME
+controllare che una volta mosso un worker non si possa costruire con l'altro
+controllare che salendo spontaneamente a un terzo livello la partita termini
+controllare che spostarsi da terzo livello a terzo livello non faccia vincere la partita
+controllare che forzare un worker al terzo livello non faccia vincere la partita
+controllare che la turnazione sia sempre la stessa (A->B->C->A->B->C....)
+controllare che i non-challenger non possano svolgere operazioni del challenger
+controllare che il challenger sia l'ultimo a selezionare il proprio God
+controllare che non ci sia più di un worker su una stessa casella ------------ MESSO
+controllare che il blocco costruito sia nel raggio di costruzione del worker selezionato
+controllare che ogni giocatore abbia God diversi ---------- MESSO
+controllare che non ci siano null nella workersList dei players
+controllare che, se si è dopo il setup, ogni worker abbia coordinate non nulle
+controllare che, se si è dopo il setup, ogni view abbia setupDone==true
+standardRules.length()==4
+Il turn originale non è stato modificato in simulate()
+La board originale non è stata modificata in simulate()

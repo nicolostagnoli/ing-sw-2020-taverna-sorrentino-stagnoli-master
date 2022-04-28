@@ -1,0 +1,640 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: ClientCLI</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.client</a> ]
+</div>
+
+<h1>Coverage Summary for Class: ClientCLI (it.polimi.ingsw.client)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ClientCLI</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 306)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">ClientCLI$MessageReceiver</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 3)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 16)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 309)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.client;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.model.Board;
+<i>4</i>&nbsp;import it.polimi.ingsw.model.Coord;
+<i>5</i>&nbsp;import it.polimi.ingsw.model.Level;
+<i>6</i>&nbsp;import it.polimi.ingsw.observer.Observer;
+<i>7</i>&nbsp;import it.polimi.ingsw.server.Connection;
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;import java.io.PrintStream;
+<i>10</i>&nbsp;import java.util.ArrayList;
+<i>11</i>&nbsp;import java.util.List;
+<i>12</i>&nbsp;import java.util.Map;
+<i>13</i>&nbsp;import java.util.Scanner;
+<i>14</i>&nbsp;import java.util.concurrent.*;
+<i>15</i>&nbsp;
+<i>16</i>&nbsp;public class ClientCLI {
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;    private PrintStream outputStream;
+<i>19</i>&nbsp;    private Scanner s;
+<i>20</i>&nbsp;
+<i>21</i>&nbsp;    //used for reacting when a message arrives from the server
+<b class="nc"><i>22</i>&nbsp;    private class MessageReceiver implements Observer&lt;Object&gt; {</b>
+<i>23</i>&nbsp;        @Override
+<i>24</i>&nbsp;        public void update(Object message) {
+<i>25</i>&nbsp;            //System.out.println(&quot;Received: &quot; + message.toString());
+<b class="nc"><i>26</i>&nbsp;            receivedObject = message;</b>
+<b class="nc"><i>27</i>&nbsp;            handleMessageReceived();</b>
+<i>28</i>&nbsp;        }
+<i>29</i>&nbsp;    }
+<i>30</i>&nbsp;
+<i>31</i>&nbsp;    private Object receivedObject;
+<i>32</i>&nbsp;    private Connection serverConnection;
+<i>33</i>&nbsp;
+<i>34</i>&nbsp;    private boolean isChallenger;
+<b class="nc"><i>35</i>&nbsp;    private String nickname = &quot;&quot;;</b>
+<i>36</i>&nbsp;
+<i>37</i>&nbsp;    private ExecutorService exec;
+<i>38</i>&nbsp;
+<b class="nc"><i>39</i>&nbsp;    public ClientCLI(Connection serverConnection, boolean isChallenger, String nickname){</b>
+<i>40</i>&nbsp;        //initialize connection object to send/receive objects from the server
+<b class="nc"><i>41</i>&nbsp;        this.serverConnection = serverConnection;</b>
+<b class="nc"><i>42</i>&nbsp;        this.serverConnection.addObserver(new MessageReceiver());</b>
+<i>43</i>&nbsp;
+<b class="nc"><i>44</i>&nbsp;        this.outputStream = new PrintStream(System.out);</b>
+<b class="nc"><i>45</i>&nbsp;        this.s = new Scanner(System.in);</b>
+<i>46</i>&nbsp;
+<b class="nc"><i>47</i>&nbsp;        this.isChallenger = isChallenger;</b>
+<b class="nc"><i>48</i>&nbsp;        this.nickname = nickname;</b>
+<i>49</i>&nbsp;
+<b class="nc"><i>50</i>&nbsp;        exec = Executors.newFixedThreadPool(1);</b>
+<i>51</i>&nbsp;    }
+<i>52</i>&nbsp;
+<i>53</i>&nbsp;    private void handleMessageReceived(){
+<i>54</i>&nbsp;        List&lt;Object&gt; objs;
+<b class="nc"><i>55</i>&nbsp;        if(receivedObject instanceof List)</b>
+<b class="nc"><i>56</i>&nbsp;            objs = (List&lt;Object&gt;) receivedObject;</b>
+<i>57</i>&nbsp;        else {
+<b class="nc"><i>58</i>&nbsp;            outputStream.println(&quot;Something went wrong in handling received message&quot;);</b>
+<i>59</i>&nbsp;            return;
+<i>60</i>&nbsp;        }
+<b class="nc"><i>61</i>&nbsp;        String event = (String) objs.get(0);</b>
+<i>62</i>&nbsp;
+<b class="nc"><i>63</i>&nbsp;        switch (event) {</b>
+<i>64</i>&nbsp;            //MODEL MESSAGES
+<i>65</i>&nbsp;            case &quot;onBoardChanged&quot;:
+<b class="nc"><i>66</i>&nbsp;                Board b = (Board)objs.get(1);</b>
+<b class="nc"><i>67</i>&nbsp;                outputStream.println(b.toString());</b>
+<b class="nc"><i>68</i>&nbsp;                break;</b>
+<i>69</i>&nbsp;
+<i>70</i>&nbsp;            case &quot;onGameReady&quot;:
+<b class="nc"><i>71</i>&nbsp;                outputStream.println(&quot;Set up phase is done!&quot;);</b>
+<b class="nc"><i>72</i>&nbsp;                break;</b>
+<i>73</i>&nbsp;
+<i>74</i>&nbsp;            case &quot;onGodsChosen&quot;:
+<b class="nc"><i>75</i>&nbsp;                outputStream.println(&quot;Challenger has chosen the playable gods&quot;);</b>
+<b class="nc"><i>76</i>&nbsp;                List&lt;String&gt; selectedGods = (List&lt;String&gt;) objs.get(1);</b>
+<b class="nc"><i>77</i>&nbsp;                for (String s : selectedGods){</b>
+<b class="nc"><i>78</i>&nbsp;                    outputStream.println(&quot;- &quot; + s);</b>
+<b class="nc"><i>79</i>&nbsp;                }</b>
+<b class="nc"><i>80</i>&nbsp;                break;</b>
+<i>81</i>&nbsp;
+<i>82</i>&nbsp;            case &quot;onPlayerAdded&quot;:
+<b class="nc"><i>83</i>&nbsp;                String newPlayer = (String) objs.get(1);</b>
+<b class="nc"><i>84</i>&nbsp;                int numCurr = (int) objs.get(2);</b>
+<b class="nc"><i>85</i>&nbsp;                int numTot = (int) objs.get(3);</b>
+<b class="nc"><i>86</i>&nbsp;                outputStream.println(newPlayer + &quot; has joined the game. Waiting for &quot; + (numTot-numCurr) + &quot; more player(s)&quot;);</b>
+<b class="nc"><i>87</i>&nbsp;                break;</b>
+<i>88</i>&nbsp;
+<i>89</i>&nbsp;            case &quot;onMessage&quot;:
+<b class="nc"><i>90</i>&nbsp;                String message = (String)((List&lt;Object&gt;) receivedObject).get(1);</b>
+<b class="nc"><i>91</i>&nbsp;                outputStream.println(message);</b>
+<b class="nc"><i>92</i>&nbsp;                if(message.equals(&quot;disconnected&quot;)){</b>
+<b class="nc"><i>93</i>&nbsp;                    outputStream.println(&quot;A client disconnected from the game, disconnecting...&quot;);</b>
+<b class="nc"><i>94</i>&nbsp;                    this.stop();</b>
+<i>95</i>&nbsp;                }
+<i>96</i>&nbsp;                break;
+<i>97</i>&nbsp;
+<i>98</i>&nbsp;            case &quot;onGodSelection&quot;:
+<b class="nc"><i>99</i>&nbsp;                String currPlayer = (String) objs.get(1);</b>
+<b class="nc"><i>100</i>&nbsp;                List&lt;String&gt; godsForSelection = (List&lt;String&gt;) objs.get(2);</b>
+<b class="nc"><i>101</i>&nbsp;                if(currPlayer.equals(nickname)){</b>
+<b class="nc"><i>102</i>&nbsp;                    onGodSelection(godsForSelection);</b>
+<i>103</i>&nbsp;                }else{
+<b class="nc"><i>104</i>&nbsp;                    outputStream.println(currPlayer + &quot; is choosing his god...&quot;);</b>
+<i>105</i>&nbsp;                }
+<i>106</i>&nbsp;
+<b class="nc"><i>107</i>&nbsp;                break;</b>
+<i>108</i>&nbsp;
+<i>109</i>&nbsp;            case &quot;onGodsSelection&quot;:
+<b class="nc"><i>110</i>&nbsp;                if (isChallenger) {</b>
+<b class="nc"><i>111</i>&nbsp;                    List&lt;String&gt; allGods = (List&lt;String&gt;) objs.get(1);</b>
+<b class="nc"><i>112</i>&nbsp;                    int numPlayers = (int) objs.get(2);</b>
+<b class="nc"><i>113</i>&nbsp;                    onGodsSelection(allGods, numPlayers);</b>
+<b class="nc"><i>114</i>&nbsp;                } else</b>
+<b class="nc"><i>115</i>&nbsp;                    outputStream.println(&quot;The challenger is choosing the gods&quot;);</b>
+<b class="nc"><i>116</i>&nbsp;                break;</b>
+<i>117</i>&nbsp;
+<i>118</i>&nbsp;            case &quot;onMyInitialization&quot;:
+<b class="nc"><i>119</i>&nbsp;                String currPlayerr = (String) objs.get(1);</b>
+<b class="nc"><i>120</i>&nbsp;                List&lt;Coord&gt; freeSpaces = (List&lt;Coord&gt;) objs.get(2);</b>
+<b class="nc"><i>121</i>&nbsp;                if(currPlayerr.equals(nickname)) {</b>
+<b class="nc"><i>122</i>&nbsp;                    onMyInitialization(freeSpaces);</b>
+<i>123</i>&nbsp;                }else{
+<b class="nc"><i>124</i>&nbsp;                    outputStream.println(currPlayerr + &quot; is placing his workers...&quot;);</b>
+<i>125</i>&nbsp;                }
+<b class="nc"><i>126</i>&nbsp;                break;</b>
+<i>127</i>&nbsp;
+<i>128</i>&nbsp;            case &quot;onMyTurn&quot;:
+<b class="nc"><i>129</i>&nbsp;                String currPlayerrr = (String) objs.get(1);</b>
+<b class="nc"><i>130</i>&nbsp;                List&lt;Coord&gt; selectableWorkers = (List&lt;Coord&gt;) objs.get(2);</b>
+<b class="nc"><i>131</i>&nbsp;                if(currPlayerrr.equals(nickname)) {</b>
+<b class="nc"><i>132</i>&nbsp;                    onMyTurn(selectableWorkers);</b>
+<i>133</i>&nbsp;                }else{
+<b class="nc"><i>134</i>&nbsp;                    outputStream.println(currPlayerrr + &quot;&#39;s turn.&quot;);</b>
+<i>135</i>&nbsp;                }
+<b class="nc"><i>136</i>&nbsp;                break;</b>
+<i>137</i>&nbsp;
+<i>138</i>&nbsp;            case &quot;onMyAction&quot;:
+<b class="nc"><i>139</i>&nbsp;                String currPlayerrrr = (String) objs.get(1);</b>
+<b class="nc"><i>140</i>&nbsp;                List&lt;Coord&gt; movableSpaces = (List&lt;Coord&gt;) objs.get(2);</b>
+<b class="nc"><i>141</i>&nbsp;                Map&lt;Level, List&lt;Coord&gt;&gt; buildableSpaces = (Map&lt;Level, List&lt;Coord&gt;&gt;) objs.get(3);</b>
+<b class="nc"><i>142</i>&nbsp;                boolean canEndTurn = (boolean) objs.get(4);</b>
+<b class="nc"><i>143</i>&nbsp;                if(currPlayerrrr.equals(nickname)) {</b>
+<b class="nc"><i>144</i>&nbsp;                    onMyAction(movableSpaces, buildableSpaces, canEndTurn);</b>
+<i>145</i>&nbsp;                }
+<i>146</i>&nbsp;                break;
+<i>147</i>&nbsp;
+<i>148</i>&nbsp;            case &quot;onStartPlayerSelection&quot;:
+<b class="nc"><i>149</i>&nbsp;                if(isChallenger){</b>
+<b class="nc"><i>150</i>&nbsp;                    List&lt;String&gt; players = (List&lt;String&gt;) objs.get(1);</b>
+<b class="nc"><i>151</i>&nbsp;                    onStartPlayerSelection(players);</b>
+<b class="nc"><i>152</i>&nbsp;                }</b>
+<i>153</i>&nbsp;                else {
+<b class="nc"><i>154</i>&nbsp;                    System.out.println(&quot;Challenger is choosing the starting player&quot;);</b>
+<i>155</i>&nbsp;                }
+<b class="nc"><i>156</i>&nbsp;                break;</b>
+<i>157</i>&nbsp;
+<i>158</i>&nbsp;            case &quot;onEnd&quot;:
+<b class="nc"><i>159</i>&nbsp;                outputStream.println(&quot;Game Ended&quot;);</b>
+<b class="nc"><i>160</i>&nbsp;                this.onEnd();</b>
+<b class="nc"><i>161</i>&nbsp;                break;</b>
+<i>162</i>&nbsp;
+<i>163</i>&nbsp;            default:
+<b class="nc"><i>164</i>&nbsp;                outputStream.println(&quot;Event message not recognized.&quot;);</b>
+<i>165</i>&nbsp;                break;
+<i>166</i>&nbsp;        }
+<i>167</i>&nbsp;    }
+<i>168</i>&nbsp;
+<i>169</i>&nbsp;    private void onGodSelection(List&lt;String&gt; gods){
+<i>170</i>&nbsp;
+<b class="nc"><i>171</i>&nbsp;        boolean correct = false;</b>
+<i>172</i>&nbsp;
+<b class="nc"><i>173</i>&nbsp;        while (!correct){</b>
+<b class="nc"><i>174</i>&nbsp;            outputStream.println(&quot;Choose a God, you can use \&quot;[god_name] help\&quot; to read the power of the God: &quot;);</b>
+<b class="nc"><i>175</i>&nbsp;            for (String g : gods) {</b>
+<b class="nc"><i>176</i>&nbsp;                outputStream.println(&quot;- &quot; + g);</b>
+<b class="nc"><i>177</i>&nbsp;            }</b>
+<i>178</i>&nbsp;
+<b class="nc"><i>179</i>&nbsp;            String input = s.nextLine();</b>
+<i>180</i>&nbsp;
+<b class="nc"><i>181</i>&nbsp;            for(String g : gods){</b>
+<b class="nc"><i>182</i>&nbsp;                if (input.toLowerCase().equals(g.toLowerCase())){</b>
+<b class="nc"><i>183</i>&nbsp;                    correct = true;</b>
+<b class="nc"><i>184</i>&nbsp;                    break;</b>
+<i>185</i>&nbsp;                }
+<b class="nc"><i>186</i>&nbsp;            }</b>
+<i>187</i>&nbsp;
+<b class="nc"><i>188</i>&nbsp;            if (correct){</b>
+<b class="nc"><i>189</i>&nbsp;                List&lt;Object&gt; objects = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>190</i>&nbsp;                objects.add(&quot;onGodChosen&quot;);</b>
+<b class="nc"><i>191</i>&nbsp;                objects.add(input);</b>
+<b class="nc"><i>192</i>&nbsp;                serverConnection.asyncSend(objects);</b>
+<b class="nc"><i>193</i>&nbsp;                if(gods.size() != 1) { //if i am the last to choose, do not print</b>
+<b class="nc"><i>194</i>&nbsp;                    outputStream.println(&quot;Waiting for other players to choose their god...&quot;);</b>
+<i>195</i>&nbsp;                }
+<i>196</i>&nbsp;            }
+<b class="nc"><i>197</i>&nbsp;        }</b>
+<i>198</i>&nbsp;    }
+<i>199</i>&nbsp;
+<i>200</i>&nbsp;    private void onGodsSelection(List&lt;String&gt; gods, int numPlayers) {
+<b class="nc"><i>201</i>&nbsp;        outputStream.println(&quot;Choose the gods to use in this game: &quot;);</b>
+<b class="nc"><i>202</i>&nbsp;        gods.forEach(outputStream::println);</b>
+<b class="nc"><i>203</i>&nbsp;        boolean valid = false;</b>
+<b class="nc"><i>204</i>&nbsp;        boolean godIsOk = false;</b>
+<b class="nc"><i>205</i>&nbsp;        List&lt;Object&gt; objects = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>206</i>&nbsp;        List&lt;String&gt; choices = new ArrayList&lt;&gt;();</b>
+<i>207</i>&nbsp;
+<b class="nc"><i>208</i>&nbsp;        while (!valid){</b>
+<b class="nc"><i>209</i>&nbsp;            String input = s.nextLine();</b>
+<b class="nc"><i>210</i>&nbsp;            input = input.toLowerCase();</b>
+<i>211</i>&nbsp;
+<b class="nc"><i>212</i>&nbsp;            for (String god : gods) {</b>
+<b class="nc"><i>213</i>&nbsp;                if (god.toLowerCase().equals(input)) {</b>
+<b class="nc"><i>214</i>&nbsp;                    choices.add(god);</b>
+<b class="nc"><i>215</i>&nbsp;                    godIsOk = true;</b>
+<b class="nc"><i>216</i>&nbsp;                    break;</b>
+<i>217</i>&nbsp;                }
+<b class="nc"><i>218</i>&nbsp;            }</b>
+<i>219</i>&nbsp;
+<b class="nc"><i>220</i>&nbsp;            if (choices.size() == numPlayers){</b>
+<b class="nc"><i>221</i>&nbsp;                valid = true;</b>
+<b class="nc"><i>222</i>&nbsp;                objects.add(&quot;onGodsChosen&quot;);</b>
+<b class="nc"><i>223</i>&nbsp;                objects.add(choices);</b>
+<b class="nc"><i>224</i>&nbsp;                serverConnection.asyncSend(objects);</b>
+<i>225</i>&nbsp;            } else
+<b class="nc"><i>226</i>&nbsp;                outputStream.println(&quot;Choose another god&quot;);</b>
+<i>227</i>&nbsp;
+<b class="nc"><i>228</i>&nbsp;            if(godIsOk)</b>
+<b class="nc"><i>229</i>&nbsp;                godIsOk = false;</b>
+<i>230</i>&nbsp;            else
+<b class="nc"><i>231</i>&nbsp;                outputStream.println(&quot;Invalid input&quot;);</b>
+<b class="nc"><i>232</i>&nbsp;        }</b>
+<i>233</i>&nbsp;    }
+<i>234</i>&nbsp;
+<i>235</i>&nbsp;    private void onStartPlayerSelection(List&lt;String&gt; players) {
+<b class="nc"><i>236</i>&nbsp;        outputStream.println(&quot;Choose the starting player: &quot;);</b>
+<b class="nc"><i>237</i>&nbsp;        List&lt;Object&gt; objects = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>238</i>&nbsp;        objects.add(&quot;onStartPlayerChosen&quot;);</b>
+<i>239</i>&nbsp;
+<b class="nc"><i>240</i>&nbsp;        for (int i = 0; i&lt;players.size(); i++) {</b>
+<b class="nc"><i>241</i>&nbsp;            outputStream.println( (i+1) + &quot; &quot; + players.get(i));</b>
+<i>242</i>&nbsp;        }
+<i>243</i>&nbsp;
+<b class="nc"><i>244</i>&nbsp;        boolean valid = false;</b>
+<i>245</i>&nbsp;
+<b class="nc"><i>246</i>&nbsp;        while (!valid){</b>
+<b class="nc"><i>247</i>&nbsp;            String input = s.nextLine();</b>
+<i>248</i>&nbsp;
+<b class="nc"><i>249</i>&nbsp;            if (input.equals(&quot;1&quot;) || input.toLowerCase().equals(players.get(0).toLowerCase())){</b>
+<b class="nc"><i>250</i>&nbsp;                valid = true;</b>
+<b class="nc"><i>251</i>&nbsp;                objects.add(players.get(0));</b>
+<b class="nc"><i>252</i>&nbsp;                serverConnection.asyncSend(objects);</b>
+<b class="nc"><i>253</i>&nbsp;            }else if (input.equals(&quot;2&quot;) || input.toLowerCase().equals(players.get(1).toLowerCase())){</b>
+<b class="nc"><i>254</i>&nbsp;                valid = true;</b>
+<b class="nc"><i>255</i>&nbsp;                objects.add(players.get(1));</b>
+<b class="nc"><i>256</i>&nbsp;                serverConnection.asyncSend(objects);</b>
+<b class="nc"><i>257</i>&nbsp;            }else if (input.equals(&quot;3&quot;) || input.toLowerCase().equals(players.get(2).toLowerCase())){</b>
+<b class="nc"><i>258</i>&nbsp;                valid = true;</b>
+<b class="nc"><i>259</i>&nbsp;                objects.add(players.get(2));</b>
+<b class="nc"><i>260</i>&nbsp;                serverConnection.asyncSend(objects);</b>
+<i>261</i>&nbsp;            } else {
+<b class="nc"><i>262</i>&nbsp;                outputStream.println(&quot;Invalid nickname&quot;);</b>
+<i>263</i>&nbsp;            }
+<b class="nc"><i>264</i>&nbsp;        }</b>
+<i>265</i>&nbsp;
+<i>266</i>&nbsp;    }
+<i>267</i>&nbsp;
+<i>268</i>&nbsp;    private void onMyInitialization(List&lt;Coord&gt; freeSpaces) {
+<b class="nc"><i>269</i>&nbsp;        boolean valid = false;</b>
+<b class="nc"><i>270</i>&nbsp;        List&lt;Object&gt; objects = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>271</i>&nbsp;        objects.add(&quot;onWorkerInitialization&quot;);</b>
+<i>272</i>&nbsp;
+<b class="nc"><i>273</i>&nbsp;        outputStream.println(&quot;Where do you want to place your worker (insert coordinates like: A1, B2... from A to E, from 1 to 5)?&quot;);</b>
+<b class="nc"><i>274</i>&nbsp;        while (!valid) {</b>
+<b class="nc"><i>275</i>&nbsp;            String input  = s.nextLine();</b>
+<i>276</i>&nbsp;            try{
+<b class="nc"><i>277</i>&nbsp;                Coord c = Coord.convertStringToCoord(input);</b>
+<b class="nc"><i>278</i>&nbsp;                if (freeSpaces.contains(c)){</b>
+<i>279</i>&nbsp;                    try{
+<b class="nc"><i>280</i>&nbsp;                        valid = true;</b>
+<b class="nc"><i>281</i>&nbsp;                        objects.add(c);</b>
+<b class="nc"><i>282</i>&nbsp;                        serverConnection.asyncSend(objects);</b>
+<b class="nc"><i>283</i>&nbsp;                    } catch (Exception e) {</b>
+<b class="nc"><i>284</i>&nbsp;                        e.printStackTrace();</b>
+<b class="nc"><i>285</i>&nbsp;                    }</b>
+<i>286</i>&nbsp;                }
+<i>287</i>&nbsp;                else{
+<b class="nc"><i>288</i>&nbsp;                    outputStream.println(&quot;Invalid input&quot;);</b>
+<i>289</i>&nbsp;                }
+<b class="nc"><i>290</i>&nbsp;            } catch (Exception e) {</b>
+<b class="nc"><i>291</i>&nbsp;                outputStream.println(&quot;Invalid input&quot;);</b>
+<b class="nc"><i>292</i>&nbsp;            }</b>
+<b class="nc"><i>293</i>&nbsp;        }</b>
+<i>294</i>&nbsp;
+<i>295</i>&nbsp;    }
+<i>296</i>&nbsp;
+<i>297</i>&nbsp;    private void onMyTurn(List&lt;Coord&gt; selectableWorkers) {
+<i>298</i>&nbsp;
+<b class="nc"><i>299</i>&nbsp;        boolean correct = false;</b>
+<b class="nc"><i>300</i>&nbsp;        List&lt;Object&gt; objects = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>301</i>&nbsp;        objects.add(&quot;onWorkerChosen&quot;);</b>
+<i>302</i>&nbsp;
+<b class="nc"><i>303</i>&nbsp;        while (!correct){</b>
+<b class="nc"><i>304</i>&nbsp;            outputStream.println(&quot;Please select the worker to use in this turn, using its position: &quot;);</b>
+<b class="nc"><i>305</i>&nbsp;            String input = s.nextLine();</b>
+<i>306</i>&nbsp;            try {
+<b class="nc"><i>307</i>&nbsp;                Coord c = Coord.convertStringToCoord(input);</b>
+<i>308</i>&nbsp;
+<b class="nc"><i>309</i>&nbsp;                if (selectableWorkers.contains(c))</b>
+<b class="nc"><i>310</i>&nbsp;                    correct = true;</b>
+<i>311</i>&nbsp;
+<b class="nc"><i>312</i>&nbsp;                if (correct){</b>
+<i>313</i>&nbsp;                    try{
+<b class="nc"><i>314</i>&nbsp;                        objects.add(c);</b>
+<b class="nc"><i>315</i>&nbsp;                        serverConnection.asyncSend(objects);</b>
+<b class="nc"><i>316</i>&nbsp;                    } catch (Exception e){</b>
+<b class="nc"><i>317</i>&nbsp;                        e.printStackTrace();</b>
+<b class="nc"><i>318</i>&nbsp;                    }</b>
+<i>319</i>&nbsp;                }
+<b class="nc"><i>320</i>&nbsp;            } catch (Exception e) {</b>
+<b class="nc"><i>321</i>&nbsp;                outputStream.println(&quot;Invalid input&quot;);</b>
+<b class="nc"><i>322</i>&nbsp;            }</b>
+<b class="nc"><i>323</i>&nbsp;        }</b>
+<i>324</i>&nbsp;    }
+<i>325</i>&nbsp;
+<i>326</i>&nbsp;    private void onMyAction(List&lt;Coord&gt; movableSpaces, Map&lt;Level, List&lt;Coord&gt;&gt; buildableSpaces, boolean canEndTurn) {
+<i>327</i>&nbsp;
+<i>328</i>&nbsp;        // String colors
+<i>329</i>&nbsp;        //String selectable = &quot;\u001B[97m&quot;; // Bright white
+<i>330</i>&nbsp;        // It doesn&#39;t print on IntelliJ white console...
+<b class="nc"><i>331</i>&nbsp;        String selectable = &quot;\u001B[0m&quot;; // Standard</b>
+<b class="nc"><i>332</i>&nbsp;        String nonSelectable = &quot;\u001B[90m&quot;; // Grey</b>
+<b class="nc"><i>333</i>&nbsp;        String reset = &quot;\u001B[0m&quot;; // Standard</b>
+<i>334</i>&nbsp;
+<i>335</i>&nbsp;        //booleans for the menu
+<b class="nc"><i>336</i>&nbsp;        boolean[] valid = new boolean[3];</b>
+<b class="nc"><i>337</i>&nbsp;        boolean correctInput = false;</b>
+<b class="nc"><i>338</i>&nbsp;        boolean isBuild = false;</b>
+<i>339</i>&nbsp;
+<i>340</i>&nbsp;        // Menu
+<i>341</i>&nbsp;
+<b class="nc"><i>342</i>&nbsp;        outputStream.println(&quot;What would you like to do?&quot;);</b>
+<i>343</i>&nbsp;
+<b class="nc"><i>344</i>&nbsp;        if (movableSpaces.isEmpty())</b>
+<b class="nc"><i>345</i>&nbsp;            outputStream.println(nonSelectable + &quot;1. Move&quot; + reset);</b>
+<i>346</i>&nbsp;        else {
+<b class="nc"><i>347</i>&nbsp;            outputStream.println(selectable + &quot;1. Move&quot; + reset);</b>
+<b class="nc"><i>348</i>&nbsp;            valid[0] = true;</b>
+<i>349</i>&nbsp;        }
+<i>350</i>&nbsp;
+<b class="nc"><i>351</i>&nbsp;        for (List&lt;Coord&gt; list : buildableSpaces.values()){</b>
+<b class="nc"><i>352</i>&nbsp;            if (!list.isEmpty()) {</b>
+<b class="nc"><i>353</i>&nbsp;                isBuild = true;</b>
+<b class="nc"><i>354</i>&nbsp;                break;</b>
+<i>355</i>&nbsp;            }
+<b class="nc"><i>356</i>&nbsp;        }</b>
+<i>357</i>&nbsp;
+<b class="nc"><i>358</i>&nbsp;        if (!isBuild)</b>
+<b class="nc"><i>359</i>&nbsp;            outputStream.println(nonSelectable + &quot;2. Build&quot; + reset);</b>
+<i>360</i>&nbsp;        else {
+<b class="nc"><i>361</i>&nbsp;            outputStream.println(selectable + &quot;2. Build&quot; + reset);</b>
+<b class="nc"><i>362</i>&nbsp;            valid[1] = true;</b>
+<i>363</i>&nbsp;        }
+<i>364</i>&nbsp;
+<b class="nc"><i>365</i>&nbsp;        if (!canEndTurn)</b>
+<b class="nc"><i>366</i>&nbsp;            outputStream.println(nonSelectable + &quot;3. End&quot; + reset);</b>
+<i>367</i>&nbsp;        else {
+<b class="nc"><i>368</i>&nbsp;            outputStream.println(selectable + &quot;3. End&quot; + reset);</b>
+<b class="nc"><i>369</i>&nbsp;            valid[2] = true;</b>
+<i>370</i>&nbsp;        }
+<i>371</i>&nbsp;
+<i>372</i>&nbsp;        String input;
+<i>373</i>&nbsp;
+<b class="nc"><i>374</i>&nbsp;        while (!correctInput){</b>
+<b class="nc"><i>375</i>&nbsp;            input = s.nextLine();</b>
+<i>376</i>&nbsp;
+<b class="nc"><i>377</i>&nbsp;            if ((input.toLowerCase().equals(&quot;move&quot;) || input.equals(&quot;1&quot;)) &amp;&amp; valid[0]) {</b>
+<b class="nc"><i>378</i>&nbsp;                correctInput = true;</b>
+<b class="nc"><i>379</i>&nbsp;                this.askToMove(movableSpaces);</b>
+<i>380</i>&nbsp;            }
+<b class="nc"><i>381</i>&nbsp;            if ((input.toLowerCase().equals(&quot;build&quot;) || input.equals(&quot;2&quot;)) &amp;&amp; valid[1]) {</b>
+<b class="nc"><i>382</i>&nbsp;                correctInput = true;</b>
+<b class="nc"><i>383</i>&nbsp;                this.askToBuild(buildableSpaces);</b>
+<i>384</i>&nbsp;            }
+<b class="nc"><i>385</i>&nbsp;            if ((input.toLowerCase().equals(&quot;end&quot;) || input.equals(&quot;3&quot;)) &amp;&amp; valid[2]) {</b>
+<b class="nc"><i>386</i>&nbsp;                correctInput = true;</b>
+<b class="nc"><i>387</i>&nbsp;                List&lt;Object&gt; objects = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>388</i>&nbsp;                objects.add(&quot;skipAction&quot;);</b>
+<b class="nc"><i>389</i>&nbsp;                serverConnection.asyncSend(objects);</b>
+<b class="nc"><i>390</i>&nbsp;            } else</b>
+<b class="nc"><i>391</i>&nbsp;                outputStream.println(&quot;Please enter a valid action&quot;);</b>
+<i>392</i>&nbsp;
+<i>393</i>&nbsp;        }
+<i>394</i>&nbsp;
+<i>395</i>&nbsp;        //End Menu
+<i>396</i>&nbsp;    }
+<i>397</i>&nbsp;
+<i>398</i>&nbsp;    private void askToBuild(Map&lt;Level, List&lt;Coord&gt;&gt; buildableSpaces){
+<b class="nc"><i>399</i>&nbsp;        outputStream.println(&quot;Where do you want to build? &quot;);</b>
+<b class="nc"><i>400</i>&nbsp;        boolean validCoord = false;</b>
+<b class="nc"><i>401</i>&nbsp;        boolean validLevel = false;</b>
+<b class="nc"><i>402</i>&nbsp;        int choice = 0;</b>
+<b class="nc"><i>403</i>&nbsp;        List&lt;Level&gt; possibleLevels= new ArrayList&lt;&gt;();</b>
+<i>404</i>&nbsp;
+<b class="nc"><i>405</i>&nbsp;        while (!validCoord){</b>
+<b class="nc"><i>406</i>&nbsp;            String input = s.nextLine();</b>
+<i>407</i>&nbsp;            try{
+<b class="nc"><i>408</i>&nbsp;                Coord c = Coord.convertStringToCoord(input);</b>
+<b class="nc"><i>409</i>&nbsp;                for (Level key : buildableSpaces.keySet()){</b>
+<b class="nc"><i>410</i>&nbsp;                    List&lt;Coord&gt; list = buildableSpaces.get(key);</b>
+<b class="nc"><i>411</i>&nbsp;                    if (list.contains(c)) {</b>
+<b class="nc"><i>412</i>&nbsp;                        validCoord = true;</b>
+<b class="nc"><i>413</i>&nbsp;                        choice++;</b>
+<b class="nc"><i>414</i>&nbsp;                        possibleLevels.add(key);</b>
+<i>415</i>&nbsp;                    }
+<b class="nc"><i>416</i>&nbsp;                }</b>
+<i>417</i>&nbsp;
+<b class="nc"><i>418</i>&nbsp;                if(validCoord){</b>
+<b class="nc"><i>419</i>&nbsp;                    if(choice == 1) {</b>
+<b class="nc"><i>420</i>&nbsp;                        List&lt;Object&gt; objects = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>421</i>&nbsp;                        objects.add(&quot;onBuildChosen&quot;);</b>
+<b class="nc"><i>422</i>&nbsp;                        objects.add(c);</b>
+<b class="nc"><i>423</i>&nbsp;                        objects.add(possibleLevels.get(0));</b>
+<b class="nc"><i>424</i>&nbsp;                        serverConnection.asyncSend(objects);</b>
+<b class="nc"><i>425</i>&nbsp;                    } else{</b>
+<b class="nc"><i>426</i>&nbsp;                        outputStream.println(&quot;What level would you like to build?&quot;);</b>
+<b class="nc"><i>427</i>&nbsp;                        for (Level l : possibleLevels){</b>
+<b class="nc"><i>428</i>&nbsp;                            outputStream.println(&quot;- &quot; + l);</b>
+<b class="nc"><i>429</i>&nbsp;                        }</b>
+<b class="nc"><i>430</i>&nbsp;                        while (!validLevel){</b>
+<b class="nc"><i>431</i>&nbsp;                            String inputLvl = s.nextLine();</b>
+<i>432</i>&nbsp;
+<b class="nc"><i>433</i>&nbsp;                            for (Level l : possibleLevels){</b>
+<b class="nc"><i>434</i>&nbsp;                                if (l.equals(Level.valueOf(inputLvl.toUpperCase()))){</b>
+<b class="nc"><i>435</i>&nbsp;                                    validLevel = true;</b>
+<b class="nc"><i>436</i>&nbsp;                                    break;</b>
+<i>437</i>&nbsp;                                }
+<b class="nc"><i>438</i>&nbsp;                            }</b>
+<i>439</i>&nbsp;
+<b class="nc"><i>440</i>&nbsp;                            if(validLevel) {</b>
+<b class="nc"><i>441</i>&nbsp;                                List&lt;Object&gt; objects = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>442</i>&nbsp;                                objects.add(&quot;onBuildChosen&quot;);</b>
+<b class="nc"><i>443</i>&nbsp;                                objects.add(c);</b>
+<b class="nc"><i>444</i>&nbsp;                                objects.add(Level.valueOf(inputLvl.toUpperCase()));</b>
+<b class="nc"><i>445</i>&nbsp;                                serverConnection.asyncSend(objects);</b>
+<b class="nc"><i>446</i>&nbsp;                            } else</b>
+<b class="nc"><i>447</i>&nbsp;                                outputStream.println(&quot;Please enter a valid level&quot;);</b>
+<b class="nc"><i>448</i>&nbsp;                        }</b>
+<i>449</i>&nbsp;                    }
+<i>450</i>&nbsp;                }
+<i>451</i>&nbsp;                else
+<b class="nc"><i>452</i>&nbsp;                    outputStream.println(&quot;Please enter a valid coordinate&quot;);</b>
+<b class="nc"><i>453</i>&nbsp;            } catch (Exception e) {</b>
+<b class="nc"><i>454</i>&nbsp;                outputStream.println(&quot;Invalid input&quot;);</b>
+<b class="nc"><i>455</i>&nbsp;            }</b>
+<b class="nc"><i>456</i>&nbsp;        }</b>
+<i>457</i>&nbsp;    }
+<i>458</i>&nbsp;
+<i>459</i>&nbsp;    private void askToMove(List&lt;Coord&gt; movableSpaces){
+<b class="nc"><i>460</i>&nbsp;        outputStream.println(&quot;Where do you want to move? &quot;);</b>
+<b class="nc"><i>461</i>&nbsp;        boolean valid = false;</b>
+<i>462</i>&nbsp;
+<b class="nc"><i>463</i>&nbsp;        while (!valid){</b>
+<b class="nc"><i>464</i>&nbsp;            String input = s.nextLine();</b>
+<i>465</i>&nbsp;            try{
+<b class="nc"><i>466</i>&nbsp;                Coord c = Coord.convertStringToCoord(input);</b>
+<b class="nc"><i>467</i>&nbsp;                if (movableSpaces.contains(c))</b>
+<b class="nc"><i>468</i>&nbsp;                    valid = true;</b>
+<i>469</i>&nbsp;
+<b class="nc"><i>470</i>&nbsp;                if(valid) {</b>
+<b class="nc"><i>471</i>&nbsp;                    List&lt;Object&gt; objects = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>472</i>&nbsp;                    objects.add(&quot;onMoveChosen&quot;);</b>
+<b class="nc"><i>473</i>&nbsp;                    objects.add(c);</b>
+<b class="nc"><i>474</i>&nbsp;                    serverConnection.asyncSend(objects);</b>
+<b class="nc"><i>475</i>&nbsp;                } else</b>
+<b class="nc"><i>476</i>&nbsp;                    outputStream.println(&quot;Please enter a valid coordinate&quot;);</b>
+<b class="nc"><i>477</i>&nbsp;            } catch (Exception e) {</b>
+<b class="nc"><i>478</i>&nbsp;                outputStream.println(&quot;Invalid input&quot;);</b>
+<b class="nc"><i>479</i>&nbsp;            }</b>
+<i>480</i>&nbsp;
+<b class="nc"><i>481</i>&nbsp;        }</b>
+<i>482</i>&nbsp;    }
+<i>483</i>&nbsp;
+<i>484</i>&nbsp;    private void onEnd(){
+<i>485</i>&nbsp;        try {
+<b class="nc"><i>486</i>&nbsp;            Thread.sleep(3000);</b>
+<b class="nc"><i>487</i>&nbsp;        } catch (InterruptedException e) {</b>
+<b class="nc"><i>488</i>&nbsp;            e.printStackTrace();</b>
+<b class="nc"><i>489</i>&nbsp;        }</b>
+<b class="nc"><i>490</i>&nbsp;        this.serverConnection.closeConnection();</b>
+<b class="nc"><i>491</i>&nbsp;        this.stop();</b>
+<i>492</i>&nbsp;    }
+<i>493</i>&nbsp;
+<i>494</i>&nbsp;    /**
+<i>495</i>&nbsp;     * To start a thread listening for incoming messages from the server
+<i>496</i>&nbsp;     */
+<i>497</i>&nbsp;    public void run(){
+<b class="nc"><i>498</i>&nbsp;        outputStream.println(&quot;You have entered the lobby.&quot;);</b>
+<i>499</i>&nbsp;
+<b class="nc"><i>500</i>&nbsp;        Future&lt;?&gt; future = exec.submit(serverConnection);</b>
+<i>501</i>&nbsp;
+<i>502</i>&nbsp;        //wait for the thread to finish
+<i>503</i>&nbsp;        try {
+<b class="nc"><i>504</i>&nbsp;            future.get();</b>
+<b class="nc"><i>505</i>&nbsp;        } catch (InterruptedException | ExecutionException e) {</b>
+<i>506</i>&nbsp;            //e.printStackTrace();
+<b class="nc"><i>507</i>&nbsp;        }</b>
+<i>508</i>&nbsp;    }
+<i>509</i>&nbsp;
+<i>510</i>&nbsp;    /**
+<i>511</i>&nbsp;     * To stop the thread listening for incoming messages from the server
+<i>512</i>&nbsp;     */
+<i>513</i>&nbsp;    public void stop(){
+<b class="nc"><i>514</i>&nbsp;        this.exec.shutdown();</b>
+<i>515</i>&nbsp;    }
+<i>516</i>&nbsp;
+<i>517</i>&nbsp;    private String decorateBoard(Board board, List&lt;String&gt; toBeAdded, int offset) {
+<b class="nc"><i>518</i>&nbsp;        String[] splitBoard = board.toString().split(&quot;\n&quot;);</b>
+<i>519</i>&nbsp;
+<b class="nc"><i>520</i>&nbsp;        for (String s : toBeAdded) {</b>
+<b class="nc"><i>521</i>&nbsp;            splitBoard[toBeAdded.indexOf(s) + offset] += &quot;\t\t\t&quot; + s;</b>
+<b class="nc"><i>522</i>&nbsp;        }</b>
+<i>523</i>&nbsp;
+<b class="nc"><i>524</i>&nbsp;        String newBoard = &quot;&quot;;</b>
+<b class="nc"><i>525</i>&nbsp;        for (String s : splitBoard) {</b>
+<b class="nc"><i>526</i>&nbsp;            newBoard += s + &quot;\n&quot;;</b>
+<i>527</i>&nbsp;        }
+<i>528</i>&nbsp;
+<b class="nc"><i>529</i>&nbsp;        return newBoard;</b>
+<i>530</i>&nbsp;    }
+<i>531</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 00:11</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane fx:id="boardWindow" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.gui.Board">
+   <children>
+      <ImageView fitHeight="734.0" fitWidth="1280.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Board/SantoriniBoard.png" />
+         </image>
+      </ImageView>
+      <Pane layoutX="755.0" layoutY="662.0" prefHeight="44.0" prefWidth="122.0">
+         <children>
+            <ImageView fx:id="skipBtnOff" fitHeight="44.0" fitWidth="122.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@Board/skip_btn_non_active.png" />
+               </image></ImageView>
+            <ImageView fx:id="skipBtnOn" fitHeight="52.0" fitWidth="122.0" onMouseClicked="#skipAction" pickOnBounds="true" preserveRatio="true" visible="false">
+               <image>
+                  <Image url="@Board/skip_btn_active.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></ImageView>
+         </children>
+      </Pane>
+      <Pane layoutX="407.0" layoutY="664.0" prefHeight="40.0" prefWidth="118.0">
+         <children>
+            <ImageView fx:id="moveBtnOn" fitHeight="44.0" fitWidth="141.0" onMouseClicked="#moveAction" pickOnBounds="true" preserveRatio="true" visible="false">
+               <image>
+                  <Image url="@Board/move_btn_active.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
+            <ImageView fx:id="moveBtnOff" fitHeight="44.0" fitWidth="156.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@Board/move_btn_non_active.png" />
+               </image>
+            </ImageView>
+         </children>
+      </Pane>
+      <Pane layoutX="581.0" layoutY="664.0" prefHeight="40.0" prefWidth="118.0">
+         <children>
+            <ImageView fx:id="buildBtnOff" fitHeight="44.0" fitWidth="122.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@Board/build_btn_non_active.png" />
+               </image></ImageView>
+            <ImageView fx:id="buildBtnOn" fitHeight="44.0" fitWidth="152.0" onMouseClicked="#buildAction" pickOnBounds="true" preserveRatio="true" visible="false">
+               <image>
+                  <Image url="@Board/build_btn_active.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></ImageView>
+         </children>
+      </Pane>
+      <ImageView fx:id="blueBanner" fitHeight="150.0" fitWidth="200.0" layoutY="250.0" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@Board/blue_player.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="redBanner" fitHeight="150.0" fitWidth="200.0" layoutY="405.0" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@Board/red_player.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="yellowBanner" fitHeight="150.0" fitWidth="200.0" layoutY="327.0" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@Board/yellow_player.png" />
+         </image>
+      </ImageView>
+      <TextArea fx:id="messageBox" editable="false" layoutX="14.0" layoutY="499.0" opacity="0.68" prefHeight="185.0" prefWidth="321.0" />
+      <ImageView fx:id="backBtn" fitHeight="44.0" fitWidth="134.0" layoutX="916.0" layoutY="662.0" onMouseClicked="#goBack" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@Board/back_btn.png" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
+      <Label fx:id="blueLabel" layoutX="14.0" layoutY="268.0" text="Label" visible="false">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Label fx:id="yellowLabel" layoutX="14.0" layoutY="345.0" text="Label" visible="false">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Label fx:id="redLabel" layoutX="14.0" layoutY="423.0" text="Label" visible="false">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <ImageView fx:id="currentGod" fitHeight="150.0" fitWidth="194.0" layoutX="1066.0" layoutY="548.0" pickOnBounds="true" preserveRatio="true">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
+   </children>
+</AnchorPane>

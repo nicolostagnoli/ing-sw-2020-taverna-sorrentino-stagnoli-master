@@ -1,0 +1,38 @@
+rule:
+	purpose = generation
+	actionType = move
+	target = myself
+	id = ABC
+
+secondary rule:
+	purpose = validation
+	actionType = move
+	decision = deny
+	generatedBy = ABC
+
+secondary rule:
+	purpose = generation
+	actionType = build
+	target = myself
+	generatedBy = ABC
+	id = DEF
+
+secondary rule:
+	purpose = validation
+	actionType = move
+	decision = deny
+	generatedBy = DEF
+
+secondary rule:
+	purpose = validation
+	actionType = build
+	decision = grant
+	buildLevel = LVL1
+	generatedBy = DEF
+
+secondary rule:
+	purpose = generation
+	id = ZZZ
+	actionType = end
+	target = myself
+	generatedBy = DEF

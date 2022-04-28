@@ -1,0 +1,34 @@
+rule:
+	purpose = VALIDATION
+	actionType = MOVE
+	decision = DENY
+
+rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	buildLevel = GROUND
+
+rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	buildLevel = LVL1
+
+rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	buildLevel = LVL2
+
+rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	buildLevel = LVL3
+
+rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	buildLevel = DOME

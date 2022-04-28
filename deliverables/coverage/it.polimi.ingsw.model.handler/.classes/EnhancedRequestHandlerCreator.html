@@ -1,0 +1,180 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: EnhancedRequestHandlerCreator</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.model.handler</a> ]
+</div>
+
+<h1>Coverage Summary for Class: EnhancedRequestHandlerCreator (it.polimi.ingsw.model.handler)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">EnhancedRequestHandlerCreator</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (8/ 8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    90,9%
+  </span>
+  <span class="absValue">
+    (40/ 44)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.model.handler;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.exceptions.model.handler.RuleParserException;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;import java.io.FileNotFoundException;
+<i>6</i>&nbsp;import java.util.ArrayList;
+<i>7</i>&nbsp;import java.util.HashMap;
+<i>8</i>&nbsp;import java.util.List;
+<i>9</i>&nbsp;import java.util.Map;
+<i>10</i>&nbsp;
+<i>11</i>&nbsp;/**
+<i>12</i>&nbsp; * This class is the Factory for RequestHandler objects.
+<i>13</i>&nbsp; * @see RequestHandler
+<i>14</i>&nbsp; */
+<i>15</i>&nbsp;public class EnhancedRequestHandlerCreator {
+<i>16</i>&nbsp;    private final String god;
+<b class="fc"><i>17</i>&nbsp;    private static final List&lt;Rule&gt; standardRules = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>18</i>&nbsp;    private static final Map&lt;String, List&lt;Rule&gt;&gt; godRules = new HashMap&lt;&gt;();</b>
+<i>19</i>&nbsp;
+<i>20</i>&nbsp;    static {
+<b class="fc"><i>21</i>&nbsp;        initStandardRules();</b>
+<b class="fc"><i>22</i>&nbsp;    }</b>
+<i>23</i>&nbsp;
+<b class="fc"><i>24</i>&nbsp;    public EnhancedRequestHandlerCreator() {</b>
+<b class="fc"><i>25</i>&nbsp;        this.god = null;</b>
+<b class="fc"><i>26</i>&nbsp;    }</b>
+<i>27</i>&nbsp;
+<i>28</i>&nbsp;    /**
+<i>29</i>&nbsp;     * Gets a new instance of this class, useful to get a RequestHandler for the specified god
+<i>30</i>&nbsp;     * @param god the name of the god whose rules will be used by the RequestHandler
+<i>31</i>&nbsp;     */
+<b class="fc"><i>32</i>&nbsp;    public EnhancedRequestHandlerCreator(String god) {</b>
+<b class="fc"><i>33</i>&nbsp;        if (!god.equals(&quot;None&quot;)) {</b>
+<b class="fc"><i>34</i>&nbsp;            this.god = god;</b>
+<i>35</i>&nbsp;        } else {
+<b class="fc"><i>36</i>&nbsp;            this.god = null;</b>
+<i>37</i>&nbsp;        }
+<b class="fc"><i>38</i>&nbsp;    }</b>
+<i>39</i>&nbsp;
+<i>40</i>&nbsp;    /**
+<i>41</i>&nbsp;     * Factory method
+<i>42</i>&nbsp;     * @return a RequestHandler for the desired god (or with only the standard rules if no god
+<i>43</i>&nbsp;     * is specified)
+<i>44</i>&nbsp;     */
+<i>45</i>&nbsp;    public RequestHandler createHandler() {
+<b class="fc"><i>46</i>&nbsp;        List&lt;Rule&gt; rules = createRulesList();</b>
+<b class="fc"><i>47</i>&nbsp;        RuleHandler ruleHandler = new ConcreteHandler(rules);</b>
+<b class="fc"><i>48</i>&nbsp;        RequestHandler requestHandler = new HandlerAdapter(ruleHandler);</b>
+<i>49</i>&nbsp;
+<b class="fc"><i>50</i>&nbsp;        return requestHandler;</b>
+<i>51</i>&nbsp;    }
+<i>52</i>&nbsp;
+<i>53</i>&nbsp;    private List&lt;Rule&gt; createRulesList() {
+<b class="fc"><i>54</i>&nbsp;        List&lt;Rule&gt; result = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>55</i>&nbsp;        if (god != null) {</b>
+<b class="fc"><i>56</i>&nbsp;            result.addAll(getGodRules());</b>
+<i>57</i>&nbsp;        }
+<b class="fc"><i>58</i>&nbsp;        result.addAll(standardRules);</b>
+<i>59</i>&nbsp;
+<b class="fc"><i>60</i>&nbsp;        return result;</b>
+<i>61</i>&nbsp;    }
+<i>62</i>&nbsp;
+<i>63</i>&nbsp;    private List&lt;Rule&gt; getGodRules() {
+<b class="fc"><i>64</i>&nbsp;        if (god == null) throw new IllegalArgumentException(&quot;Cannot get rules for &#39;null&#39; god.&quot;);</b>
+<b class="fc"><i>65</i>&nbsp;        if (!godRules.containsKey(god)) {</b>
+<b class="fc"><i>66</i>&nbsp;            initGodRules(god);</b>
+<i>67</i>&nbsp;        }
+<i>68</i>&nbsp;
+<b class="fc"><i>69</i>&nbsp;        return new ArrayList&lt;&gt;(godRules.get(god));</b>
+<i>70</i>&nbsp;    }
+<i>71</i>&nbsp;
+<i>72</i>&nbsp;    private static void initStandardRules() {
+<i>73</i>&nbsp;        try {
+<b class="fc"><i>74</i>&nbsp;            RuleParser ruleParser = new RuleParser(&quot;rules/standard/primary&quot;);</b>
+<b class="fc"><i>75</i>&nbsp;            ruleParser.parse();</b>
+<b class="fc"><i>76</i>&nbsp;            standardRules.addAll(ruleParser.getRules());</b>
+<b class="nc"><i>77</i>&nbsp;        } catch (FileNotFoundException | RuleParserException e) {</b>
+<b class="nc"><i>78</i>&nbsp;            System.out.println(&quot;Couldn&#39;t load standard rules.&quot;);</b>
+<b class="nc"><i>79</i>&nbsp;            System.out.println(e.getMessage());</b>
+<b class="nc"><i>80</i>&nbsp;            e.printStackTrace();</b>
+<b class="fc"><i>81</i>&nbsp;        }</b>
+<b class="fc"><i>82</i>&nbsp;    }</b>
+<i>83</i>&nbsp;
+<i>84</i>&nbsp;    private static void initGodRules(String god) {
+<b class="fc"><i>85</i>&nbsp;        String path = &quot;rules/&quot; + god.toLowerCase();</b>
+<i>86</i>&nbsp;        try {
+<b class="fc"><i>87</i>&nbsp;            RuleParser ruleParser = new RuleParser(path);</b>
+<b class="fc"><i>88</i>&nbsp;            ruleParser.parse();</b>
+<b class="fc"><i>89</i>&nbsp;            godRules.put(god, ruleParser.getRules());</b>
+<b class="fc"><i>90</i>&nbsp;        } catch (FileNotFoundException | RuleParserException e) {</b>
+<b class="fc"><i>91</i>&nbsp;            System.out.println(&quot;Couldn&#39;t load rules for god &quot; + god);</b>
+<b class="fc"><i>92</i>&nbsp;            System.out.println(e.getMessage());</b>
+<b class="fc"><i>93</i>&nbsp;            e.printStackTrace();</b>
+<b class="fc"><i>94</i>&nbsp;        }</b>
+<i>95</i>&nbsp;
+<b class="fc"><i>96</i>&nbsp;    }</b>
+<i>97</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 00:11</div>
+</div>
+</body>
+</html>

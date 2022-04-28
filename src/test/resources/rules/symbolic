@@ -1,0 +1,6 @@
+rule:
+	purpose = validation
+	actionType = move
+	decision = grant
+	symbolicCondition:
+		equalCoordinates(oldAfter, after)

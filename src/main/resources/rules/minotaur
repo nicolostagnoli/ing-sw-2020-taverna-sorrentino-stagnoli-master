@@ -1,0 +1,11 @@
+rule:
+	purpose = VALIDATION
+	actionType = MOVE
+	decision = GRANT
+	condition:
+		occupied(after)
+		near(before, after)
+		negate(samePlayer(before, after))
+		valid(sum(after, diff(after, before)))
+		negate(occupied(sum(after, diff(after, before))))
+	forceSpaceFunction = sum(after, diff(after, before))

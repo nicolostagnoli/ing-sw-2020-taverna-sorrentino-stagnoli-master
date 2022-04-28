@@ -1,0 +1,6 @@
+rule:
+	purpose = generation
+	actionType = move
+	target = myself
+	id = ABC
+	generatedBy = ABC

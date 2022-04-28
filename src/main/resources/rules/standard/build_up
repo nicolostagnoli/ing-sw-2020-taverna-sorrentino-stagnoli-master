@@ -1,0 +1,82 @@
+rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = GRANT
+	buildLevel = LVL1
+	condition:
+		near(before, after)
+		negate(occupied(after))
+		negate(dome(after))
+		compareLevels(after, LVL1, =1)
+
+rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = GRANT
+	buildLevel = LVL2
+	condition:
+		near(before, after)
+		negate(occupied(after))
+		negate(dome(after))
+		compareLevels(after, LVL2, =1)
+
+rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = GRANT
+	buildLevel = LVL3
+	condition:
+		near(before, after)
+		negate(occupied(after))
+		negate(dome(after))
+		compareLevels(after, LVL3, =1)
+
+rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = GRANT
+	buildLevel = DOME
+	condition:
+		near(before, after)
+		negate(occupied(after))
+		negate(dome(after))
+		compareLevels(after, DOME, =1)
+
+rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	buildLevel = GROUND
+
+rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	buildLevel = LVL1
+	condition:
+		or(negate(near(before, after)), or(occupied(after), or(dome(after), negate(compareLevels(after, LVL1, =1)))))
+
+
+rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	buildLevel = LVL2
+	condition:
+		or(negate(near(before, after)), or(occupied(after), or(dome(after), negate(compareLevels(after, LVL2, =1)))))
+
+rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	buildLevel = LVL3
+	condition:
+		or(negate(near(before, after)), or(occupied(after), or(dome(after), negate(compareLevels(after, LVL3, =1)))))
+
+rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	buildLevel = DOME
+	condition:
+		or(negate(near(before, after)), or(occupied(after), or(dome(after), negate(compareLevels(after, DOME, =1)))))

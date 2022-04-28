@@ -1,0 +1,68 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: TriFunction</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.model.handler.util</a> ]
+</div>
+
+<h1>Coverage Summary for Class: TriFunction (it.polimi.ingsw.model.handler.util)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">TriFunction</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.model.handler.util;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;/**
+<i>4</i>&nbsp; * Represents a function that accepts three arguments and produces a result.
+<i>5</i>&nbsp; * This is the three-arity specialization of {@link java.util.function.Function}.
+<i>6</i>&nbsp; * @param &lt;T&gt; the type of the first argument to the function
+<i>7</i>&nbsp; * @param &lt;U&gt; the type of the second argument to the function
+<i>8</i>&nbsp; * @param &lt;V&gt; the type of the third argument to the function
+<i>9</i>&nbsp; * @param &lt;R&gt; the type of the result of the function
+<i>10</i>&nbsp; */
+<i>11</i>&nbsp;@FunctionalInterface
+<i>12</i>&nbsp;public interface TriFunction&lt;T, U, V, R&gt; {
+<i>13</i>&nbsp;    /**
+<i>14</i>&nbsp;     * Applies this function to the given arguments.
+<i>15</i>&nbsp;     * @param t the first function argument
+<i>16</i>&nbsp;     * @param u the second function argument
+<i>17</i>&nbsp;     * @param v the third function argument
+<i>18</i>&nbsp;     * @return the function result
+<i>19</i>&nbsp;     */
+<i>20</i>&nbsp;    R apply(T t, U u, V v);
+<i>21</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 00:11</div>
+</div>
+</body>
+</html>

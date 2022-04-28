@@ -1,0 +1,102 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: RequestHandler</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.model.handler</a> ]
+</div>
+
+<h1>Coverage Summary for Class: RequestHandler (it.polimi.ingsw.model.handler)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">RequestHandler</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.model.handler;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.model.Board;
+<i>4</i>&nbsp;import it.polimi.ingsw.model.Coord;
+<i>5</i>&nbsp;import it.polimi.ingsw.model.Level;
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;import java.util.List;
+<i>8</i>&nbsp;import java.util.Map;
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;/**
+<i>11</i>&nbsp; * Handles requests about the possibilities of a player during his turn, based on the rules of the game.
+<i>12</i>&nbsp; * This is the only interface the user can have on the whole handling of the game rules, thus allowing
+<i>13</i>&nbsp; * a strong decoupling between the &quot;game logic&quot; and the &quot;rules logic&quot;.
+<i>14</i>&nbsp; */
+<i>15</i>&nbsp;public interface RequestHandler {
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;    /**
+<i>18</i>&nbsp;     * Populates the collections passed by the caller with data about what actions can be
+<i>19</i>&nbsp;     * performed and what actions can&#39;t
+<i>20</i>&nbsp;     * @param current the position of the current worker, i.e. the worker that will perform the action
+<i>21</i>&nbsp;     * @param board the board to evaluate for all possible actions
+<i>22</i>&nbsp;     * @param movableSpaces the list in which the coordinates reachable by a move will be put
+<i>23</i>&nbsp;     * @param buildableSpaces the map in which the coordinates where a build (for each level)
+<i>24</i>&nbsp;     *                        can be performed will be put
+<i>25</i>&nbsp;     * @param forces the map in which the &quot;force&quot; destination will be put, for each space that
+<i>26</i>&nbsp;     *               requires a forcing in order to move there.
+<i>27</i>&nbsp;     */
+<i>28</i>&nbsp;    void getValidSpaces(Coord current, Board board,
+<i>29</i>&nbsp;                               List&lt;Coord&gt; movableSpaces, Map&lt;Level, List&lt;Coord&gt;&gt; buildableSpaces,
+<i>30</i>&nbsp;                               Map&lt;Coord, Coord&gt; forces);
+<i>31</i>&nbsp;
+<i>32</i>&nbsp;    /**
+<i>33</i>&nbsp;     * Updates the rules of the handler with the rules to be used for the next action.
+<i>34</i>&nbsp;     * @param after the target position of the last performed action
+<i>35</i>&nbsp;     * @param at the {@code ActionType} of the last performed action
+<i>36</i>&nbsp;     */
+<i>37</i>&nbsp;    void generate(Coord after, ActionType at);
+<i>38</i>&nbsp;
+<i>39</i>&nbsp;    /**
+<i>40</i>&nbsp;     * Returns true when the last performed action caused the player to win
+<i>41</i>&nbsp;     * @param after the target position of the last performed action
+<i>42</i>&nbsp;     * @param at the {@code ActionType} of the last performed action
+<i>43</i>&nbsp;     * @return true when the last performed action caused the player to win
+<i>44</i>&nbsp;     */
+<i>45</i>&nbsp;    boolean checkForWin(Coord after, ActionType at);
+<i>46</i>&nbsp;
+<i>47</i>&nbsp;    /**
+<i>48</i>&nbsp;     * Resets the rules of this handler to its initial rules.
+<i>49</i>&nbsp;     * When ending a turn (i.e. a sequence of actions) the initial rules must be
+<i>50</i>&nbsp;     * restored, in order to be used for the next turn.
+<i>51</i>&nbsp;     * Thus this method has to be called when the corresponding player&#39;s turn ends.
+<i>52</i>&nbsp;     */
+<i>53</i>&nbsp;    void reset();
+<i>54</i>&nbsp;
+<i>55</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 00:11</div>
+</div>
+</body>
+</html>

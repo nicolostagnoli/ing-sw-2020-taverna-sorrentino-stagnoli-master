@@ -1,0 +1,62 @@
+rule:
+	purpose = GENERATION
+	actionType = MOVE
+	target = MYSELF
+	id = gen_move
+	generatedBy = gen_move
+
+secondary rule:
+	purpose = GENERATION
+	actionType = BUILD
+	target = MYSELF
+	id = gen_build
+	generatedBy = gen_move
+
+secondary rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	buildLevel = GROUND
+	symbolicCondition:
+		negate(equalCoordinates(oldAfter, after))
+	generatedBy = gen_build
+
+secondary rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	buildLevel = LVL1
+	symbolicCondition:
+		negate(equalCoordinates(oldAfter, after))
+	generatedBy = gen_build
+
+secondary rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	buildLevel = LVL2
+	symbolicCondition:
+		negate(equalCoordinates(oldAfter, after))
+	generatedBy = gen_build
+
+secondary rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	buildLevel = LVL3
+	symbolicCondition:
+		negate(equalCoordinates(oldAfter, after))
+	generatedBy = gen_build
+
+secondary rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	buildLevel = DOME
+	symbolicCondition:
+		negate(equalCoordinates(oldAfter, after))
+	generatedBy = gen_build
+
+secondary file:
+	source = rules/standard/secondary
+	generatedBy = gen_build

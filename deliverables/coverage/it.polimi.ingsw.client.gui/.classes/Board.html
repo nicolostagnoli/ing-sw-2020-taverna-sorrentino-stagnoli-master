@@ -1,0 +1,1008 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Board</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.client.gui</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Board (it.polimi.ingsw.client.gui)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Board</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 26)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 256)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Board$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 146)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">Board$2</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 3)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">Board$Cell</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 13)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 41)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">Board$MessageReceiver</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 6)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">Board$State</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 2)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 49)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 454)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.client.gui;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.model.*;
+<i>4</i>&nbsp;import it.polimi.ingsw.observer.Observer;
+<i>5</i>&nbsp;import it.polimi.ingsw.server.Connection;
+<i>6</i>&nbsp;import javafx.application.Platform;
+<i>7</i>&nbsp;import javafx.fxml.FXML;
+<i>8</i>&nbsp;import javafx.fxml.FXMLLoader;
+<i>9</i>&nbsp;import javafx.fxml.Initializable;
+<i>10</i>&nbsp;import javafx.scene.Cursor;
+<i>11</i>&nbsp;import javafx.scene.Parent;
+<i>12</i>&nbsp;import javafx.scene.Scene;
+<i>13</i>&nbsp;import javafx.scene.control.*;
+<i>14</i>&nbsp;import javafx.scene.image.Image;
+<i>15</i>&nbsp;import javafx.scene.image.ImageView;
+<i>16</i>&nbsp;import javafx.scene.layout.AnchorPane;
+<i>17</i>&nbsp;import javafx.stage.Modality;
+<i>18</i>&nbsp;import javafx.stage.Stage;
+<i>19</i>&nbsp;
+<i>20</i>&nbsp;import java.io.IOException;
+<i>21</i>&nbsp;import java.net.URL;
+<i>22</i>&nbsp;import java.util.*;
+<i>23</i>&nbsp;import java.util.concurrent.ExecutorService;
+<i>24</i>&nbsp;import java.util.concurrent.Executors;
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;public class Board implements Initializable {
+<i>27</i>&nbsp;
+<i>28</i>&nbsp;    //used for reacting when a message arrives from the server
+<b class="nc"><i>29</i>&nbsp;    private class MessageReceiver implements Observer&lt;Object&gt; {</b>
+<i>30</i>&nbsp;        @Override
+<i>31</i>&nbsp;        public void update(Object message) {
+<b class="nc"><i>32</i>&nbsp;            synchronized (receivedObject) {</b>
+<b class="nc"><i>33</i>&nbsp;                System.out.println(&quot;Received: &quot; + message.toString());</b>
+<b class="nc"><i>34</i>&nbsp;                receivedObject = message;</b>
+<b class="nc"><i>35</i>&nbsp;                handleMessageReceived();</b>
+<b class="nc"><i>36</i>&nbsp;            }</b>
+<i>37</i>&nbsp;        }
+<i>38</i>&nbsp;    }
+<i>39</i>&nbsp;
+<i>40</i>&nbsp;    //used to store the graphics and the coordinates for the board cells
+<i>41</i>&nbsp;    private class Cell{
+<i>42</i>&nbsp;        private ImageView level, dome, worker;
+<i>43</i>&nbsp;        private boolean enabled;
+<i>44</i>&nbsp;        private Coord coord;
+<b class="nc"><i>45</i>&nbsp;        public Cell(int x, int y){</b>
+<b class="nc"><i>46</i>&nbsp;            this.level = new ImageView();</b>
+<b class="nc"><i>47</i>&nbsp;            this.dome = new ImageView();</b>
+<b class="nc"><i>48</i>&nbsp;            this.worker = new ImageView();</b>
+<b class="nc"><i>49</i>&nbsp;            this.level.setX(0);</b>
+<b class="nc"><i>50</i>&nbsp;            this.level.setY(0);</b>
+<b class="nc"><i>51</i>&nbsp;            this.dome.setX(0);</b>
+<b class="nc"><i>52</i>&nbsp;            this.dome.setY(0);</b>
+<b class="nc"><i>53</i>&nbsp;            this.worker.setX(0);</b>
+<b class="nc"><i>54</i>&nbsp;            this.worker.setY(0);</b>
+<b class="nc"><i>55</i>&nbsp;            this.level.setFitWidth(cellDim);</b>
+<b class="nc"><i>56</i>&nbsp;            this.level.setFitHeight(cellDim);</b>
+<b class="nc"><i>57</i>&nbsp;            this.dome.setFitWidth(cellDim/1.30);</b>
+<b class="nc"><i>58</i>&nbsp;            this.dome.setFitHeight(cellDim/1.30);</b>
+<b class="nc"><i>59</i>&nbsp;            this.worker.setFitWidth(cellDim/1.50);</b>
+<b class="nc"><i>60</i>&nbsp;            this.worker.setFitHeight(cellDim/1.50);</b>
+<b class="nc"><i>61</i>&nbsp;            this.coord = new Coord(x, y);</b>
+<b class="nc"><i>62</i>&nbsp;            this.enabled = false;</b>
+<i>63</i>&nbsp;
+<b class="nc"><i>64</i>&nbsp;            this.level.setOnMouseClicked(mouseEvent -&gt; { if(this.enabled){ onCellClicked(this.coord); } } );</b>
+<b class="nc"><i>65</i>&nbsp;            this.worker.setOnMouseClicked(mouseEvent -&gt; { if(this.enabled){ onCellClicked(this.coord); } } );</b>
+<i>66</i>&nbsp;        }
+<i>67</i>&nbsp;        public void setPosition(int x, int y){
+<b class="nc"><i>68</i>&nbsp;            this.level.setX(x);</b>
+<b class="nc"><i>69</i>&nbsp;            this.level.setY(y);</b>
+<b class="nc"><i>70</i>&nbsp;            this.dome.setX(x + domeOffset);</b>
+<b class="nc"><i>71</i>&nbsp;            this.dome.setY(y + domeOffset);</b>
+<b class="nc"><i>72</i>&nbsp;            this.worker.setX(x + domeOffset);</b>
+<b class="nc"><i>73</i>&nbsp;            this.worker.setY(y + domeOffset);</b>
+<i>74</i>&nbsp;        }
+<i>75</i>&nbsp;        public void setLevelImage(Image img){
+<b class="nc"><i>76</i>&nbsp;            this.level.setImage(img);</b>
+<i>77</i>&nbsp;        }
+<i>78</i>&nbsp;        public void setDomeImage(){
+<b class="nc"><i>79</i>&nbsp;            this.dome.setImage(domeImage);</b>
+<i>80</i>&nbsp;        }
+<i>81</i>&nbsp;        public void setWorkerImage(Image worker){
+<b class="nc"><i>82</i>&nbsp;            this.worker.setImage(worker);</b>
+<i>83</i>&nbsp;        }
+<i>84</i>&nbsp;        public void resetImages(){
+<b class="nc"><i>85</i>&nbsp;            this.level.setImage(null);</b>
+<b class="nc"><i>86</i>&nbsp;            this.dome.setImage(null);</b>
+<b class="nc"><i>87</i>&nbsp;            this.worker.setImage(null);</b>
+<i>88</i>&nbsp;        }
+<i>89</i>&nbsp;        public void enable(){
+<b class="nc"><i>90</i>&nbsp;            this.enabled = true;</b>
+<b class="nc"><i>91</i>&nbsp;            this.level.setCursor(Cursor.HAND);</b>
+<b class="nc"><i>92</i>&nbsp;            this.worker.setCursor(Cursor.HAND);</b>
+<i>93</i>&nbsp;        }
+<i>94</i>&nbsp;        public void disable(){
+<b class="nc"><i>95</i>&nbsp;            this.enabled = false;</b>
+<b class="nc"><i>96</i>&nbsp;            this.level.setCursor(Cursor.DEFAULT);</b>
+<b class="nc"><i>97</i>&nbsp;            this.worker.setCursor(Cursor.DEFAULT);</b>
+<i>98</i>&nbsp;        }
+<i>99</i>&nbsp;        public ImageView getLevelImage(){
+<b class="nc"><i>100</i>&nbsp;            return this.level;</b>
+<i>101</i>&nbsp;        }
+<i>102</i>&nbsp;        public ImageView getDomeImage(){
+<b class="nc"><i>103</i>&nbsp;            return this.dome;</b>
+<i>104</i>&nbsp;        }
+<i>105</i>&nbsp;        public ImageView getWorkerImage(){
+<b class="nc"><i>106</i>&nbsp;            return this.worker;</b>
+<i>107</i>&nbsp;        }
+<i>108</i>&nbsp;    }
+<i>109</i>&nbsp;
+<i>110</i>&nbsp;    //used to store the state of the gui
+<b class="nc"><i>111</i>&nbsp;    private enum State{</b>
+<b class="nc"><i>112</i>&nbsp;        NONE, MOVE, BUILD, INITIALIZINGWORKERS, SELECTINGWORKER</b>
+<i>113</i>&nbsp;    }
+<i>114</i>&nbsp;
+<i>115</i>&nbsp;    //connection variables
+<b class="nc"><i>116</i>&nbsp;    private Object receivedObject = new Object();</b>
+<i>117</i>&nbsp;    private Connection serverConnection;
+<i>118</i>&nbsp;    private ExecutorService exec; //to listen for server messages on a separate thread
+<i>119</i>&nbsp;    private String ip;
+<i>120</i>&nbsp;
+<i>121</i>&nbsp;    //game variables
+<i>122</i>&nbsp;    private boolean isChallenger;
+<i>123</i>&nbsp;    private String nickname;
+<i>124</i>&nbsp;    private Map&lt;String, Color&gt; playersColors;
+<i>125</i>&nbsp;    private Map&lt;String, Image&gt; playersGodsImages;
+<i>126</i>&nbsp;    private Map&lt;String, God&gt; playersGods;
+<i>127</i>&nbsp;    private Cell[][] board;
+<b class="nc"><i>128</i>&nbsp;    private State state = State.NONE;</b>
+<i>129</i>&nbsp;    private Map&lt;Level, List&lt;Coord&gt;&gt; buildableSpaces;
+<i>130</i>&nbsp;
+<i>131</i>&nbsp;    private List&lt;Coord&gt; clickableCells;
+<i>132</i>&nbsp;    private boolean canMove, canBuild, canSkip;
+<i>133</i>&nbsp;
+<i>134</i>&nbsp;    //resources and window components
+<i>135</i>&nbsp;    public AnchorPane boardWindow;
+<i>136</i>&nbsp;    public ImageView moveBtnOn, moveBtnOff, buildBtnOn, buildBtnOff, skipBtnOn, skipBtnOff, backBtn;
+<i>137</i>&nbsp;    public ImageView redBanner, blueBanner, yellowBanner, currentGod;
+<i>138</i>&nbsp;    public Label redLabel, blueLabel, yellowLabel;
+<i>139</i>&nbsp;    public TextArea messageBox;
+<i>140</i>&nbsp;    private Image lvl1Image, lvl2Image, lvl3Image, domeImage, emptyImage;
+<i>141</i>&nbsp;    private Map&lt;Color, Image&gt; workersTokens;
+<b class="nc"><i>142</i>&nbsp;    private int cellStep = 105, intialX = 388, initialY = 112, cellDim = 90, domeOffset = 10;</b>
+<i>143</i>&nbsp;
+<b class="nc"><i>144</i>&nbsp;    public Board(){</b>
+<i>145</i>&nbsp;        //initialize board
+<b class="nc"><i>146</i>&nbsp;        this.board = new Cell[5][5];</b>
+<b class="nc"><i>147</i>&nbsp;        for (int i = 0; i &lt; 5; i++) {</b>
+<b class="nc"><i>148</i>&nbsp;            for (int j = 0; j &lt; 5; j++) {</b>
+<b class="nc"><i>149</i>&nbsp;                this.board[i][j] = new Cell(i, j);</b>
+<b class="nc"><i>150</i>&nbsp;                this.board[i][j].setPosition(i*cellStep + intialX, j*cellStep + initialY);</b>
+<i>151</i>&nbsp;            }
+<i>152</i>&nbsp;        }
+<i>153</i>&nbsp;        //initialize resources
+<b class="nc"><i>154</i>&nbsp;        this.lvl1Image = new Image(&quot;Board/lvl_1.png&quot;);</b>
+<b class="nc"><i>155</i>&nbsp;        this.lvl2Image = new Image(&quot;Board/lvl_2.png&quot;);</b>
+<b class="nc"><i>156</i>&nbsp;        this.lvl3Image = new Image(&quot;Board/lvl_3.png&quot;);</b>
+<b class="nc"><i>157</i>&nbsp;        this.domeImage = new Image(&quot;Board/dome.png&quot;);</b>
+<b class="nc"><i>158</i>&nbsp;        this.emptyImage = new Image(&quot;Board/empty.png&quot;);</b>
+<b class="nc"><i>159</i>&nbsp;        this.workersTokens = new HashMap&lt;&gt;();</b>
+<b class="nc"><i>160</i>&nbsp;        this.workersTokens.put(Color.RED, new Image(&quot;Board/token_red.png&quot;));</b>
+<b class="nc"><i>161</i>&nbsp;        this.workersTokens.put(Color.BLUE, new Image(&quot;Board/token_blue.png&quot;));</b>
+<b class="nc"><i>162</i>&nbsp;        this.workersTokens.put(Color.YELLOW, new Image(&quot;Board/token_yellow.png&quot;));</b>
+<i>163</i>&nbsp;
+<b class="nc"><i>164</i>&nbsp;        this.playersColors = new HashMap&lt;&gt;();</b>
+<b class="nc"><i>165</i>&nbsp;        this.playersGodsImages = new HashMap&lt;&gt;();</b>
+<b class="nc"><i>166</i>&nbsp;        this.playersGods = new HashMap&lt;&gt;();</b>
+<i>167</i>&nbsp;
+<b class="nc"><i>168</i>&nbsp;        this.clickableCells = new ArrayList&lt;&gt;();</b>
+<i>169</i>&nbsp;    }
+<i>170</i>&nbsp;
+<i>171</i>&nbsp;    /**
+<i>172</i>&nbsp;     * To pass connection and game parameters from the previous window (main menu)
+<i>173</i>&nbsp;     *
+<i>174</i>&nbsp;     * @param serverConnection the connection object used to communicate with the server
+<i>175</i>&nbsp;     * @param isChallenger flag to tell the gui if it is challenger or not
+<i>176</i>&nbsp;     * @param nickname the nickname chosen in the main menu
+<i>177</i>&nbsp;     * @param ip the ip of the server for further reconnection
+<i>178</i>&nbsp;     */
+<i>179</i>&nbsp;    public void setParameters(Connection serverConnection, boolean isChallenger, String nickname, String ip){
+<b class="nc"><i>180</i>&nbsp;        this.serverConnection = serverConnection;</b>
+<b class="nc"><i>181</i>&nbsp;        this.serverConnection.addObserver(new MessageReceiver());</b>
+<b class="nc"><i>182</i>&nbsp;        this.ip = ip;</b>
+<i>183</i>&nbsp;
+<b class="nc"><i>184</i>&nbsp;        this.isChallenger = isChallenger;</b>
+<b class="nc"><i>185</i>&nbsp;        this.nickname = nickname;</b>
+<i>186</i>&nbsp;
+<b class="nc"><i>187</i>&nbsp;        exec = Executors.newFixedThreadPool(1);</b>
+<b class="nc"><i>188</i>&nbsp;        exec.submit(serverConnection);</b>
+<b class="nc"><i>189</i>&nbsp;        System.out.println(&quot;You have entered the lobby.&quot;);</b>
+<i>190</i>&nbsp;    }
+<i>191</i>&nbsp;
+<i>192</i>&nbsp;    /**
+<i>193</i>&nbsp;     * Initializes the board
+<i>194</i>&nbsp;     *
+<i>195</i>&nbsp;     * @param url
+<i>196</i>&nbsp;     * @param resourceBundle
+<i>197</i>&nbsp;     */
+<i>198</i>&nbsp;    @Override
+<i>199</i>&nbsp;    public void initialize(URL url, ResourceBundle resourceBundle) {
+<i>200</i>&nbsp;        //add each ImageView the matrix board as children of the main pane
+<b class="nc"><i>201</i>&nbsp;        for (int i = 0; i &lt; 5; i++) {</b>
+<b class="nc"><i>202</i>&nbsp;            for (int j = 0; j &lt; 5; j++) {</b>
+<b class="nc"><i>203</i>&nbsp;                this.board[i][j].setLevelImage(emptyImage); //to make cell clickable even if there is no image (for setup phase, placing workers)</b>
+<b class="nc"><i>204</i>&nbsp;                boardWindow.getChildren().add(board[i][j].getLevelImage());</b>
+<b class="nc"><i>205</i>&nbsp;                boardWindow.getChildren().add(board[i][j].getDomeImage());</b>
+<b class="nc"><i>206</i>&nbsp;                boardWindow.getChildren().add(board[i][j].getWorkerImage());</b>
+<i>207</i>&nbsp;            }
+<i>208</i>&nbsp;        }
+<b class="nc"><i>209</i>&nbsp;        this.blueBanner.setVisible(false);</b>
+<b class="nc"><i>210</i>&nbsp;        this.redBanner.setVisible(false);</b>
+<b class="nc"><i>211</i>&nbsp;        this.yellowBanner.setVisible(false);</b>
+<i>212</i>&nbsp;    }
+<i>213</i>&nbsp;
+<i>214</i>&nbsp;    /**
+<i>215</i>&nbsp;     * called when clicking on a cell (can be clicked only if the cell was enabled)
+<i>216</i>&nbsp;     * @param clickedCell the coordinates of the clicked cell
+<i>217</i>&nbsp;     */
+<i>218</i>&nbsp;    private void onCellClicked(Coord clickedCell){
+<b class="nc"><i>219</i>&nbsp;        switch (this.state){</b>
+<i>220</i>&nbsp;            case MOVE:
+<i>221</i>&nbsp;                //player has chose to move in clickedCell
+<b class="nc"><i>222</i>&nbsp;                if(clickableCells.contains(clickedCell)){</b>
+<b class="nc"><i>223</i>&nbsp;                    List&lt;Object&gt; action = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>224</i>&nbsp;                    action.add(&quot;onMoveChosen&quot;);</b>
+<b class="nc"><i>225</i>&nbsp;                    action.add(clickedCell);</b>
+<b class="nc"><i>226</i>&nbsp;                    serverConnection.asyncSend(action);</b>
+<b class="nc"><i>227</i>&nbsp;                    this.state=State.NONE;</b>
+<b class="nc"><i>228</i>&nbsp;                    this.disableAll();</b>
+<b class="nc"><i>229</i>&nbsp;                }else{</b>
+<b class="nc"><i>230</i>&nbsp;                    this.showMessage(&quot;Invalid move.&quot;);</b>
+<i>231</i>&nbsp;                }
+<b class="nc"><i>232</i>&nbsp;                break;</b>
+<i>233</i>&nbsp;
+<i>234</i>&nbsp;            case BUILD:
+<i>235</i>&nbsp;                //player has chose to build in clickedCell
+<b class="nc"><i>236</i>&nbsp;                if(clickableCells.contains(clickedCell)){</b>
+<i>237</i>&nbsp;                    Level buildLevel;
+<b class="nc"><i>238</i>&nbsp;                    List&lt;Level&gt; possibleLevels = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>239</i>&nbsp;                    for (Level key : buildableSpaces.keySet()){</b>
+<b class="nc"><i>240</i>&nbsp;                        List&lt;Coord&gt; list = buildableSpaces.get(key);</b>
+<b class="nc"><i>241</i>&nbsp;                        if (list.contains(clickedCell)) {</b>
+<b class="nc"><i>242</i>&nbsp;                            possibleLevels.add(key);</b>
+<i>243</i>&nbsp;                        }
+<b class="nc"><i>244</i>&nbsp;                    }</b>
+<b class="nc"><i>245</i>&nbsp;                    if(possibleLevels.size() &gt; 1){</b>
+<b class="nc"><i>246</i>&nbsp;                        buildLevel = levelSelectionPopup(possibleLevels);</b>
+<i>247</i>&nbsp;                    }else{
+<b class="nc"><i>248</i>&nbsp;                        buildLevel = possibleLevels.get(0);</b>
+<i>249</i>&nbsp;                    }
+<b class="nc"><i>250</i>&nbsp;                    List&lt;Object&gt; action = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>251</i>&nbsp;                    action.add(&quot;onBuildChosen&quot;);</b>
+<b class="nc"><i>252</i>&nbsp;                    action.add(clickedCell);</b>
+<b class="nc"><i>253</i>&nbsp;                    action.add(buildLevel);</b>
+<b class="nc"><i>254</i>&nbsp;                    serverConnection.asyncSend(action);</b>
+<b class="nc"><i>255</i>&nbsp;                    this.state=State.NONE;</b>
+<b class="nc"><i>256</i>&nbsp;                    this.disableAll();</b>
+<b class="nc"><i>257</i>&nbsp;                }else{</b>
+<b class="nc"><i>258</i>&nbsp;                    this.showMessage(&quot;Invalid build.&quot;);</b>
+<i>259</i>&nbsp;                }
+<b class="nc"><i>260</i>&nbsp;                break;</b>
+<i>261</i>&nbsp;
+<i>262</i>&nbsp;            case INITIALIZINGWORKERS:
+<i>263</i>&nbsp;                //worker initialization
+<b class="nc"><i>264</i>&nbsp;                if(clickableCells.contains(clickedCell)){</b>
+<b class="nc"><i>265</i>&nbsp;                    List&lt;Object&gt; action = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>266</i>&nbsp;                    action.add(&quot;onWorkerInitialization&quot;);</b>
+<b class="nc"><i>267</i>&nbsp;                    action.add(clickedCell);</b>
+<b class="nc"><i>268</i>&nbsp;                    serverConnection.asyncSend(action);</b>
+<b class="nc"><i>269</i>&nbsp;                    this.state=State.NONE;</b>
+<b class="nc"><i>270</i>&nbsp;                    this.disableAll();</b>
+<b class="nc"><i>271</i>&nbsp;                }else{</b>
+<b class="nc"><i>272</i>&nbsp;                    this.showMessage(&quot;Invalid selection.&quot;);</b>
+<i>273</i>&nbsp;                }
+<b class="nc"><i>274</i>&nbsp;                break;</b>
+<i>275</i>&nbsp;
+<i>276</i>&nbsp;            case SELECTINGWORKER:
+<i>277</i>&nbsp;                //player has chose where to place his worker
+<b class="nc"><i>278</i>&nbsp;                if(clickableCells.contains(clickedCell)){</b>
+<b class="nc"><i>279</i>&nbsp;                    List&lt;Object&gt; action = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>280</i>&nbsp;                    action.add(&quot;onWorkerChosen&quot;);</b>
+<b class="nc"><i>281</i>&nbsp;                    action.add(clickedCell);</b>
+<b class="nc"><i>282</i>&nbsp;                    serverConnection.asyncSend(action);</b>
+<b class="nc"><i>283</i>&nbsp;                    this.state=State.NONE;</b>
+<b class="nc"><i>284</i>&nbsp;                    this.disableAll();</b>
+<b class="nc"><i>285</i>&nbsp;                }else{</b>
+<b class="nc"><i>286</i>&nbsp;                    this.showMessage(&quot;Invalid selection.&quot;);</b>
+<i>287</i>&nbsp;                }
+<b class="nc"><i>288</i>&nbsp;                break;</b>
+<i>289</i>&nbsp;
+<i>290</i>&nbsp;            default:
+<i>291</i>&nbsp;                break;
+<i>292</i>&nbsp;        }
+<i>293</i>&nbsp;    }
+<i>294</i>&nbsp;
+<i>295</i>&nbsp;    //enable board, means the cell are clickable
+<i>296</i>&nbsp;    private void enableBoard(boolean enable){
+<b class="nc"><i>297</i>&nbsp;        for (int i = 0; i &lt; 5; i++) {</b>
+<b class="nc"><i>298</i>&nbsp;            for (int j = 0; j &lt; 5; j++) {</b>
+<b class="nc"><i>299</i>&nbsp;                if(enable){</b>
+<b class="nc"><i>300</i>&nbsp;                    board[i][j].enable();</b>
+<i>301</i>&nbsp;                }else{
+<b class="nc"><i>302</i>&nbsp;                    board[i][j].disable();</b>
+<i>303</i>&nbsp;                }
+<i>304</i>&nbsp;            }
+<i>305</i>&nbsp;        }
+<i>306</i>&nbsp;    }
+<i>307</i>&nbsp;
+<i>308</i>&nbsp;    //used to update the graphics when the onBoardChanged event arrives
+<i>309</i>&nbsp;    private void updateBoard(it.polimi.ingsw.model.Board b){
+<b class="nc"><i>310</i>&nbsp;        for (int i = 0; i &lt; 5; i++) {</b>
+<b class="nc"><i>311</i>&nbsp;            for (int j = 0; j &lt; 5; j++) {</b>
+<i>312</i>&nbsp;                //reset the board
+<b class="nc"><i>313</i>&nbsp;                board[i][j].resetImages();</b>
+<i>314</i>&nbsp;                //draw the board
+<b class="nc"><i>315</i>&nbsp;                switch (b.getSpace(new Coord(i, j)).getHeight()){</b>
+<i>316</i>&nbsp;                    case GROUND:
+<b class="nc"><i>317</i>&nbsp;                        this.board[i][j].setLevelImage(this.emptyImage);</b>
+<b class="nc"><i>318</i>&nbsp;                        break;</b>
+<i>319</i>&nbsp;                    case LVL1:
+<b class="nc"><i>320</i>&nbsp;                        this.board[i][j].setLevelImage(this.lvl1Image);</b>
+<b class="nc"><i>321</i>&nbsp;                        break;</b>
+<i>322</i>&nbsp;                    case LVL2:
+<b class="nc"><i>323</i>&nbsp;                        this.board[i][j].setLevelImage(this.lvl2Image);</b>
+<b class="nc"><i>324</i>&nbsp;                        break;</b>
+<i>325</i>&nbsp;                    case LVL3:
+<b class="nc"><i>326</i>&nbsp;                        this.board[i][j].setLevelImage(this.lvl3Image);</b>
+<i>327</i>&nbsp;                        break;
+<i>328</i>&nbsp;                }
+<b class="nc"><i>329</i>&nbsp;                if(b.getSpace(new Coord(i, j)).isDome()){</b>
+<b class="nc"><i>330</i>&nbsp;                    this.board[i][j].setDomeImage();</b>
+<i>331</i>&nbsp;                }
+<i>332</i>&nbsp;            }
+<i>333</i>&nbsp;        }
+<i>334</i>&nbsp;        //draw worker
+<b class="nc"><i>335</i>&nbsp;        for(Worker w: b.getAllWorkersCopy()){</b>
+<b class="nc"><i>336</i>&nbsp;            if(w.getPosition() != null) {</b>
+<b class="nc"><i>337</i>&nbsp;                board[w.getPosition().x][w.getPosition().y].setWorkerImage(workersTokens.get(w.getColor()));</b>
+<i>338</i>&nbsp;            }
+<b class="nc"><i>339</i>&nbsp;        }</b>
+<i>340</i>&nbsp;    }
+<i>341</i>&nbsp;
+<i>342</i>&nbsp;    //used to show a message in the text area
+<i>343</i>&nbsp;    private void showMessage(String message){
+<b class="nc"><i>344</i>&nbsp;        this.messageBox.appendText(message + &quot;\n&quot;);</b>
+<i>345</i>&nbsp;    }
+<i>346</i>&nbsp;
+<i>347</i>&nbsp;    //enable move button
+<i>348</i>&nbsp;    private void enableMove(boolean enable){
+<b class="nc"><i>349</i>&nbsp;        this.moveBtnOff.setVisible(!enable);</b>
+<b class="nc"><i>350</i>&nbsp;        this.moveBtnOn.setVisible(enable);</b>
+<i>351</i>&nbsp;    }
+<i>352</i>&nbsp;
+<i>353</i>&nbsp;    //enable build button
+<i>354</i>&nbsp;    private void enableBuild(boolean enable){
+<b class="nc"><i>355</i>&nbsp;        this.buildBtnOff.setVisible(!enable);</b>
+<b class="nc"><i>356</i>&nbsp;        this.buildBtnOn.setVisible(enable);</b>
+<i>357</i>&nbsp;    }
+<i>358</i>&nbsp;
+<i>359</i>&nbsp;    //enable skip button
+<i>360</i>&nbsp;    private void enableSkip(boolean enable){
+<b class="nc"><i>361</i>&nbsp;        this.skipBtnOff.setVisible(!enable);</b>
+<b class="nc"><i>362</i>&nbsp;        this.skipBtnOn.setVisible(enable);</b>
+<i>363</i>&nbsp;    }
+<i>364</i>&nbsp;
+<i>365</i>&nbsp;    //enable back button
+<i>366</i>&nbsp;    private void enableBack(boolean enable){
+<b class="nc"><i>367</i>&nbsp;        this.backBtn.setVisible(enable);</b>
+<i>368</i>&nbsp;    }
+<i>369</i>&nbsp;
+<i>370</i>&nbsp;    //disable board and all buttons
+<i>371</i>&nbsp;    private void disableAll(){
+<b class="nc"><i>372</i>&nbsp;        this.enableBoard(false);</b>
+<b class="nc"><i>373</i>&nbsp;        this.enableMove(false);</b>
+<b class="nc"><i>374</i>&nbsp;        this.enableBuild(false);</b>
+<b class="nc"><i>375</i>&nbsp;        this.enableSkip(false);</b>
+<b class="nc"><i>376</i>&nbsp;        this.enableBack(false);</b>
+<i>377</i>&nbsp;    }
+<i>378</i>&nbsp;
+<i>379</i>&nbsp;    /**
+<i>380</i>&nbsp;     * called when the move button is clicked
+<i>381</i>&nbsp;     */
+<i>382</i>&nbsp;    @FXML
+<i>383</i>&nbsp;    public void moveAction(){
+<b class="nc"><i>384</i>&nbsp;        this.disableAll();</b>
+<b class="nc"><i>385</i>&nbsp;        this.enableBoard(true);</b>
+<b class="nc"><i>386</i>&nbsp;        this.state = State.MOVE;</b>
+<b class="nc"><i>387</i>&nbsp;        this.enableBack(true);</b>
+<i>388</i>&nbsp;    }
+<i>389</i>&nbsp;
+<i>390</i>&nbsp;    /**
+<i>391</i>&nbsp;     *called when the move button is clicked
+<i>392</i>&nbsp;     */
+<i>393</i>&nbsp;    @FXML
+<i>394</i>&nbsp;    public void buildAction(){
+<b class="nc"><i>395</i>&nbsp;        this.disableAll();</b>
+<b class="nc"><i>396</i>&nbsp;        this.enableBoard(true);</b>
+<b class="nc"><i>397</i>&nbsp;        this.state = State.BUILD;</b>
+<b class="nc"><i>398</i>&nbsp;        this.enableBack(true);</b>
+<i>399</i>&nbsp;    }
+<i>400</i>&nbsp;
+<i>401</i>&nbsp;    /**
+<i>402</i>&nbsp;     *called when the move button is clicked
+<i>403</i>&nbsp;     */
+<i>404</i>&nbsp;    @FXML
+<i>405</i>&nbsp;    public void skipAction(){
+<b class="nc"><i>406</i>&nbsp;        this.disableAll();</b>
+<b class="nc"><i>407</i>&nbsp;        this.state = State.NONE;</b>
+<i>408</i>&nbsp;        //send a message to the server, player wants to skip
+<b class="nc"><i>409</i>&nbsp;        List&lt;Object&gt; objects = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>410</i>&nbsp;        objects.add(&quot;skipAction&quot;);</b>
+<b class="nc"><i>411</i>&nbsp;        serverConnection.asyncSend(objects);</b>
+<i>412</i>&nbsp;    }
+<i>413</i>&nbsp;
+<i>414</i>&nbsp;    /**
+<i>415</i>&nbsp;     * called when the back button is clicked
+<i>416</i>&nbsp;     */
+<i>417</i>&nbsp;    @FXML
+<i>418</i>&nbsp;    public void goBack(){
+<b class="nc"><i>419</i>&nbsp;        disableAll();</b>
+<b class="nc"><i>420</i>&nbsp;        this.state = State.NONE;</b>
+<b class="nc"><i>421</i>&nbsp;        if(canSkip)</b>
+<b class="nc"><i>422</i>&nbsp;            enableSkip(true);</b>
+<b class="nc"><i>423</i>&nbsp;        if(canMove)</b>
+<b class="nc"><i>424</i>&nbsp;            enableMove(true);</b>
+<b class="nc"><i>425</i>&nbsp;        if(canBuild)</b>
+<b class="nc"><i>426</i>&nbsp;            enableBuild(true);</b>
+<i>427</i>&nbsp;    }
+<i>428</i>&nbsp;
+<i>429</i>&nbsp;    //to add player banner (when game is ready)
+<i>430</i>&nbsp;    private void addPlayerBanner(String player, Color color){
+<b class="nc"><i>431</i>&nbsp;        this.playersColors.put(player, color);</b>
+<b class="nc"><i>432</i>&nbsp;        switch (color){</b>
+<i>433</i>&nbsp;            case BLUE:
+<b class="nc"><i>434</i>&nbsp;                this.blueBanner.setVisible(true);</b>
+<b class="nc"><i>435</i>&nbsp;                this.blueLabel.setVisible(true);</b>
+<b class="nc"><i>436</i>&nbsp;                this.blueLabel.setText(player);</b>
+<b class="nc"><i>437</i>&nbsp;                break;</b>
+<i>438</i>&nbsp;            case RED:
+<b class="nc"><i>439</i>&nbsp;                this.redBanner.setVisible(true);</b>
+<b class="nc"><i>440</i>&nbsp;                this.redLabel.setVisible(true);</b>
+<b class="nc"><i>441</i>&nbsp;                this.redLabel.setText(player);</b>
+<b class="nc"><i>442</i>&nbsp;                break;</b>
+<i>443</i>&nbsp;            case YELLOW:
+<b class="nc"><i>444</i>&nbsp;                this.yellowBanner.setVisible(true);</b>
+<b class="nc"><i>445</i>&nbsp;                this.yellowLabel.setVisible(true);</b>
+<b class="nc"><i>446</i>&nbsp;                this.yellowLabel.setText(player);</b>
+<i>447</i>&nbsp;                break;
+<i>448</i>&nbsp;        }
+<i>449</i>&nbsp;    }
+<i>450</i>&nbsp;
+<i>451</i>&nbsp;    //to remove a player banner (when he looses)
+<i>452</i>&nbsp;    private void removePlayerBanner(String nickname){
+<b class="nc"><i>453</i>&nbsp;        Color c = this.playersColors.get(nickname);</b>
+<b class="nc"><i>454</i>&nbsp;        switch (c){</b>
+<i>455</i>&nbsp;            case BLUE:
+<b class="nc"><i>456</i>&nbsp;                this.blueBanner.setVisible(false);</b>
+<b class="nc"><i>457</i>&nbsp;                this.blueLabel.setVisible(false);</b>
+<b class="nc"><i>458</i>&nbsp;                break;</b>
+<i>459</i>&nbsp;            case RED:
+<b class="nc"><i>460</i>&nbsp;                this.redBanner.setVisible(false);</b>
+<b class="nc"><i>461</i>&nbsp;                this.redLabel.setVisible(false);</b>
+<b class="nc"><i>462</i>&nbsp;                break;</b>
+<i>463</i>&nbsp;            case YELLOW:
+<b class="nc"><i>464</i>&nbsp;                this.yellowBanner.setVisible(false);</b>
+<b class="nc"><i>465</i>&nbsp;                this.yellowLabel.setVisible(false);</b>
+<i>466</i>&nbsp;                break;
+<i>467</i>&nbsp;        }
+<i>468</i>&nbsp;    }
+<i>469</i>&nbsp;
+<i>470</i>&nbsp;    //to highlight a player banner during it&#39;s turn
+<i>471</i>&nbsp;    private void highlightPlayerBanner(String nickname){
+<b class="nc"><i>472</i>&nbsp;        Color c = this.playersColors.get(nickname);</b>
+<b class="nc"><i>473</i>&nbsp;        this.blueBanner.setScaleX(1);</b>
+<b class="nc"><i>474</i>&nbsp;        this.redBanner.setScaleX(1);</b>
+<b class="nc"><i>475</i>&nbsp;        this.yellowBanner.setScaleX(1);</b>
+<b class="nc"><i>476</i>&nbsp;        switch (c){</b>
+<i>477</i>&nbsp;            case BLUE:
+<b class="nc"><i>478</i>&nbsp;                this.blueBanner.setScaleX(1.5);</b>
+<b class="nc"><i>479</i>&nbsp;                break;</b>
+<i>480</i>&nbsp;            case RED:
+<b class="nc"><i>481</i>&nbsp;                this.redBanner.setScaleX(1.5);</b>
+<b class="nc"><i>482</i>&nbsp;                break;</b>
+<i>483</i>&nbsp;            case YELLOW:
+<b class="nc"><i>484</i>&nbsp;                this.yellowBanner.setScaleX(1.5);</b>
+<i>485</i>&nbsp;                break;
+<i>486</i>&nbsp;        }
+<i>487</i>&nbsp;    }
+<i>488</i>&nbsp;
+<i>489</i>&nbsp;    //to ask challenger to choose gods for the game
+<i>490</i>&nbsp;    private List&lt;String&gt; godsSelectionPopup(int numPlayers){
+<i>491</i>&nbsp;
+<b class="nc"><i>492</i>&nbsp;        final List&lt;String&gt;[] gods = new List[]{new ArrayList&lt;&gt;()};</b>
+<i>493</i>&nbsp;
+<b class="nc"><i>494</i>&nbsp;        FXMLLoader loader = new FXMLLoader();</b>
+<b class="nc"><i>495</i>&nbsp;        loader.setLocation(getClass().getResource(&quot;/GodsPopup.fxml&quot;));</b>
+<b class="nc"><i>496</i>&nbsp;        Parent root = null;</b>
+<i>497</i>&nbsp;        try {
+<b class="nc"><i>498</i>&nbsp;            root = loader.load();</b>
+<b class="nc"><i>499</i>&nbsp;            Stage stage = new Stage();</b>
+<i>500</i>&nbsp;
+<b class="nc"><i>501</i>&nbsp;            Scene scene = new Scene(root);</b>
+<b class="nc"><i>502</i>&nbsp;            stage.setScene(scene);</b>
+<b class="nc"><i>503</i>&nbsp;            stage.setResizable(false);</b>
+<b class="nc"><i>504</i>&nbsp;            stage.sizeToScene();</b>
+<b class="nc"><i>505</i>&nbsp;            stage.setTitle(&quot;Choose the playable gods&quot;);</b>
+<b class="nc"><i>506</i>&nbsp;            stage.initOwner(boardWindow.getScene().getWindow());</b>
+<b class="nc"><i>507</i>&nbsp;            stage.initModality(Modality.WINDOW_MODAL);</b>
+<b class="nc"><i>508</i>&nbsp;            ((GodsPopup) loader.getController()).setNumPlayers(numPlayers);</b>
+<b class="nc"><i>509</i>&nbsp;            stage.showAndWait();</b>
+<b class="nc"><i>510</i>&nbsp;            gods[0] = ((GodsPopup) loader.getController()).getChoices();</b>
+<b class="nc"><i>511</i>&nbsp;        } catch (IOException e) {</b>
+<b class="nc"><i>512</i>&nbsp;            e.printStackTrace();</b>
+<b class="nc"><i>513</i>&nbsp;        }</b>
+<i>514</i>&nbsp;
+<b class="nc"><i>515</i>&nbsp;        return gods[0];</b>
+<i>516</i>&nbsp;
+<i>517</i>&nbsp;    }
+<i>518</i>&nbsp;
+<i>519</i>&nbsp;    //to ask a player for his god
+<i>520</i>&nbsp;    private String godSelectionPopup(List&lt;String&gt; availableGods){
+<i>521</i>&nbsp;
+<b class="nc"><i>522</i>&nbsp;        final String[] god = new String[1];</b>
+<i>523</i>&nbsp;
+<b class="nc"><i>524</i>&nbsp;        FXMLLoader loader = new FXMLLoader();</b>
+<b class="nc"><i>525</i>&nbsp;        loader.setLocation(getClass().getResource(&quot;/GodPopup.fxml&quot;));</b>
+<b class="nc"><i>526</i>&nbsp;        Parent root = null;</b>
+<i>527</i>&nbsp;        try {
+<b class="nc"><i>528</i>&nbsp;            root = loader.load();</b>
+<b class="nc"><i>529</i>&nbsp;            Stage stage = new Stage();</b>
+<i>530</i>&nbsp;
+<b class="nc"><i>531</i>&nbsp;            Scene scene = new Scene(root);</b>
+<b class="nc"><i>532</i>&nbsp;            stage.setScene(scene);</b>
+<b class="nc"><i>533</i>&nbsp;            stage.setResizable(false);</b>
+<b class="nc"><i>534</i>&nbsp;            stage.sizeToScene();</b>
+<b class="nc"><i>535</i>&nbsp;            stage.setTitle(&quot;Choose the playable gods&quot;);</b>
+<b class="nc"><i>536</i>&nbsp;            stage.initOwner(boardWindow.getScene().getWindow());</b>
+<b class="nc"><i>537</i>&nbsp;            stage.initModality(Modality.WINDOW_MODAL);</b>
+<b class="nc"><i>538</i>&nbsp;            ((GodPopup) loader.getController()).setGods(availableGods);</b>
+<b class="nc"><i>539</i>&nbsp;            stage.showAndWait();</b>
+<b class="nc"><i>540</i>&nbsp;            god[0] = ((GodPopup) loader.getController()).getChoice();</b>
+<b class="nc"><i>541</i>&nbsp;        } catch (IOException e) {</b>
+<b class="nc"><i>542</i>&nbsp;            e.printStackTrace();</b>
+<b class="nc"><i>543</i>&nbsp;        }</b>
+<b class="nc"><i>544</i>&nbsp;        return god[0];</b>
+<i>545</i>&nbsp;    }
+<i>546</i>&nbsp;
+<i>547</i>&nbsp;    //to ask challenger for starting player
+<i>548</i>&nbsp;    private String startPlayerSelectionPopup(List&lt;String&gt; players){
+<b class="nc"><i>549</i>&nbsp;        ChoiceDialog&lt;String&gt; dialog = new ChoiceDialog&lt;&gt;(players.get(0), players);</b>
+<b class="nc"><i>550</i>&nbsp;        dialog.setTitle(&quot;Choose Start Player&quot;);</b>
+<b class="nc"><i>551</i>&nbsp;        dialog.setHeaderText(&quot;Choose Start Player&quot;);</b>
+<i>552</i>&nbsp;
+<b class="nc"><i>553</i>&nbsp;        dialog.initModality(Modality.WINDOW_MODAL);</b>
+<b class="nc"><i>554</i>&nbsp;        Optional&lt;String&gt; result = dialog.showAndWait();</b>
+<b class="nc"><i>555</i>&nbsp;        return result.orElse(&quot;&quot;);</b>
+<i>556</i>&nbsp;    }
+<i>557</i>&nbsp;
+<i>558</i>&nbsp;    //to ask which level to build in case of multiple options (atlas)
+<i>559</i>&nbsp;    private Level levelSelectionPopup(List&lt;Level&gt; levels){
+<b class="nc"><i>560</i>&nbsp;        ChoiceDialog&lt;Level&gt; dialog = new ChoiceDialog&lt;&gt;(levels.get(0), levels);</b>
+<b class="nc"><i>561</i>&nbsp;        dialog.setTitle(&quot;Choose Level to Build&quot;);</b>
+<b class="nc"><i>562</i>&nbsp;        dialog.setHeaderText(&quot;Choose Level to Build&quot;);</b>
+<i>563</i>&nbsp;
+<b class="nc"><i>564</i>&nbsp;        dialog.initModality(Modality.WINDOW_MODAL);</b>
+<b class="nc"><i>565</i>&nbsp;        Optional&lt;Level&gt; result = dialog.showAndWait();</b>
+<b class="nc"><i>566</i>&nbsp;        return result.orElse(levels.get(0));</b>
+<i>567</i>&nbsp;    }
+<i>568</i>&nbsp;
+<i>569</i>&nbsp;    private void messagePopup(String header, String body){
+<b class="nc"><i>570</i>&nbsp;        Alert alert = new Alert(Alert.AlertType.INFORMATION);</b>
+<b class="nc"><i>571</i>&nbsp;        alert.setTitle(&quot;Santorini&quot;);</b>
+<b class="nc"><i>572</i>&nbsp;        alert.setHeaderText(header);</b>
+<b class="nc"><i>573</i>&nbsp;        alert.setContentText(body);</b>
+<b class="nc"><i>574</i>&nbsp;        alert.showAndWait();</b>
+<i>575</i>&nbsp;        return;
+<i>576</i>&nbsp;    }
+<i>577</i>&nbsp;
+<i>578</i>&nbsp;    //called when receiving a message from the server
+<i>579</i>&nbsp;    private void handleMessageReceived() {
+<i>580</i>&nbsp;        List&lt;Object&gt; objs;
+<b class="nc"><i>581</i>&nbsp;        if (receivedObject instanceof List)</b>
+<b class="nc"><i>582</i>&nbsp;            objs = (List&lt;Object&gt;) receivedObject;</b>
+<i>583</i>&nbsp;        else {
+<b class="nc"><i>584</i>&nbsp;            System.out.println(&quot;Something went wrong in handling received message&quot;);</b>
+<i>585</i>&nbsp;            return;
+<i>586</i>&nbsp;        }
+<b class="nc"><i>587</i>&nbsp;        String event = (String) objs.get(0);</b>
+<b class="nc"><i>588</i>&nbsp;        Platform.runLater(new Runnable() {</b>
+<i>589</i>&nbsp;            @Override
+<i>590</i>&nbsp;            public void run() {
+<b class="nc"><i>591</i>&nbsp;                synchronized (receivedObject) {</b>
+<i>592</i>&nbsp;                    List&lt;Object&gt; objects;
+<b class="nc"><i>593</i>&nbsp;                    switch (event) {</b>
+<i>594</i>&nbsp;                        //MODEL MESSAGES
+<i>595</i>&nbsp;                        case &quot;onBoardChanged&quot;:
+<i>596</i>&nbsp;                            //disableAll();
+<b class="nc"><i>597</i>&nbsp;                            it.polimi.ingsw.model.Board b = (it.polimi.ingsw.model.Board) objs.get(1);</b>
+<b class="nc"><i>598</i>&nbsp;                            System.out.println(b.toString());</b>
+<b class="nc"><i>599</i>&nbsp;                            updateBoard(b);</b>
+<b class="nc"><i>600</i>&nbsp;                            break;</b>
+<i>601</i>&nbsp;
+<i>602</i>&nbsp;                        case &quot;onGameReady&quot;:
+<b class="nc"><i>603</i>&nbsp;                            disableAll();</b>
+<b class="nc"><i>604</i>&nbsp;                            System.out.println(&quot;Set up phase is done!&quot;);</b>
+<b class="nc"><i>605</i>&nbsp;                            showMessage(&quot;Set up phase is done!&quot;);</b>
+<b class="nc"><i>606</i>&nbsp;                            List&lt;Player&gt; players = (List&lt;Player&gt;) objs.get(1);</b>
+<b class="nc"><i>607</i>&nbsp;                            players.forEach(p -&gt; addPlayerBanner(p.getNickname(), p.getWorkerColor()));</b>
+<b class="nc"><i>608</i>&nbsp;                            players.forEach(p -&gt; playersGodsImages.put(p.getNickname(), new Image(&quot;GodCard/&quot;+p.getGod().getName()+&quot;.png&quot;)));</b>
+<b class="nc"><i>609</i>&nbsp;                            players.forEach(p -&gt; playersGods.put(p.getNickname(), p.getGod()));</b>
+<b class="nc"><i>610</i>&nbsp;                            break;</b>
+<i>611</i>&nbsp;
+<i>612</i>&nbsp;                        case &quot;onGodsChosen&quot;:
+<b class="nc"><i>613</i>&nbsp;                            disableAll();</b>
+<b class="nc"><i>614</i>&nbsp;                            List&lt;String&gt; selectedGods = (List&lt;String&gt;) objs.get(1);</b>
+<b class="nc"><i>615</i>&nbsp;                            System.out.println(&quot;Challenger has chosen the playable gods&quot;);</b>
+<b class="nc"><i>616</i>&nbsp;                            showMessage(&quot;Challenger has chosen the playable gods&quot;);</b>
+<b class="nc"><i>617</i>&nbsp;                            break;</b>
+<i>618</i>&nbsp;
+<i>619</i>&nbsp;                        case &quot;onPlayerAdded&quot;:
+<b class="nc"><i>620</i>&nbsp;                            disableAll();</b>
+<b class="nc"><i>621</i>&nbsp;                            String newPlayer = (String) objs.get(1);</b>
+<b class="nc"><i>622</i>&nbsp;                            int numCurr = (int) objs.get(2);</b>
+<b class="nc"><i>623</i>&nbsp;                            int numTot = (int) objs.get(3);</b>
+<b class="nc"><i>624</i>&nbsp;                            System.out.println(newPlayer + &quot; has joined the game. Waiting for &quot; + (numTot - numCurr) + &quot; more player(s)&quot;);</b>
+<b class="nc"><i>625</i>&nbsp;                            showMessage(newPlayer + &quot; has joined the game. Waiting for &quot; + (numTot - numCurr) + &quot; more player(s)&quot;);</b>
+<b class="nc"><i>626</i>&nbsp;                            break;</b>
+<i>627</i>&nbsp;
+<i>628</i>&nbsp;                        case &quot;onGodSelection&quot;:
+<b class="nc"><i>629</i>&nbsp;                            disableAll();</b>
+<b class="nc"><i>630</i>&nbsp;                            String currPlayer = (String) objs.get(1);</b>
+<b class="nc"><i>631</i>&nbsp;                            List&lt;String&gt; godsForSelection = (List&lt;String&gt;) objs.get(2);</b>
+<b class="nc"><i>632</i>&nbsp;                            if (currPlayer.equals(nickname)) {</b>
+<b class="nc"><i>633</i>&nbsp;                                String godSelected = &quot;&quot;;</b>
+<b class="nc"><i>634</i>&nbsp;                                while (godSelected.equals(&quot;&quot;)) {</b>
+<b class="nc"><i>635</i>&nbsp;                                    godSelected = godSelectionPopup(godsForSelection);</b>
+<i>636</i>&nbsp;                                }
+<b class="nc"><i>637</i>&nbsp;                                showMessage(&quot;Selected god: &quot; + godSelected);</b>
+<b class="nc"><i>638</i>&nbsp;                                objects = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>639</i>&nbsp;                                objects.add(&quot;onGodChosen&quot;);</b>
+<b class="nc"><i>640</i>&nbsp;                                objects.add(godSelected);</b>
+<b class="nc"><i>641</i>&nbsp;                                serverConnection.asyncSend(objects);</b>
+<b class="nc"><i>642</i>&nbsp;                            } else {</b>
+<b class="nc"><i>643</i>&nbsp;                                showMessage(currPlayer + &quot; is choosing his god...&quot;);</b>
+<i>644</i>&nbsp;                            }
+<b class="nc"><i>645</i>&nbsp;                            break;</b>
+<i>646</i>&nbsp;
+<i>647</i>&nbsp;                        case &quot;onGodsSelection&quot;:
+<b class="nc"><i>648</i>&nbsp;                            disableAll();</b>
+<b class="nc"><i>649</i>&nbsp;                            if (isChallenger) {</b>
+<b class="nc"><i>650</i>&nbsp;                                List&lt;String&gt; allGods = (List&lt;String&gt;) objs.get(1);</b>
+<b class="nc"><i>651</i>&nbsp;                                int numPlayers = (int) objs.get(2);</b>
+<b class="nc"><i>652</i>&nbsp;                                List&lt;String&gt; godsSelected = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>653</i>&nbsp;                                while (godsSelected.size() &lt; numPlayers) {</b>
+<b class="nc"><i>654</i>&nbsp;                                    godsSelected = godsSelectionPopup(numPlayers);</b>
+<i>655</i>&nbsp;                                }
+<b class="nc"><i>656</i>&nbsp;                                objects = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>657</i>&nbsp;                                objects.add(&quot;onGodsChosen&quot;);</b>
+<b class="nc"><i>658</i>&nbsp;                                objects.add(godsSelected);</b>
+<b class="nc"><i>659</i>&nbsp;                                serverConnection.asyncSend(objects);</b>
+<b class="nc"><i>660</i>&nbsp;                            } else {</b>
+<b class="nc"><i>661</i>&nbsp;                                System.out.println(&quot;The challenger is choosing the gods...&quot;);</b>
+<b class="nc"><i>662</i>&nbsp;                                showMessage(&quot;The challenger is choosing the gods...&quot;);</b>
+<i>663</i>&nbsp;                            }
+<b class="nc"><i>664</i>&nbsp;                            break;</b>
+<i>665</i>&nbsp;
+<i>666</i>&nbsp;                        case &quot;onStartPlayerSelection&quot;:
+<b class="nc"><i>667</i>&nbsp;                            disableAll();</b>
+<b class="nc"><i>668</i>&nbsp;                            if (isChallenger) {</b>
+<b class="nc"><i>669</i>&nbsp;                                List&lt;String&gt; playerss = (List&lt;String&gt;) objs.get(1);</b>
+<b class="nc"><i>670</i>&nbsp;                                String startPlayer = &quot;&quot;;</b>
+<b class="nc"><i>671</i>&nbsp;                                while (startPlayer.equals(&quot;&quot;)) {</b>
+<b class="nc"><i>672</i>&nbsp;                                    startPlayer = startPlayerSelectionPopup(playerss);</b>
+<i>673</i>&nbsp;                                }
+<b class="nc"><i>674</i>&nbsp;                                objects = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>675</i>&nbsp;                                objects.add(&quot;onStartPlayerChosen&quot;);</b>
+<b class="nc"><i>676</i>&nbsp;                                objects.add(startPlayer);</b>
+<b class="nc"><i>677</i>&nbsp;                                serverConnection.asyncSend(objects);</b>
+<b class="nc"><i>678</i>&nbsp;                            } else {</b>
+<b class="nc"><i>679</i>&nbsp;                                System.out.println(&quot;Challenger is choosing the starting player...&quot;);</b>
+<b class="nc"><i>680</i>&nbsp;                                showMessage(&quot;Challenger is choosing the starting player...&quot;);</b>
+<i>681</i>&nbsp;                            }
+<b class="nc"><i>682</i>&nbsp;                            break;</b>
+<i>683</i>&nbsp;
+<i>684</i>&nbsp;                        case &quot;onMyInitialization&quot;:
+<b class="nc"><i>685</i>&nbsp;                            disableAll();</b>
+<b class="nc"><i>686</i>&nbsp;                            String currPlayerr = (String) objs.get(1);</b>
+<b class="nc"><i>687</i>&nbsp;                            List&lt;Coord&gt; freeSpaces = (List&lt;Coord&gt;) objs.get(2);</b>
+<b class="nc"><i>688</i>&nbsp;                            if (currPlayerr.equals(nickname)) {</b>
+<b class="nc"><i>689</i>&nbsp;                                showMessage(&quot;Your turn: place your workers.&quot;);</b>
+<b class="nc"><i>690</i>&nbsp;                                clickableCells.clear();</b>
+<b class="nc"><i>691</i>&nbsp;                                clickableCells = freeSpaces;</b>
+<b class="nc"><i>692</i>&nbsp;                                state = State.INITIALIZINGWORKERS;</b>
+<b class="nc"><i>693</i>&nbsp;                                enableBoard(true);</b>
+<i>694</i>&nbsp;                                //a questo punto la board è abilitata e verrà selezionato lo spazio dove posizionare il worker
+<i>695</i>&nbsp;                            } else {
+<b class="nc"><i>696</i>&nbsp;                                showMessage(currPlayerr + &quot; is placing his workers...&quot;);</b>
+<i>697</i>&nbsp;                            }
+<b class="nc"><i>698</i>&nbsp;                            break;</b>
+<i>699</i>&nbsp;
+<i>700</i>&nbsp;                        case &quot;onMyTurn&quot;:
+<b class="nc"><i>701</i>&nbsp;                            disableAll();</b>
+<b class="nc"><i>702</i>&nbsp;                            String currPlayerrr = (String) objs.get(1);</b>
+<b class="nc"><i>703</i>&nbsp;                            List&lt;Coord&gt; selectableWorkers = (List&lt;Coord&gt;) objs.get(2);</b>
+<b class="nc"><i>704</i>&nbsp;                            highlightPlayerBanner(currPlayerrr);</b>
+<b class="nc"><i>705</i>&nbsp;                            currentGod.setImage(playersGodsImages.get(currPlayerrr));</b>
+<b class="nc"><i>706</i>&nbsp;                            currentGod.setOnMouseClicked(mouseEvent -&gt; { messagePopup(playersGods.get(currPlayerrr).getName(), playersGods.get(currPlayerrr).getDescription());});</b>
+<b class="nc"><i>707</i>&nbsp;                            if (currPlayerrr.equals(nickname)) {</b>
+<b class="nc"><i>708</i>&nbsp;                                showMessage(&quot;Your turn: Select the worker for this turn&quot;);</b>
+<b class="nc"><i>709</i>&nbsp;                                clickableCells.clear();</b>
+<b class="nc"><i>710</i>&nbsp;                                clickableCells.addAll(selectableWorkers);</b>
+<b class="nc"><i>711</i>&nbsp;                                state = State.SELECTINGWORKER;</b>
+<b class="nc"><i>712</i>&nbsp;                                enableBoard(true);</b>
+<i>713</i>&nbsp;                                //a questo punto la board è abilitata e verrà selezionato il worker per il turno
+<i>714</i>&nbsp;                            } else {
+<b class="nc"><i>715</i>&nbsp;                                showMessage(currPlayerrr + &quot;&#39;s turn...&quot;);</b>
+<i>716</i>&nbsp;                            }
+<b class="nc"><i>717</i>&nbsp;                            break;</b>
+<i>718</i>&nbsp;
+<i>719</i>&nbsp;                        case &quot;onMyAction&quot;:
+<b class="nc"><i>720</i>&nbsp;                            disableAll();</b>
+<b class="nc"><i>721</i>&nbsp;                            canMove = false;</b>
+<b class="nc"><i>722</i>&nbsp;                            canBuild = false;</b>
+<b class="nc"><i>723</i>&nbsp;                            canSkip = false;</b>
+<b class="nc"><i>724</i>&nbsp;                            String currPlayerrrr = (String) objs.get(1);</b>
+<i>725</i>&nbsp;                            //movable spaces
+<b class="nc"><i>726</i>&nbsp;                            List&lt;Coord&gt; movableSpaces = (List&lt;Coord&gt;) objs.get(2);</b>
+<b class="nc"><i>727</i>&nbsp;                            buildableSpaces = (Map&lt;Level, List&lt;Coord&gt;&gt;) objs.get(3);</b>
+<b class="nc"><i>728</i>&nbsp;                            boolean canEndTurn = (boolean) objs.get(4);</b>
+<b class="nc"><i>729</i>&nbsp;                            if (currPlayerrrr.equals(nickname)) {</b>
+<b class="nc"><i>730</i>&nbsp;                                clickableCells.clear();</b>
+<b class="nc"><i>731</i>&nbsp;                                clickableCells.addAll(movableSpaces);</b>
+<i>732</i>&nbsp;                                //buildable spaces
+<b class="nc"><i>733</i>&nbsp;                                boolean thereAreBuilds = false;</b>
+<b class="nc"><i>734</i>&nbsp;                                for (Level l : buildableSpaces.keySet()) {</b>
+<i>735</i>&nbsp;                                    //clickableCells.addAll(buildableSpaces.get(l));
+<b class="nc"><i>736</i>&nbsp;                                    for (Coord c : buildableSpaces.get(l)) {</b>
+<b class="nc"><i>737</i>&nbsp;                                        if (!clickableCells.contains(c)) {</b>
+<b class="nc"><i>738</i>&nbsp;                                            clickableCells.add(c);</b>
+<i>739</i>&nbsp;                                        }
+<b class="nc"><i>740</i>&nbsp;                                    }</b>
+<b class="nc"><i>741</i>&nbsp;                                    if (buildableSpaces.get(l).size() &gt; 0)</b>
+<b class="nc"><i>742</i>&nbsp;                                        thereAreBuilds = true;</b>
+<b class="nc"><i>743</i>&nbsp;                                }</b>
+<b class="nc"><i>744</i>&nbsp;                                if (canEndTurn) {</b>
+<b class="nc"><i>745</i>&nbsp;                                    enableSkip(true);</b>
+<b class="nc"><i>746</i>&nbsp;                                    canSkip = true;</b>
+<i>747</i>&nbsp;                                }
+<b class="nc"><i>748</i>&nbsp;                                if (movableSpaces.size() &gt; 0) {</b>
+<b class="nc"><i>749</i>&nbsp;                                    enableMove(true);</b>
+<b class="nc"><i>750</i>&nbsp;                                    canMove = true;</b>
+<i>751</i>&nbsp;                                }
+<b class="nc"><i>752</i>&nbsp;                                if (thereAreBuilds) {</b>
+<b class="nc"><i>753</i>&nbsp;                                    enableBuild(true);</b>
+<b class="nc"><i>754</i>&nbsp;                                    canBuild = true;</b>
+<i>755</i>&nbsp;                                }
+<b class="nc"><i>756</i>&nbsp;                                state = State.NONE;</b>
+<i>757</i>&nbsp;                                //a questo punto un button tra move e build verrà premuto, e la board verrà abilitata
+<b class="nc"><i>758</i>&nbsp;                            }</b>
+<i>759</i>&nbsp;                            break;
+<i>760</i>&nbsp;
+<i>761</i>&nbsp;                        case &quot;onEnd&quot;:
+<b class="nc"><i>762</i>&nbsp;                            disableAll();</b>
+<b class="nc"><i>763</i>&nbsp;                            messagePopup(&quot;Game ended&quot;, &quot;Game ended.&quot;);</b>
+<b class="nc"><i>764</i>&nbsp;                            System.out.println(&quot;Game Ended&quot;);</b>
+<i>765</i>&nbsp;
+<b class="nc"><i>766</i>&nbsp;                            break;</b>
+<i>767</i>&nbsp;
+<i>768</i>&nbsp;                        case &quot;onMessage&quot;:
+<b class="nc"><i>769</i>&nbsp;                            disableAll();</b>
+<b class="nc"><i>770</i>&nbsp;                            String message = (String) ((List&lt;Object&gt;) receivedObject).get(1);</b>
+<b class="nc"><i>771</i>&nbsp;                            if (!message.equals((&quot;disconnected&quot;))) {</b>
+<b class="nc"><i>772</i>&nbsp;                                System.out.println(message);</b>
+<b class="nc"><i>773</i>&nbsp;                                showMessage(message);</b>
+<b class="nc"><i>774</i>&nbsp;                                messagePopup(message, message);</b>
+<i>775</i>&nbsp;                            }
+<b class="nc"><i>776</i>&nbsp;                            if (message.equals((&quot;disconnected&quot;))) {</b>
+<b class="nc"><i>777</i>&nbsp;                                disableAll();</b>
+<i>778</i>&nbsp;                                // the game is no more valid, client must disconnect
+<b class="nc"><i>779</i>&nbsp;                                System.out.println(&quot;A client disconnected from the game, disconnecting...&quot;);</b>
+<b class="nc"><i>780</i>&nbsp;                                showMessage(&quot;A client disconnected from the game, disconnecting...&quot;);</b>
+<i>781</i>&nbsp;
+<b class="nc"><i>782</i>&nbsp;                                messagePopup(&quot;Game ended.&quot;, &quot;Another player disconnected from the game.&quot;);</b>
+<i>783</i>&nbsp;
+<i>784</i>&nbsp;                                //Close socket, streams, return to main menu
+<b class="nc"><i>785</i>&nbsp;                                close();</b>
+<i>786</i>&nbsp;                            }
+<i>787</i>&nbsp;                            break;
+<i>788</i>&nbsp;
+<i>789</i>&nbsp;                        default:
+<b class="nc"><i>790</i>&nbsp;                            disableAll();</b>
+<b class="nc"><i>791</i>&nbsp;                            System.out.println(&quot;Event message not recognized.&quot;);</b>
+<i>792</i>&nbsp;                            break;
+<i>793</i>&nbsp;                    }
+<b class="nc"><i>794</i>&nbsp;                }</b>
+<i>795</i>&nbsp;            }
+<i>796</i>&nbsp;        });
+<i>797</i>&nbsp;    }
+<i>798</i>&nbsp;
+<i>799</i>&nbsp;    /**
+<i>800</i>&nbsp;     * To close the board window and return to the main menu,
+<i>801</i>&nbsp;     * connecting to the server as a new client
+<i>802</i>&nbsp;     */
+<i>803</i>&nbsp;    public void close(){
+<b class="nc"><i>804</i>&nbsp;        this.exec.shutdown();</b>
+<b class="nc"><i>805</i>&nbsp;        this.serverConnection.closeConnection();</b>
+<i>806</i>&nbsp;        //Close this windows and show main menu window
+<b class="nc"><i>807</i>&nbsp;        FXMLLoader loader = new FXMLLoader();</b>
+<b class="nc"><i>808</i>&nbsp;        loader.setLocation(getClass().getResource(&quot;/home.fxml&quot;));</b>
+<b class="nc"><i>809</i>&nbsp;        Parent root = null;</b>
+<i>810</i>&nbsp;        try {
+<b class="nc"><i>811</i>&nbsp;            root = loader.load();</b>
+<b class="nc"><i>812</i>&nbsp;            Stage stage = new Stage();</b>
+<b class="nc"><i>813</i>&nbsp;            stage.setScene(new Scene(root));</b>
+<b class="nc"><i>814</i>&nbsp;            stage.setResizable(false);</b>
+<b class="nc"><i>815</i>&nbsp;            stage.sizeToScene();</b>
+<b class="nc"><i>816</i>&nbsp;            stage.setTitle(&quot;Santorini Game&quot;);</b>
+<b class="nc"><i>817</i>&nbsp;            ((Home)loader.getController()).connectToServer(ip);</b>
+<b class="nc"><i>818</i>&nbsp;            stage.show();</b>
+<b class="nc"><i>819</i>&nbsp;            ((Stage) boardWindow.getScene().getWindow()).close();</b>
+<b class="nc"><i>820</i>&nbsp;        } catch (IOException e) { e.printStackTrace(); }</b>
+<i>821</i>&nbsp;    }
+<i>822</i>&nbsp;
+<i>823</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 00:11</div>
+</div>
+</body>
+</html>

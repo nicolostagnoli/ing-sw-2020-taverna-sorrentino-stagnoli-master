@@ -1,0 +1,62 @@
+rule:
+	purpose = GENERATION
+	actionType = MOVE
+	target = MYSELF
+	id = gen_move
+	generatedBy = gen_move
+
+secondary rule:
+	purpose = GENERATION
+	actionType = BUILD
+	target = MYSELF
+	id = gen_build
+	generatedBy = gen_move
+
+secondary rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	condition:
+		or(negate(valid(sum(after, coord(1,0)))), or(negate(valid(sum(after, coord(0,1)))), or(negate(valid(sum(after, coord(1,1)))), or(negate(valid(sum(after, coord(-1,0)))), or(negate(valid(sum(after, coord(0,-1)))), or(negate(valid(sum(after, coord(-1,-1)))), or(negate(valid(sum(after, coord(1,-1)))), negate(valid(sum(after, coord(-1,1)))))))))))
+	buildLevel = GROUND
+	generatedBy = gen_build
+
+secondary rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	condition:
+		or(negate(valid(sum(after, coord(1,0)))), or(negate(valid(sum(after, coord(0,1)))), or(negate(valid(sum(after, coord(1,1)))), or(negate(valid(sum(after, coord(-1,0)))), or(negate(valid(sum(after, coord(0,-1)))), or(negate(valid(sum(after, coord(-1,-1)))), or(negate(valid(sum(after, coord(1,-1)))), negate(valid(sum(after, coord(-1,1)))))))))))
+	buildLevel = LVL1
+	generatedBy = gen_build
+
+secondary rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	condition:
+		or(negate(valid(sum(after, coord(1,0)))), or(negate(valid(sum(after, coord(0,1)))), or(negate(valid(sum(after, coord(1,1)))), or(negate(valid(sum(after, coord(-1,0)))), or(negate(valid(sum(after, coord(0,-1)))), or(negate(valid(sum(after, coord(-1,-1)))), or(negate(valid(sum(after, coord(1,-1)))), negate(valid(sum(after, coord(-1,1)))))))))))
+	buildLevel = LVL2
+	generatedBy = gen_build
+
+secondary rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	condition:
+		or(negate(valid(sum(after, coord(1,0)))), or(negate(valid(sum(after, coord(0,1)))), or(negate(valid(sum(after, coord(1,1)))), or(negate(valid(sum(after, coord(-1,0)))), or(negate(valid(sum(after, coord(0,-1)))), or(negate(valid(sum(after, coord(-1,-1)))), or(negate(valid(sum(after, coord(1,-1)))), negate(valid(sum(after, coord(-1,1)))))))))))
+	buildLevel = LVL3
+	generatedBy = gen_build
+
+secondary rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = DENY
+	condition:
+		or(negate(valid(sum(after, coord(1,0)))), or(negate(valid(sum(after, coord(0,1)))), or(negate(valid(sum(after, coord(1,1)))), or(negate(valid(sum(after, coord(-1,0)))), or(negate(valid(sum(after, coord(0,-1)))), or(negate(valid(sum(after, coord(-1,-1)))), or(negate(valid(sum(after, coord(1,-1)))), negate(valid(sum(after, coord(-1,1)))))))))))
+	buildLevel = DOME
+	generatedBy = gen_build
+
+secondary file:
+	source = rules/standard/secondary
+	generatedBy = gen_build

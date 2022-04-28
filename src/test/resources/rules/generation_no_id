@@ -1,0 +1,8 @@
+rule:
+	purpose = generation
+	actionType = build
+	target = myself
+rule:
+	purpose = validation
+	actionType = move
+	decision = grant

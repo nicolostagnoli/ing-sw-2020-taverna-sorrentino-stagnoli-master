@@ -1,0 +1,214 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: ConcreteHandler</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.model.handler</a> ]
+</div>
+
+<h1>Coverage Summary for Class: ConcreteHandler (it.polimi.ingsw.model.handler)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ConcreteHandler</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (9/ 9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (56/ 56)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.model.handler;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.exceptions.model.handler.UndeterminedSpaceException;
+<i>4</i>&nbsp;import it.polimi.ingsw.model.Board;
+<i>5</i>&nbsp;import it.polimi.ingsw.model.Coord;
+<i>6</i>&nbsp;import it.polimi.ingsw.model.handler.util.Pair;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;import java.util.ArrayList;
+<i>9</i>&nbsp;import java.util.Collection;
+<i>10</i>&nbsp;import java.util.List;
+<i>11</i>&nbsp;import java.util.stream.Collectors;
+<i>12</i>&nbsp;
+<i>13</i>&nbsp;/**
+<i>14</i>&nbsp; * Handles requests about the possibilities of a player during his turn, based on the rules of the game.
+<i>15</i>&nbsp; * This class is at the heart of the application logic. It determines what actions a player can
+<i>16</i>&nbsp; * do, whether he has won or not, and updates the current rules used in this turn with the rules
+<i>17</i>&nbsp; * to be used in the next turn.
+<i>18</i>&nbsp; */
+<i>19</i>&nbsp;class ConcreteHandler implements RuleHandler {
+<i>20</i>&nbsp;
+<b class="fc"><i>21</i>&nbsp;    private static final List&lt;ConcreteHandler&gt; handlers = new ArrayList&lt;&gt;();</b>
+<i>22</i>&nbsp;    private List&lt;Rule&gt; rules;
+<i>23</i>&nbsp;    private final List&lt;Rule&gt; initialRules;
+<i>24</i>&nbsp;
+<i>25</i>&nbsp;
+<b class="fc"><i>26</i>&nbsp;    public ConcreteHandler(List&lt;Rule&gt; rules) {</b>
+<b class="fc"><i>27</i>&nbsp;        this.rules = new ArrayList&lt;&gt;(rules);</b>
+<b class="fc"><i>28</i>&nbsp;        this.initialRules = rules;</b>
+<b class="fc"><i>29</i>&nbsp;        handlers.add(this);</b>
+<b class="fc"><i>30</i>&nbsp;    }</b>
+<i>31</i>&nbsp;
+<i>32</i>&nbsp;
+<i>33</i>&nbsp;    //---------------------------------------------------------------------------------------
+<i>34</i>&nbsp;
+<i>35</i>&nbsp;    /**
+<i>36</i>&nbsp;     * This methods determines, for each coordinate, what actions can be performed and what actions can&#39;t.
+<i>37</i>&nbsp;     * It takes all the {@code VALIDATION} rules and, for each {@code Rule r}:
+<i>38</i>&nbsp;     * &lt;ul&gt;
+<i>39</i>&nbsp;     *     &lt;li&gt;Checks if the rule applies to a coordinate
+<i>40</i>&nbsp;     *     &lt;li&gt;If so, marks the coordinate as valid for the action {@code r.getActionType}
+<i>41</i>&nbsp;     *          or invalid (it depends on {@code r.getDecision})
+<i>42</i>&nbsp;     *     &lt;li&gt;Repeats for next coordinates, until all coordinates have been examined
+<i>43</i>&nbsp;     *     &lt;/li&gt;
+<i>44</i>&nbsp;     * &lt;/ul&gt;
+<i>45</i>&nbsp;     * @param vc the container of the data this method will populate
+<i>46</i>&nbsp;     * @throws UndeterminedSpaceException when the rules aren&#39;t enough to determine the validity
+<i>47</i>&nbsp;     * of all the coordinates/spaces
+<i>48</i>&nbsp;     */
+<i>49</i>&nbsp;    @Override
+<i>50</i>&nbsp;    public void handleValidationRequest(ValidationContainer vc) throws UndeterminedSpaceException {
+<i>51</i>&nbsp;
+<i>52</i>&nbsp;        //Do your work
+<i>53</i>&nbsp;
+<b class="fc"><i>54</i>&nbsp;        Coord current = vc.getCurrentPosition();</b>
+<b class="fc"><i>55</i>&nbsp;        Board board = vc.getBoard();</b>
+<i>56</i>&nbsp;
+<b class="fc"><i>57</i>&nbsp;        rules.stream()</b>
+<b class="fc"><i>58</i>&nbsp;                .filter(r -&gt; r.getPurpose() == Purpose.VALIDATION)</b>
+<b class="fc"><i>59</i>&nbsp;                .forEach(r -&gt;</b>
+<b class="fc"><i>60</i>&nbsp;                        vc.getAllSpaces().stream()</b>
+<b class="fc"><i>61</i>&nbsp;                        .filter(s -&gt; r.getCondition().test(new Pair&lt;&gt;(current, s), board))</b>
+<b class="fc"><i>62</i>&nbsp;                        .forEach(s -&gt; vc.validateSpace(</b>
+<i>63</i>&nbsp;                                s,
+<b class="fc"><i>64</i>&nbsp;                                r.getActionType(),</b>
+<b class="fc"><i>65</i>&nbsp;                                r.getDecision(),</b>
+<b class="fc"><i>66</i>&nbsp;                                r.getForceSpaceFunction().apply(current, s),</b>
+<b class="fc"><i>67</i>&nbsp;                                r.getBuildLevel())</b>
+<i>68</i>&nbsp;                        )
+<i>69</i>&nbsp;                );
+<i>70</i>&nbsp;
+<i>71</i>&nbsp;
+<i>72</i>&nbsp;        //Check if validation is completed
+<b class="fc"><i>73</i>&nbsp;        if (!vc.allSpacesValidated()) {</b>
+<b class="fc"><i>74</i>&nbsp;            String exceptionalMessage = &quot;Cannot determine validity of the followings:\n&quot;;</b>
+<b class="fc"><i>75</i>&nbsp;            exceptionalMessage += vc.getNotValidatedSpaces().toString();</b>
+<i>76</i>&nbsp;
+<b class="fc"><i>77</i>&nbsp;            throw new UndeterminedSpaceException(exceptionalMessage);</b>
+<i>78</i>&nbsp;        }
+<i>79</i>&nbsp;
+<b class="fc"><i>80</i>&nbsp;    }</b>
+<i>81</i>&nbsp;
+<i>82</i>&nbsp;    @Override
+<i>83</i>&nbsp;    public void generate(ValidationContainer vc, Coord after, ActionType at) {
+<b class="fc"><i>84</i>&nbsp;        Pair&lt;Coord&gt; pair = new Pair&lt;&gt;(vc.getCurrentPosition(), after);</b>
+<b class="fc"><i>85</i>&nbsp;        Board board = vc.getBoard();</b>
+<i>86</i>&nbsp;
+<i>87</i>&nbsp;
+<b class="fc"><i>88</i>&nbsp;        List&lt;Rule&gt; rulesOnOpponents = rules.stream()</b>
+<b class="fc"><i>89</i>&nbsp;                .filter(r -&gt; r.getPurpose()==Purpose.GENERATION)</b>
+<b class="fc"><i>90</i>&nbsp;                .filter(r -&gt; r.getTarget() == Target.OPPONENTS)</b>
+<b class="fc"><i>91</i>&nbsp;                .filter(r -&gt; r.getActionType() == at)</b>
+<b class="fc"><i>92</i>&nbsp;                .filter(r -&gt; r.getCondition().test(pair, board))</b>
+<b class="fc"><i>93</i>&nbsp;                .map(r -&gt; r.getGeneratedRules(pair))</b>
+<b class="fc"><i>94</i>&nbsp;                .flatMap(Collection::stream)</b>
+<b class="fc"><i>95</i>&nbsp;                .collect(Collectors.toList());</b>
+<i>96</i>&nbsp;
+<b class="fc"><i>97</i>&nbsp;        handlers.stream()</b>
+<b class="fc"><i>98</i>&nbsp;                .filter(h -&gt; h!=this)</b>
+<b class="fc"><i>99</i>&nbsp;                .forEach(h -&gt;</b>
+<b class="fc"><i>100</i>&nbsp;                        h.rules.addAll(0, rulesOnOpponents)</b>
+<i>101</i>&nbsp;                );
+<i>102</i>&nbsp;
+<b class="fc"><i>103</i>&nbsp;        rules = rules.stream()</b>
+<b class="fc"><i>104</i>&nbsp;                .filter(r -&gt; r.getPurpose() == Purpose.GENERATION)</b>
+<b class="fc"><i>105</i>&nbsp;                .filter(r -&gt; r.getTarget() == Target.MYSELF)</b>
+<b class="fc"><i>106</i>&nbsp;                .filter(r -&gt; r.getActionType() == at)</b>
+<b class="fc"><i>107</i>&nbsp;                .filter(r -&gt; r.getCondition().test(pair, board))</b>
+<b class="fc"><i>108</i>&nbsp;                .map(r -&gt; r.getGeneratedRules(pair))</b>
+<b class="fc"><i>109</i>&nbsp;                .flatMap(Collection::stream)</b>
+<b class="fc"><i>110</i>&nbsp;                .collect(Collectors.toList());</b>
+<i>111</i>&nbsp;
+<b class="fc"><i>112</i>&nbsp;    }</b>
+<i>113</i>&nbsp;
+<i>114</i>&nbsp;    @Override
+<i>115</i>&nbsp;    public boolean handleWinCheckRequest(ValidationContainer vc, Coord after, ActionType at) {
+<b class="fc"><i>116</i>&nbsp;        Pair&lt;Coord&gt; pair = new Pair&lt;&gt;(vc.getCurrentPosition(), after);</b>
+<b class="fc"><i>117</i>&nbsp;        Board board = vc.getBoard();</b>
+<i>118</i>&nbsp;
+<b class="fc"><i>119</i>&nbsp;        Rule winRule = rules.stream()</b>
+<b class="fc"><i>120</i>&nbsp;                .filter(r -&gt; r.getPurpose() == Purpose.WIN)</b>
+<b class="fc"><i>121</i>&nbsp;                .filter(r -&gt; r.getActionType() == at)</b>
+<b class="fc"><i>122</i>&nbsp;                .filter(r -&gt; r.getCondition().test(pair, board))</b>
+<b class="fc"><i>123</i>&nbsp;                .findFirst().orElse(null);</b>
+<b class="fc"><i>124</i>&nbsp;        return winRule != null &amp;&amp; winRule.getDecision() == Decision.GRANT;</b>
+<i>125</i>&nbsp;    }
+<i>126</i>&nbsp;
+<i>127</i>&nbsp;    @Override
+<i>128</i>&nbsp;    public void reset() {
+<b class="fc"><i>129</i>&nbsp;        rules = new ArrayList&lt;&gt;(initialRules);</b>
+<b class="fc"><i>130</i>&nbsp;    }</b>
+<i>131</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 00:11</div>
+</div>
+</body>
+</html>

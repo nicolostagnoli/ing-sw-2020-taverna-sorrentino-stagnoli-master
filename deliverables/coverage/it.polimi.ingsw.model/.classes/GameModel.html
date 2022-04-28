@@ -1,0 +1,714 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: GameModel</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.model</a> ]
+</div>
+
+<h1>Coverage Summary for Class: GameModel (it.polimi.ingsw.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GameModel</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (39/ 39)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    92,7%
+  </span>
+  <span class="absValue">
+    (268/ 289)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.model;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import com.google.gson.Gson;
+<i>4</i>&nbsp;import it.polimi.ingsw.exceptions.model.AlreadyExistingPlayerException;
+<i>5</i>&nbsp;import it.polimi.ingsw.exceptions.model.GameFullException;
+<i>6</i>&nbsp;import it.polimi.ingsw.exceptions.model.IllegalWorkerChoiceException;
+<i>7</i>&nbsp;import it.polimi.ingsw.listeners.EventSource;
+<i>8</i>&nbsp;import it.polimi.ingsw.listeners.Listener;
+<i>9</i>&nbsp;import it.polimi.ingsw.listeners.ModelEventListener;
+<i>10</i>&nbsp;import it.polimi.ingsw.model.handler.ActionType;
+<i>11</i>&nbsp;import it.polimi.ingsw.model.handler.EnhancedRequestHandlerCreator;
+<i>12</i>&nbsp;import it.polimi.ingsw.model.handler.RequestHandler;
+<i>13</i>&nbsp;import it.polimi.ingsw.model.handler.RequestHandlerCreator;
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;import java.io.FileNotFoundException;
+<i>16</i>&nbsp;import java.io.IOException;
+<i>17</i>&nbsp;import java.io.InputStream;
+<i>18</i>&nbsp;import java.util.*;
+<i>19</i>&nbsp;import java.util.stream.Collectors;
+<i>20</i>&nbsp;
+<b class="fc"><i>21</i>&nbsp;public class GameModel implements EventSource {</b>
+<i>22</i>&nbsp;
+<i>23</i>&nbsp;    private ModelState state;
+<i>24</i>&nbsp;    private int numPlayers;
+<i>25</i>&nbsp;    private final List&lt;Player&gt; queue;
+<i>26</i>&nbsp;    private List&lt;God&gt; godsList;
+<i>27</i>&nbsp;    private final List&lt;Color&gt; colors;
+<i>28</i>&nbsp;    private Board board;
+<i>29</i>&nbsp;    private Player currentPlayer;
+<i>30</i>&nbsp;    private Worker currentWorker;
+<i>31</i>&nbsp;    private Turn turn;
+<i>32</i>&nbsp;    private final Map&lt;Player, RequestHandler&gt; oldHandlers;
+<i>33</i>&nbsp;    private final Map&lt;Player, RequestHandler&gt; handlers;
+<i>34</i>&nbsp;    private final List&lt;ModelEventListener&gt; modelListeners;
+<i>35</i>&nbsp;
+<i>36</i>&nbsp;
+<b class="fc"><i>37</i>&nbsp;    public GameModel() throws FileNotFoundException {</b>
+<b class="fc"><i>38</i>&nbsp;        this.state = new LobbyState(this);</b>
+<b class="fc"><i>39</i>&nbsp;        this.queue = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>40</i>&nbsp;        this.colors = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>41</i>&nbsp;        this.colors.add(Color.YELLOW);</b>
+<b class="fc"><i>42</i>&nbsp;        this.colors.add(Color.RED);</b>
+<b class="fc"><i>43</i>&nbsp;        this.colors.add(Color.BLUE);</b>
+<b class="fc"><i>44</i>&nbsp;        this.board = new Board();</b>
+<b class="fc"><i>45</i>&nbsp;        this.godsList = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>46</i>&nbsp;        this.currentPlayer = null;</b>
+<b class="fc"><i>47</i>&nbsp;        this.currentWorker = null;</b>
+<b class="fc"><i>48</i>&nbsp;        this.turn = new Turn();</b>
+<b class="fc"><i>49</i>&nbsp;        this.oldHandlers = new HashMap&lt;&gt;();</b>
+<b class="fc"><i>50</i>&nbsp;        this.handlers = new HashMap&lt;&gt;();</b>
+<b class="fc"><i>51</i>&nbsp;        this.modelListeners = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>52</i>&nbsp;        loadAvailableGods();</b>
+<i>53</i>&nbsp;
+<b class="fc"><i>54</i>&nbsp;    }</b>
+<i>55</i>&nbsp;
+<i>56</i>&nbsp;
+<i>57</i>&nbsp;    // INIT FUNCTIONS
+<i>58</i>&nbsp;
+<i>59</i>&nbsp;    // Reads from file all available gods
+<i>60</i>&nbsp;    private void loadAvailableGods() throws FileNotFoundException {
+<i>61</i>&nbsp;
+<b class="fc"><i>62</i>&nbsp;        InputStream inputStream = this.getClass()</b>
+<b class="fc"><i>63</i>&nbsp;                .getClassLoader().getResourceAsStream(&quot;gods&quot;);</b>
+<b class="fc"><i>64</i>&nbsp;        if (inputStream == null) {</b>
+<b class="nc"><i>65</i>&nbsp;            throw new FileNotFoundException(&quot;\&quot;gods\&quot; file wasn&#39;t found.&quot;);</b>
+<i>66</i>&nbsp;        }
+<b class="fc"><i>67</i>&nbsp;        Scanner sc = new Scanner(inputStream);</b>
+<b class="fc"><i>68</i>&nbsp;        Gson gson = new Gson();</b>
+<b class="fc"><i>69</i>&nbsp;        while (sc.hasNext()) {</b>
+<b class="fc"><i>70</i>&nbsp;            godsList.add(gson.fromJson(sc.nextLine(), God.class));</b>
+<i>71</i>&nbsp;        }
+<b class="fc"><i>72</i>&nbsp;        sc.close();</b>
+<i>73</i>&nbsp;        try {
+<b class="fc"><i>74</i>&nbsp;            inputStream.close();</b>
+<b class="nc"><i>75</i>&nbsp;        } catch (IOException e) {</b>
+<b class="nc"><i>76</i>&nbsp;            System.out.println(&quot;Couldn&#39;t close the inputStream from \&quot;gods\&quot; file.&quot;);</b>
+<b class="nc"><i>77</i>&nbsp;            e.printStackTrace();</b>
+<b class="fc"><i>78</i>&nbsp;        }</b>
+<i>79</i>&nbsp;
+<b class="fc"><i>80</i>&nbsp;        System.out.println(&quot;Gods loaded: &quot;);</b>
+<b class="fc"><i>81</i>&nbsp;        godsList.forEach(g -&gt; System.out.println(g.getName() + &quot;: &quot; + g.getDescription()));</b>
+<b class="fc"><i>82</i>&nbsp;        System.out.println(&quot;Total number of gods: &quot; + godsList.size());</b>
+<b class="fc"><i>83</i>&nbsp;    }</b>
+<i>84</i>&nbsp;
+<i>85</i>&nbsp;    void initRequestHandlers() {
+<b class="fc"><i>86</i>&nbsp;        queue.forEach(p -&gt;</b>
+<b class="fc"><i>87</i>&nbsp;                oldHandlers.put(p,</b>
+<b class="fc"><i>88</i>&nbsp;                        new RequestHandlerCreator(p.getGod().getName())</b>
+<b class="fc"><i>89</i>&nbsp;                                .createHandler()</b>
+<i>90</i>&nbsp;                )
+<i>91</i>&nbsp;        );
+<i>92</i>&nbsp;
+<b class="fc"><i>93</i>&nbsp;        queue.forEach(p -&gt;</b>
+<b class="fc"><i>94</i>&nbsp;                handlers.put(p,</b>
+<b class="fc"><i>95</i>&nbsp;                        new EnhancedRequestHandlerCreator(p.getGod().getName())</b>
+<b class="fc"><i>96</i>&nbsp;                                .createHandler()</b>
+<i>97</i>&nbsp;                )
+<i>98</i>&nbsp;        );
+<b class="fc"><i>99</i>&nbsp;    }</b>
+<i>100</i>&nbsp;
+<i>101</i>&nbsp;
+<i>102</i>&nbsp;    // STATE FUNCTIONS
+<i>103</i>&nbsp;
+<i>104</i>&nbsp;    /**
+<i>105</i>&nbsp;     * To change the game state
+<i>106</i>&nbsp;     * @param state the new state
+<i>107</i>&nbsp;     */
+<i>108</i>&nbsp;    public void changeState(ModelState state) {
+<b class="fc"><i>109</i>&nbsp;        this.state = state;</b>
+<b class="fc"><i>110</i>&nbsp;    }</b>
+<i>111</i>&nbsp;
+<i>112</i>&nbsp;    /**
+<i>113</i>&nbsp;     * To do the next step of the current state
+<i>114</i>&nbsp;     */
+<i>115</i>&nbsp;    public void nextStep() {
+<b class="fc"><i>116</i>&nbsp;        state.nextStep();</b>
+<b class="fc"><i>117</i>&nbsp;    }</b>
+<i>118</i>&nbsp;
+<i>119</i>&nbsp;
+<i>120</i>&nbsp;    // SETUP FUNCTIONS
+<i>121</i>&nbsp;
+<i>122</i>&nbsp;    /**
+<i>123</i>&nbsp;     * To set the number of players for the game
+<i>124</i>&nbsp;     * @param numPlayers the number of players
+<i>125</i>&nbsp;     */
+<i>126</i>&nbsp;    public void setNumPlayers(int numPlayers) {
+<b class="fc"><i>127</i>&nbsp;        this.numPlayers = numPlayers;</b>
+<b class="fc"><i>128</i>&nbsp;    }</b>
+<i>129</i>&nbsp;
+<i>130</i>&nbsp;    /**
+<i>131</i>&nbsp;     * To get the number of players for this game
+<i>132</i>&nbsp;     * @return the number of players for this game
+<i>133</i>&nbsp;     */
+<i>134</i>&nbsp;    public int getNumPlayers() {
+<b class="fc"><i>135</i>&nbsp;        return numPlayers;</b>
+<i>136</i>&nbsp;    }
+<i>137</i>&nbsp;
+<i>138</i>&nbsp;    /**
+<i>139</i>&nbsp;     * To check if all players arrived
+<i>140</i>&nbsp;     * @return true if all players arrived
+<i>141</i>&nbsp;     */
+<i>142</i>&nbsp;    public boolean allPlayersArrived() {
+<b class="fc"><i>143</i>&nbsp;        return this.queue.size() == this.numPlayers;</b>
+<i>144</i>&nbsp;    }
+<i>145</i>&nbsp;
+<i>146</i>&nbsp;    /**
+<i>147</i>&nbsp;     * To add a new player in the game
+<i>148</i>&nbsp;     * @param player the new player
+<i>149</i>&nbsp;     */
+<i>150</i>&nbsp;    public void addNewPlayer(Player player) {
+<b class="fc"><i>151</i>&nbsp;        if (queue.size() == this.numPlayers) {</b>
+<b class="fc"><i>152</i>&nbsp;            throw new GameFullException(&quot;Game is full.&quot;);</b>
+<b class="fc"><i>153</i>&nbsp;        } else if (this.queue.stream().anyMatch(p -&gt; p.getNickname().equals(player.getNickname()))) {</b>
+<b class="fc"><i>154</i>&nbsp;            throw new AlreadyExistingPlayerException(&quot;Player with nickname &quot; +</b>
+<b class="fc"><i>155</i>&nbsp;                    player.getNickname() + &quot; already exists.&quot;);</b>
+<i>156</i>&nbsp;        }
+<i>157</i>&nbsp;
+<b class="fc"><i>158</i>&nbsp;        if (queue.size() == 0) {</b>
+<b class="fc"><i>159</i>&nbsp;            currentPlayer = player; // Set Challenger as currentPlayer</b>
+<i>160</i>&nbsp;        }
+<i>161</i>&nbsp;
+<b class="fc"><i>162</i>&nbsp;        queue.add(player);</b>
+<b class="fc"><i>163</i>&nbsp;        this.board.addWorker(player.getWorker(0));</b>
+<b class="fc"><i>164</i>&nbsp;        this.board.addWorker(player.getWorker(1));</b>
+<i>165</i>&nbsp;
+<b class="fc"><i>166</i>&nbsp;        Random r = new Random();</b>
+<b class="fc"><i>167</i>&nbsp;        int i = r.nextInt(colors.size());</b>
+<b class="fc"><i>168</i>&nbsp;        Color randomColor = colors.get(i);</b>
+<b class="fc"><i>169</i>&nbsp;        setPlayerColor(player, randomColor);</b>
+<i>170</i>&nbsp;
+<b class="fc"><i>171</i>&nbsp;        modelListeners.forEach(l -&gt; l.onPlayerAdded(player.getNickname(), queue.size(), numPlayers));</b>
+<b class="fc"><i>172</i>&nbsp;    }</b>
+<i>173</i>&nbsp;
+<i>174</i>&nbsp;    /**
+<i>175</i>&nbsp;     * To get all the available gods
+<i>176</i>&nbsp;     * @return a list of available gods
+<i>177</i>&nbsp;     */
+<i>178</i>&nbsp;    public List&lt;God&gt; getAvailableGods() {
+<b class="fc"><i>179</i>&nbsp;        return new ArrayList&lt;&gt;(godsList);</b>
+<i>180</i>&nbsp;    }
+<i>181</i>&nbsp;
+<i>182</i>&nbsp;    /**
+<i>183</i>&nbsp;     * To get all the nicknames already in the game
+<i>184</i>&nbsp;     * @return a list of nicknames already in the game
+<i>185</i>&nbsp;     */
+<i>186</i>&nbsp;    public List&lt;String&gt; getPlayersNicknames() {
+<b class="fc"><i>187</i>&nbsp;        return queue.stream()</b>
+<b class="fc"><i>188</i>&nbsp;                .map(Player::getNickname)</b>
+<b class="fc"><i>189</i>&nbsp;                .collect(Collectors.toList());</b>
+<i>190</i>&nbsp;    }
+<i>191</i>&nbsp;
+<i>192</i>&nbsp;    /**
+<i>193</i>&nbsp;     * To set the gods for the game
+<i>194</i>&nbsp;     * @param gods the list of gods
+<i>195</i>&nbsp;     */
+<i>196</i>&nbsp;    public void setGods(List&lt;String&gt; gods) {
+<b class="fc"><i>197</i>&nbsp;        this.godsList =</b>
+<b class="fc"><i>198</i>&nbsp;                godsList.stream()</b>
+<b class="fc"><i>199</i>&nbsp;                        .filter(god -&gt; gods.contains(god.getName()))</b>
+<b class="fc"><i>200</i>&nbsp;                        .collect(Collectors.toList());</b>
+<i>201</i>&nbsp;
+<b class="fc"><i>202</i>&nbsp;        modelListeners.forEach(l -&gt; l.onGodsChosen(gods));</b>
+<i>203</i>&nbsp;
+<b class="fc"><i>204</i>&nbsp;        nextPlayer();</b>
+<b class="fc"><i>205</i>&nbsp;    }</b>
+<i>206</i>&nbsp;
+<i>207</i>&nbsp;    /**
+<i>208</i>&nbsp;     * to set a color to a player of the game
+<i>209</i>&nbsp;     * @param p the player
+<i>210</i>&nbsp;     * @param c the color
+<i>211</i>&nbsp;     * @throws IllegalArgumentException when player is not in the game or the color has already been assigned
+<i>212</i>&nbsp;     */
+<i>213</i>&nbsp;    public void setPlayerColor(Player p, Color c) throws IllegalArgumentException {
+<i>214</i>&nbsp;        //Check that player p is part of the game
+<b class="fc"><i>215</i>&nbsp;        if (!this.queue.contains(p)) {</b>
+<b class="nc"><i>216</i>&nbsp;            throw new IllegalArgumentException(&quot;Given player is not part of the game.&quot;);</b>
+<i>217</i>&nbsp;        }
+<i>218</i>&nbsp;
+<i>219</i>&nbsp;        //If color has been taken by another player, throw exception
+<b class="fc"><i>220</i>&nbsp;        if (!this.colors.contains(c))</b>
+<b class="nc"><i>221</i>&nbsp;            throw new IllegalArgumentException(&quot;Chosen color is not available any longer.&quot;);</b>
+<i>222</i>&nbsp;
+<b class="fc"><i>223</i>&nbsp;        p.setWorkerColor(c);</b>
+<b class="fc"><i>224</i>&nbsp;        this.colors.remove(c);</b>
+<b class="fc"><i>225</i>&nbsp;    }</b>
+<i>226</i>&nbsp;
+<i>227</i>&nbsp;    /**
+<i>228</i>&nbsp;     * To assign a god to a player
+<i>229</i>&nbsp;     * @param p the player
+<i>230</i>&nbsp;     * @param g the gdd
+<i>231</i>&nbsp;     * @throws IllegalArgumentException when the player is not in the game or the god has already been assigned
+<i>232</i>&nbsp;     */
+<i>233</i>&nbsp;    public void assignGodToPlayer(Player p, God g) throws IllegalArgumentException {
+<i>234</i>&nbsp;        //Check that player p is part of the game
+<b class="fc"><i>235</i>&nbsp;        if (!this.queue.contains(p)) {</b>
+<b class="nc"><i>236</i>&nbsp;            throw new IllegalArgumentException(&quot;Given player is not part of the game.&quot;);</b>
+<i>237</i>&nbsp;        }
+<i>238</i>&nbsp;
+<i>239</i>&nbsp;        //If god has been chosen by another player, throw exception
+<b class="fc"><i>240</i>&nbsp;        if (!this.godsList.contains(g))</b>
+<b class="nc"><i>241</i>&nbsp;            throw new IllegalArgumentException(&quot;Chosen god has been previously chosen by another &quot; +</b>
+<i>242</i>&nbsp;                    &quot;player or has never been selected by Challenger.&quot;);
+<i>243</i>&nbsp;
+<b class="fc"><i>244</i>&nbsp;        p.setGod(g);</b>
+<b class="fc"><i>245</i>&nbsp;        this.godsList.remove(g);</b>
+<b class="fc"><i>246</i>&nbsp;        if (!godsList.isEmpty()) { // If all players have chosen, keep the Challenger as currentPlayer</b>
+<b class="fc"><i>247</i>&nbsp;            nextPlayer();</b>
+<i>248</i>&nbsp;        }
+<b class="fc"><i>249</i>&nbsp;    }</b>
+<i>250</i>&nbsp;
+<i>251</i>&nbsp;    /**
+<i>252</i>&nbsp;     * To set a player as the starting player
+<i>253</i>&nbsp;     * @param startPlayer the player to set
+<i>254</i>&nbsp;     * @throws IllegalArgumentException when the player is not part of the game
+<i>255</i>&nbsp;     */
+<i>256</i>&nbsp;    public void setStartPlayer(Player startPlayer) throws IllegalArgumentException {
+<i>257</i>&nbsp;
+<b class="fc"><i>258</i>&nbsp;        if (!queue.contains(startPlayer))</b>
+<b class="nc"><i>259</i>&nbsp;            throw new IllegalArgumentException(&quot;Chosen player is not in the game.&quot;);</b>
+<i>260</i>&nbsp;
+<b class="fc"><i>261</i>&nbsp;        boolean ordered = false;</b>
+<b class="fc"><i>262</i>&nbsp;        if (startPlayer.equals(queue.get(0))) ordered = true;</b>
+<b class="fc"><i>263</i>&nbsp;        while (!ordered) {</b>
+<b class="fc"><i>264</i>&nbsp;            Player moved = queue.remove(0);</b>
+<b class="fc"><i>265</i>&nbsp;            queue.add(moved);</b>
+<b class="fc"><i>266</i>&nbsp;            if (startPlayer.equals(queue.get(0))) ordered = true;</b>
+<b class="fc"><i>267</i>&nbsp;        }</b>
+<i>268</i>&nbsp;
+<b class="fc"><i>269</i>&nbsp;        currentPlayer = startPlayer;</b>
+<b class="fc"><i>270</i>&nbsp;        currentPlayer.setAsStartPlayer();</b>
+<b class="fc"><i>271</i>&nbsp;    }</b>
+<i>272</i>&nbsp;
+<i>273</i>&nbsp;    /**
+<i>274</i>&nbsp;     * To initialize workers position of the current player on the board
+<i>275</i>&nbsp;     * @param c the coordinates to place the worker
+<i>276</i>&nbsp;     */
+<i>277</i>&nbsp;    public void initializeWorker(Coord c) {
+<i>278</i>&nbsp;
+<b class="fc"><i>279</i>&nbsp;        board.initializeWorker(currentPlayer, c);</b>
+<b class="fc"><i>280</i>&nbsp;        notifyBoardChanged();</b>
+<i>281</i>&nbsp;
+<i>282</i>&nbsp;        //If player has initialized both his workers...
+<b class="fc"><i>283</i>&nbsp;        if (currentPlayer.getWorkersList().stream()</b>
+<b class="fc"><i>284</i>&nbsp;                .noneMatch(worker -&gt; worker.getPosition() == null)</b>
+<i>285</i>&nbsp;        ) {
+<b class="fc"><i>286</i>&nbsp;            nextPlayer(); // ... go to next player.</b>
+<i>287</i>&nbsp;        }
+<b class="fc"><i>288</i>&nbsp;    }</b>
+<i>289</i>&nbsp;
+<i>290</i>&nbsp;
+<i>291</i>&nbsp;    // GAME FUNCTIONS
+<i>292</i>&nbsp;
+<i>293</i>&nbsp;    /**
+<i>294</i>&nbsp;     * To get a reference to a player by his nickname
+<i>295</i>&nbsp;     * @param nick the nickname
+<i>296</i>&nbsp;     * @return a reference to the Player object of the game with the given nickname
+<i>297</i>&nbsp;     * @throws IllegalArgumentException when the nickname is not in the game
+<i>298</i>&nbsp;     */
+<i>299</i>&nbsp;    public Player getPlayerByNickname(String nick) throws IllegalArgumentException {
+<i>300</i>&nbsp;
+<b class="fc"><i>301</i>&nbsp;        Player res = queue.stream()</b>
+<b class="fc"><i>302</i>&nbsp;                .filter(p -&gt; p.getNickname().equals(nick)).findFirst().orElse(null);</b>
+<i>303</i>&nbsp;
+<b class="fc"><i>304</i>&nbsp;        if (res != null) {</b>
+<b class="fc"><i>305</i>&nbsp;            return res;</b>
+<i>306</i>&nbsp;        } else {
+<b class="fc"><i>307</i>&nbsp;            throw new IllegalArgumentException(&quot;There is no player with the provided name.&quot;);</b>
+<i>308</i>&nbsp;        }
+<i>309</i>&nbsp;    }
+<i>310</i>&nbsp;
+<i>311</i>&nbsp;    /**
+<i>312</i>&nbsp;     * To get a reference to the current player
+<i>313</i>&nbsp;     * @return reference to the current player
+<i>314</i>&nbsp;     */
+<i>315</i>&nbsp;    public Player getCurrentPlayer() {
+<b class="fc"><i>316</i>&nbsp;        return currentPlayer;</b>
+<i>317</i>&nbsp;    }
+<i>318</i>&nbsp;
+<i>319</i>&nbsp;    /**
+<i>320</i>&nbsp;     * Get a copy of the list of players of the game
+<i>321</i>&nbsp;     * @return a copy of the list of players of the game
+<i>322</i>&nbsp;     */
+<i>323</i>&nbsp;    public List&lt;Player&gt; getPlayers() {
+<b class="fc"><i>324</i>&nbsp;        List&lt;Player&gt; result = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>325</i>&nbsp;        queue.forEach(p -&gt; result.add(p.clone()));</b>
+<b class="fc"><i>326</i>&nbsp;        return result;</b>
+<i>327</i>&nbsp;    }
+<i>328</i>&nbsp;
+<i>329</i>&nbsp;    /**
+<i>330</i>&nbsp;     * To get a copy of the board of the game
+<i>331</i>&nbsp;     * @return a copy of the board of the game
+<i>332</i>&nbsp;     */
+<i>333</i>&nbsp;    public Board getBoard() {
+<b class="fc"><i>334</i>&nbsp;        return this.board.clone();</b>
+<i>335</i>&nbsp;    }
+<i>336</i>&nbsp;
+<i>337</i>&nbsp;    /**
+<i>338</i>&nbsp;     * To set the worker choice of the current player
+<i>339</i>&nbsp;     * @param workerPos the coordinates of the chosen worker
+<i>340</i>&nbsp;     */
+<i>341</i>&nbsp;    public void setWorkerChoice(Coord workerPos) {
+<b class="fc"><i>342</i>&nbsp;        Worker selected = board.getWorkerByPosition(workerPos);</b>
+<i>343</i>&nbsp;
+<i>344</i>&nbsp;        // Worker must belong to currentPlayer
+<b class="fc"><i>345</i>&nbsp;        if (!selected.getPlayerNickname().equals(currentPlayer.getNickname())) {</b>
+<b class="nc"><i>346</i>&nbsp;            throw new IllegalWorkerChoiceException(&quot;Selected worker does not belong to the current player&quot;);</b>
+<i>347</i>&nbsp;        }
+<i>348</i>&nbsp;
+<i>349</i>&nbsp;        // Worker must be selectable (= able to move)
+<b class="fc"><i>350</i>&nbsp;        if (!turn.getSelectableWorkers().contains(workerPos)) {</b>
+<b class="nc"><i>351</i>&nbsp;            nextStep();</b>
+<b class="nc"><i>352</i>&nbsp;            return;</b>
+<i>353</i>&nbsp;        }
+<b class="fc"><i>354</i>&nbsp;        currentWorker = selected;</b>
+<b class="fc"><i>355</i>&nbsp;    }</b>
+<i>356</i>&nbsp;
+<i>357</i>&nbsp;    /**
+<i>358</i>&nbsp;     * To make the selected move for the selected worker
+<i>359</i>&nbsp;     * @param moveChoice the coordinates for the move
+<i>360</i>&nbsp;     */
+<i>361</i>&nbsp;    public void setMove(Coord moveChoice) {
+<b class="fc"><i>362</i>&nbsp;        if (!turn.getMovableSpacesCopy().contains(moveChoice)) {</b>
+<b class="fc"><i>363</i>&nbsp;            notifyAction();</b>
+<b class="fc"><i>364</i>&nbsp;            return;</b>
+<i>365</i>&nbsp;        }
+<i>366</i>&nbsp;
+<b class="fc"><i>367</i>&nbsp;        if (turn.getForcesCopy().containsKey(moveChoice)) {</b>
+<b class="fc"><i>368</i>&nbsp;            Coord forceDest = turn.getForcesCopy().get(moveChoice);</b>
+<b class="fc"><i>369</i>&nbsp;            board.workerForceMove(currentWorker, moveChoice, forceDest);</b>
+<b class="fc"><i>370</i>&nbsp;        } else {</b>
+<b class="fc"><i>371</i>&nbsp;            board.workerMove(currentWorker, moveChoice);</b>
+<i>372</i>&nbsp;        }
+<b class="fc"><i>373</i>&nbsp;        notifyBoardChanged();</b>
+<i>374</i>&nbsp;
+<b class="fc"><i>375</i>&nbsp;        turn.hasMoved();</b>
+<i>376</i>&nbsp;
+<i>377</i>&nbsp;        //Check if this action caused the current player to win
+<b class="fc"><i>378</i>&nbsp;        RequestHandler oldHandler = oldHandlers.get(currentPlayer);</b>
+<b class="fc"><i>379</i>&nbsp;        RequestHandler handler = handlers.get(currentPlayer);</b>
+<b class="fc"><i>380</i>&nbsp;        assert (oldHandler.checkForWin(moveChoice, ActionType.MOVE) ==</b>
+<b class="fc"><i>381</i>&nbsp;                handler.checkForWin(moveChoice, ActionType.MOVE));</b>
+<b class="fc"><i>382</i>&nbsp;        if (handler.checkForWin(moveChoice, ActionType.MOVE)) {</b>
+<b class="fc"><i>383</i>&nbsp;            state = new EndState(this);</b>
+<b class="fc"><i>384</i>&nbsp;            return;</b>
+<i>385</i>&nbsp;        }
+<i>386</i>&nbsp;
+<b class="fc"><i>387</i>&nbsp;        oldHandler.generate(moveChoice, ActionType.MOVE);</b>
+<b class="fc"><i>388</i>&nbsp;        handler.generate(moveChoice, ActionType.MOVE);</b>
+<i>389</i>&nbsp;
+<b class="fc"><i>390</i>&nbsp;    }</b>
+<i>391</i>&nbsp;
+<i>392</i>&nbsp;    /**
+<i>393</i>&nbsp;     * To make the selected build for the selected worker
+<i>394</i>&nbsp;     * @param buildChoice the coordinates for the build
+<i>395</i>&nbsp;     */
+<i>396</i>&nbsp;    public void setBuild(Coord buildChoice, Level level) {
+<b class="fc"><i>397</i>&nbsp;        if (!turn.getBuildableSpacesCopy().get(level).contains(buildChoice)) {</b>
+<b class="fc"><i>398</i>&nbsp;            notifyAction();</b>
+<b class="fc"><i>399</i>&nbsp;            return;</b>
+<i>400</i>&nbsp;        }
+<b class="fc"><i>401</i>&nbsp;        board.workerBuild(currentWorker, buildChoice, level);</b>
+<b class="fc"><i>402</i>&nbsp;        notifyBoardChanged();</b>
+<i>403</i>&nbsp;
+<b class="fc"><i>404</i>&nbsp;        turn.hasBuilt();</b>
+<i>405</i>&nbsp;
+<i>406</i>&nbsp;        //Check if this action caused the current player to win
+<b class="fc"><i>407</i>&nbsp;        RequestHandler oldHandler = oldHandlers.get(currentPlayer);</b>
+<b class="fc"><i>408</i>&nbsp;        RequestHandler handler = handlers.get(currentPlayer);</b>
+<i>409</i>&nbsp;
+<b class="fc"><i>410</i>&nbsp;        assert (oldHandler.checkForWin(buildChoice, ActionType.BUILD) ==</b>
+<b class="fc"><i>411</i>&nbsp;                handler.checkForWin(buildChoice, ActionType.BUILD));</b>
+<i>412</i>&nbsp;
+<b class="fc"><i>413</i>&nbsp;        if (handler.checkForWin(buildChoice, ActionType.BUILD)) {</b>
+<b class="nc"><i>414</i>&nbsp;            state = new EndState(this);</b>
+<b class="nc"><i>415</i>&nbsp;            return;</b>
+<i>416</i>&nbsp;        }
+<i>417</i>&nbsp;
+<b class="fc"><i>418</i>&nbsp;        oldHandler.generate(buildChoice, ActionType.BUILD);</b>
+<b class="fc"><i>419</i>&nbsp;        handler.generate(buildChoice, ActionType.BUILD);</b>
+<i>420</i>&nbsp;
+<b class="fc"><i>421</i>&nbsp;    }</b>
+<i>422</i>&nbsp;
+<i>423</i>&nbsp;    /**
+<i>424</i>&nbsp;     * To end the turn of the current player
+<i>425</i>&nbsp;     */
+<i>426</i>&nbsp;    public void setEnd() {
+<i>427</i>&nbsp;
+<b class="fc"><i>428</i>&nbsp;        if (turn.hasEnded()) {</b>
+<b class="fc"><i>429</i>&nbsp;            turn.reset();</b>
+<b class="fc"><i>430</i>&nbsp;            oldHandlers.get(currentPlayer).reset();</b>
+<b class="fc"><i>431</i>&nbsp;            handlers.get(currentPlayer).reset();</b>
+<b class="fc"><i>432</i>&nbsp;            currentWorker = null;</b>
+<b class="fc"><i>433</i>&nbsp;            nextPlayer();</b>
+<i>434</i>&nbsp;        } else {
+<b class="fc"><i>435</i>&nbsp;            turn.setEnded();</b>
+<b class="fc"><i>436</i>&nbsp;            Coord currPosition = currentWorker.getPosition();</b>
+<i>437</i>&nbsp;
+<i>438</i>&nbsp;            //Check if this action caused the current player to win
+<b class="fc"><i>439</i>&nbsp;            RequestHandler oldHandler = oldHandlers.get(currentPlayer);</b>
+<b class="fc"><i>440</i>&nbsp;            RequestHandler handler = handlers.get(currentPlayer);</b>
+<i>441</i>&nbsp;
+<b class="fc"><i>442</i>&nbsp;            assert (oldHandler.checkForWin(currPosition, ActionType.END) ==</b>
+<b class="fc"><i>443</i>&nbsp;                    handler.checkForWin(currPosition, ActionType.END));</b>
+<i>444</i>&nbsp;
+<b class="fc"><i>445</i>&nbsp;            if (handler.checkForWin(currPosition, ActionType.END)) {</b>
+<b class="nc"><i>446</i>&nbsp;                state = new EndState(this);</b>
+<b class="nc"><i>447</i>&nbsp;                return;</b>
+<i>448</i>&nbsp;            }
+<i>449</i>&nbsp;
+<b class="fc"><i>450</i>&nbsp;            oldHandler.generate(currPosition, ActionType.END);</b>
+<b class="fc"><i>451</i>&nbsp;            handler.generate(currPosition, ActionType.END);</b>
+<i>452</i>&nbsp;        }
+<b class="fc"><i>453</i>&nbsp;    }</b>
+<i>454</i>&nbsp;
+<i>455</i>&nbsp;    /**
+<i>456</i>&nbsp;     * To set the next player in the queue as the current player, and to put the current at the end of the queue
+<i>457</i>&nbsp;     */
+<i>458</i>&nbsp;    public void nextPlayer() {
+<i>459</i>&nbsp;        //Check the game is ready
+<b class="fc"><i>460</i>&nbsp;        if (allPlayersArrived()) {</b>
+<b class="fc"><i>461</i>&nbsp;            queue.remove(currentPlayer);</b>
+<b class="fc"><i>462</i>&nbsp;            queue.add(currentPlayer);</b>
+<b class="fc"><i>463</i>&nbsp;            currentPlayer = queue.get(0);</b>
+<i>464</i>&nbsp;        } else {
+<b class="fc"><i>465</i>&nbsp;            throw new IllegalStateException(&quot;Cannot go to next player because players&#39; queue &quot; +</b>
+<i>466</i>&nbsp;                    &quot;is not complete.&quot;);
+<i>467</i>&nbsp;        }
+<b class="fc"><i>468</i>&nbsp;    }</b>
+<i>469</i>&nbsp;
+<i>470</i>&nbsp;    /**
+<i>471</i>&nbsp;     *
+<i>472</i>&nbsp;     * @return
+<i>473</i>&nbsp;     */
+<i>474</i>&nbsp;    public boolean hasNewCycleBegun() {
+<b class="fc"><i>475</i>&nbsp;        return currentPlayer.isStartPlayer();</b>
+<i>476</i>&nbsp;    }
+<i>477</i>&nbsp;
+<i>478</i>&nbsp;    /**
+<i>479</i>&nbsp;     *
+<i>480</i>&nbsp;     * @return
+<i>481</i>&nbsp;     */
+<i>482</i>&nbsp;    public boolean hasNewTurnBegun() {
+<b class="fc"><i>483</i>&nbsp;        return currentWorker == null;</b>
+<i>484</i>&nbsp;    }
+<i>485</i>&nbsp;
+<i>486</i>&nbsp;    void nextAction() {
+<b class="fc"><i>487</i>&nbsp;        RequestHandler oldCurrHandler = oldHandlers.get(currentPlayer);</b>
+<b class="fc"><i>488</i>&nbsp;        RequestHandler currHandler = handlers.get(currentPlayer);</b>
+<b class="fc"><i>489</i>&nbsp;        Coord currentPosition = currentWorker.getPosition();</b>
+<b class="fc"><i>490</i>&nbsp;        turn.clear();</b>
+<b class="fc"><i>491</i>&nbsp;        currHandler.getValidSpaces(currentPosition, board.clone(),</b>
+<b class="fc"><i>492</i>&nbsp;                turn.getMovableSpacesReference(), turn.getBuildableSpacesReference(),</b>
+<b class="fc"><i>493</i>&nbsp;                turn.getForcesReference());</b>
+<i>494</i>&nbsp;
+<i>495</i>&nbsp;        /*START: New handler test*/
+<b class="fc"><i>496</i>&nbsp;        if (!(currentPlayer.getGod().getName().equals(&quot;Hera&quot;) ||</b>
+<b class="fc"><i>497</i>&nbsp;                currentPlayer.getGod().getName().equals(&quot;Hestia&quot;) ||</b>
+<b class="fc"><i>498</i>&nbsp;                currentPlayer.getGod().getName().equals(&quot;Limus&quot;) ||</b>
+<b class="fc"><i>499</i>&nbsp;                currentPlayer.getGod().getName().equals(&quot;Triton&quot;) ||</b>
+<b class="fc"><i>500</i>&nbsp;                currentPlayer.getGod().getName().equals(&quot;Zeus&quot;)</b>
+<i>501</i>&nbsp;        )) {
+<b class="fc"><i>502</i>&nbsp;            List&lt;Coord&gt; movableSpaces = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>503</i>&nbsp;            Map&lt;Level, List&lt;Coord&gt;&gt; buildableSpaces = new HashMap&lt;&gt;();</b>
+<b class="fc"><i>504</i>&nbsp;            Map&lt;Coord, Coord&gt; forces = new HashMap&lt;&gt;();</b>
+<b class="fc"><i>505</i>&nbsp;            oldCurrHandler.getValidSpaces(currentPosition, board.clone(),</b>
+<i>506</i>&nbsp;                    movableSpaces, buildableSpaces, forces);
+<b class="fc"><i>507</i>&nbsp;            assert turn.getMovableSpacesReference().size() == movableSpaces.size();</b>
+<b class="fc"><i>508</i>&nbsp;            assert turn.getMovableSpacesReference().containsAll(movableSpaces);</b>
+<b class="fc"><i>509</i>&nbsp;            for (Level level : buildableSpaces.keySet()) {</b>
+<b class="fc"><i>510</i>&nbsp;                assert buildableSpaces.get(level).size() ==</b>
+<b class="fc"><i>511</i>&nbsp;                        turn.getBuildableSpacesReference().get(level).size();</b>
+<b class="fc"><i>512</i>&nbsp;                assert turn.getBuildableSpacesReference().get(level).containsAll(</b>
+<b class="fc"><i>513</i>&nbsp;                        buildableSpaces.get(level));</b>
+<b class="fc"><i>514</i>&nbsp;            }</b>
+<b class="fc"><i>515</i>&nbsp;            for (Coord coord : forces.keySet()) {</b>
+<b class="fc"><i>516</i>&nbsp;                assert turn.getForcesReference().containsKey(coord);</b>
+<b class="fc"><i>517</i>&nbsp;                assert turn.getForcesReference().get(coord).equals(forces.get(coord));</b>
+<b class="fc"><i>518</i>&nbsp;            }</b>
+<i>519</i>&nbsp;        }
+<i>520</i>&nbsp;        /*END: New handler test*/
+<i>521</i>&nbsp;
+<b class="fc"><i>522</i>&nbsp;        if (turn.getMovableSpacesCopy().isEmpty() &amp;&amp; turn.getBuildableSpacesCopy().values()</b>
+<b class="fc"><i>523</i>&nbsp;                .stream().flatMap(Collection::stream).count() == 0) {</b>
+<b class="fc"><i>524</i>&nbsp;            if (!turn.canEndTurn()) {</b>
+<b class="fc"><i>525</i>&nbsp;                removeCurrentPlayer(); // PLayer lost</b>
+<i>526</i>&nbsp;            } else {
+<b class="fc"><i>527</i>&nbsp;                setEnd();</b>
+<b class="fc"><i>528</i>&nbsp;                nextStep();</b>
+<i>529</i>&nbsp;            }
+<b class="fc"><i>530</i>&nbsp;            return;</b>
+<i>531</i>&nbsp;        }
+<i>532</i>&nbsp;
+<b class="fc"><i>533</i>&nbsp;        notifyAction();</b>
+<b class="fc"><i>534</i>&nbsp;    }</b>
+<i>535</i>&nbsp;
+<i>536</i>&nbsp;    List&lt;Coord&gt; getSelectableWorkers() {
+<b class="fc"><i>537</i>&nbsp;        RequestHandler oldCurrHandler = oldHandlers.get(currentPlayer);</b>
+<b class="fc"><i>538</i>&nbsp;        RequestHandler currHandler = handlers.get(currentPlayer);</b>
+<b class="fc"><i>539</i>&nbsp;        List&lt;Coord&gt; selectableWorkers = new ArrayList&lt;&gt;();</b>
+<i>540</i>&nbsp;
+<b class="fc"><i>541</i>&nbsp;        for (Worker worker : currentPlayer.getWorkersList()) {</b>
+<b class="fc"><i>542</i>&nbsp;            Coord position = worker.getPosition();</b>
+<b class="fc"><i>543</i>&nbsp;            turn.clear();</b>
+<b class="fc"><i>544</i>&nbsp;            currHandler.getValidSpaces(position, board.clone(),</b>
+<b class="fc"><i>545</i>&nbsp;                    turn.getMovableSpacesReference(), turn.getBuildableSpacesReference(),</b>
+<b class="fc"><i>546</i>&nbsp;                    turn.getForcesReference());</b>
+<i>547</i>&nbsp;
+<i>548</i>&nbsp;            /*START: New handler test*/
+<b class="fc"><i>549</i>&nbsp;            List&lt;Coord&gt; movableSpaces = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>550</i>&nbsp;            Map&lt;Level, List&lt;Coord&gt;&gt; buildableSpaces = new HashMap&lt;&gt;();</b>
+<b class="fc"><i>551</i>&nbsp;            Map&lt;Coord, Coord&gt; forces = new HashMap&lt;&gt;();</b>
+<b class="fc"><i>552</i>&nbsp;            oldCurrHandler.getValidSpaces(position, board.clone(),</b>
+<i>553</i>&nbsp;                    movableSpaces, buildableSpaces, forces);
+<b class="fc"><i>554</i>&nbsp;            assert turn.getMovableSpacesReference().size() == movableSpaces.size();</b>
+<b class="fc"><i>555</i>&nbsp;            assert turn.getMovableSpacesReference().containsAll(movableSpaces);</b>
+<b class="fc"><i>556</i>&nbsp;            for (Level level : buildableSpaces.keySet()) {</b>
+<b class="fc"><i>557</i>&nbsp;                assert buildableSpaces.get(level).size() ==</b>
+<b class="fc"><i>558</i>&nbsp;                        turn.getBuildableSpacesReference().get(level).size();</b>
+<b class="fc"><i>559</i>&nbsp;                assert turn.getBuildableSpacesReference().get(level).containsAll(</b>
+<b class="fc"><i>560</i>&nbsp;                        buildableSpaces.get(level));</b>
+<b class="fc"><i>561</i>&nbsp;            }</b>
+<b class="fc"><i>562</i>&nbsp;            for (Coord coord : forces.keySet()) {</b>
+<b class="fc"><i>563</i>&nbsp;                assert turn.getForcesReference().containsKey(coord);</b>
+<b class="fc"><i>564</i>&nbsp;                assert turn.getForcesReference().get(coord).equals(forces.get(coord));</b>
+<b class="fc"><i>565</i>&nbsp;            }</b>
+<i>566</i>&nbsp;            /*END: New handler test*/
+<i>567</i>&nbsp;
+<b class="fc"><i>568</i>&nbsp;            if (!turn.getMovableSpacesCopy().isEmpty()) {</b>
+<b class="fc"><i>569</i>&nbsp;                selectableWorkers.add(worker.getPosition());</b>
+<i>570</i>&nbsp;            }
+<b class="fc"><i>571</i>&nbsp;        }</b>
+<b class="fc"><i>572</i>&nbsp;        turn.setSelectableWorkers(selectableWorkers);</b>
+<b class="fc"><i>573</i>&nbsp;        return selectableWorkers;</b>
+<i>574</i>&nbsp;    }
+<i>575</i>&nbsp;
+<i>576</i>&nbsp;    void removeCurrentPlayer() {
+<b class="fc"><i>577</i>&nbsp;        Player loser = currentPlayer;</b>
+<b class="fc"><i>578</i>&nbsp;        notifyMessage(loser.getNickname() + &quot; lost.&quot;);</b>
+<b class="fc"><i>579</i>&nbsp;        nextPlayer();</b>
+<i>580</i>&nbsp;
+<b class="fc"><i>581</i>&nbsp;        board.remove(loser);</b>
+<b class="fc"><i>582</i>&nbsp;        queue.remove(loser);</b>
+<b class="fc"><i>583</i>&nbsp;        oldHandlers.remove(loser);</b>
+<b class="fc"><i>584</i>&nbsp;        handlers.remove(loser);</b>
+<b class="fc"><i>585</i>&nbsp;        notifyBoardChanged();</b>
+<i>586</i>&nbsp;
+<b class="fc"><i>587</i>&nbsp;        if (numPlayers == 2) {</b>
+<b class="nc"><i>588</i>&nbsp;            modelListeners.forEach(l -&gt; l.onMessage(currentPlayer.getNickname() + &quot; won!&quot;));</b>
+<b class="nc"><i>589</i>&nbsp;            modelListeners.forEach(ModelEventListener::onEnd);</b>
+<b class="nc"><i>590</i>&nbsp;            return;</b>
+<i>591</i>&nbsp;        }
+<b class="fc"><i>592</i>&nbsp;        numPlayers = numPlayers - 1;</b>
+<b class="fc"><i>593</i>&nbsp;        currentWorker = null;</b>
+<b class="fc"><i>594</i>&nbsp;        nextStep(); // Recently added to avoid blocking on player&#39;s defeat</b>
+<i>595</i>&nbsp;        //Following line is commented because the loser may still want to see the game
+<i>596</i>&nbsp;        //modelListeners.remove(getListenerByNickname(currentPlayer.getNickname()));
+<b class="nc"><i>597</i>&nbsp;    }</b>
+<i>598</i>&nbsp;
+<i>599</i>&nbsp;
+<i>600</i>&nbsp;    // LISTENERS FUNCTIONS
+<i>601</i>&nbsp;
+<i>602</i>&nbsp;    private void notifyAction() {
+<b class="fc"><i>603</i>&nbsp;        modelListeners.forEach(listener -&gt; listener.onMyAction(currentPlayer.getNickname(), turn.getMovableSpacesCopy(), turn.getBuildableSpacesCopy(),</b>
+<b class="fc"><i>604</i>&nbsp;                turn.canEndTurn()));</b>
+<b class="fc"><i>605</i>&nbsp;    }</b>
+<i>606</i>&nbsp;
+<i>607</i>&nbsp;    private void notifyBoardChanged() {
+<b class="fc"><i>608</i>&nbsp;        modelListeners.forEach(l -&gt; l.onBoardChanged(board.clone()));</b>
+<b class="fc"><i>609</i>&nbsp;    }</b>
+<i>610</i>&nbsp;
+<i>611</i>&nbsp;    private void notifyMessage(String message) {
+<b class="fc"><i>612</i>&nbsp;        modelListeners.forEach(l -&gt; l.onMessage(message));</b>
+<b class="fc"><i>613</i>&nbsp;    }</b>
+<i>614</i>&nbsp;
+<i>615</i>&nbsp;    /**
+<i>616</i>&nbsp;     * To add a listener to this game model
+<i>617</i>&nbsp;     * @param listener the listener to add
+<i>618</i>&nbsp;     */
+<i>619</i>&nbsp;    @Override
+<i>620</i>&nbsp;    public void addListener(Listener listener) {
+<b class="fc"><i>621</i>&nbsp;        if (!(listener instanceof ModelEventListener)) {</b>
+<b class="nc"><i>622</i>&nbsp;            throw new IllegalArgumentException(&quot;Tried to register a non-ModelEventListener to Model&quot;);</b>
+<i>623</i>&nbsp;        }
+<b class="fc"><i>624</i>&nbsp;        modelListeners.add((ModelEventListener) listener);</b>
+<b class="fc"><i>625</i>&nbsp;    }</b>
+<i>626</i>&nbsp;
+<i>627</i>&nbsp;    List&lt;ModelEventListener&gt; getAllListeners() {
+<b class="fc"><i>628</i>&nbsp;        return new ArrayList&lt;&gt;(modelListeners);</b>
+<i>629</i>&nbsp;    }
+<i>630</i>&nbsp;
+<i>631</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 00:11</div>
+</div>
+</body>
+</html>

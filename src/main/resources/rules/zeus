@@ -1,0 +1,47 @@
+rule:
+	purpose = GENERATION
+	actionType = MOVE
+	target = MYSELF
+	id = unique
+
+secondary rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = GRANT
+	buildLevel = LVL1
+	condition:
+		equalCoordinates(before, after)
+		compareLevels(after, LVL1, =1)
+	generatedBy = unique
+
+secondary rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = GRANT
+	buildLevel = LVL2
+	condition:
+		equalCoordinates(before, after)
+		compareLevels(after, LVL2, =1)
+	generatedBy = unique
+
+
+secondary rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = GRANT
+	buildLevel = LVL3
+	condition:
+		equalCoordinates(before, after)
+		compareLevels(after, LVL3, =1)
+	generatedBy = unique
+
+
+secondary rule:
+	purpose = VALIDATION
+	actionType = BUILD
+	decision = GRANT
+	buildLevel = DOME
+	condition:
+		equalCoordinates(before, after)
+		compareLevels(after, DOME, =1)
+	generatedBy = unique

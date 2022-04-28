@@ -1,0 +1,6 @@
+secondary file:
+	source = rules/setParameters
+rule:
+	purpose = validation
+	actionType = move
+	decision = grant
